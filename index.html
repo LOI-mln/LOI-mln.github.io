@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Milan Loi | CS Student Portfolio</title>
+
+    <!-- Styles CSS -->
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Polices Google Fonts (Inter & JetBrains Mono) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Icônes FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body class="light-mode">
+
+    <!-- =========================================
+         ÉCRAN DE CHARGEMENT (Style Matrix)
+         ========================================= -->
+    <div id="loading-screen">
+        <canvas id="matrix-canvas"></canvas>
+        <div class="loading-text">MILAN LOI</div>
+    </div>
+
+    <!-- Orbes d'arrière-plan (Effet Parallaxe) -->
+    <div class="bg-orb orb-1"></div>
+    <div class="bg-orb orb-2"></div>
+
+    <!-- Conteneur Principal (Dashboard) -->
+    <main class="dashboard-container">
+
+        <!-- =========================================
+             BARRE LATÉRALE (Sidebar)
+             ========================================= -->
+        <aside class="sidebar">
+            <div class="profile-mini">
+                <div class="avatar-placeholder"></div>
+                <h3>Milan Loi</h3>
+                <span class="role-badge">CS Student</span>
+            </div>
+
+            <nav class="nav-menu">
+                <button class="nav-btn active" data-target="home">
+                    <i class="fa-solid fa-terminal"></i> <span>Home</span>
+                </button>
+                <button class="nav-btn" data-target="skills">
+                    <i class="fa-solid fa-graduation-cap"></i> <span>Competencies</span>
+                </button>
+                <button class="nav-btn" data-target="timeline">
+                    <i class="fa-solid fa-timeline"></i> <span>Timeline</span>
+                </button>
+                <button class="nav-btn" data-target="projects">
+                    <i class="fa-solid fa-code-branch"></i> <span>Projects</span>
+                </button>
+            </nav>
+
+            <div class="footer-mini">
+                <button id="theme-toggle" class="theme-btn" title="Toggle Dark Mode">
+                    <i class="fa-solid fa-moon"></i>
+                </button>
+
+                <p><i class="fa-solid fa-location-dot"></i> Bordeaux / Limoges</p>
+            </div>
+        </aside>
+
+        <!-- =========================================
+             ZONE DE CONTENU
+             ========================================= -->
+        <div class="content-area">
+
+            <!-- 1. SECTION ACCUEIL -->
+            <section id="home" class="page-section active">
+                <div class="hero-text">
+                    <p class="greeting">Hi, I'm Milan.</p>
+                    <h1 class="main-title">Computer Science <br>Student.</h1>
+                    <h2 class="subtitle">Enthusiastic about Dev, AI & System Administration.</h2>
+                    <p class="bio">
+                        French second-year Computer Science student (BSc Computer Science).
+                        <br><br>
+                        My journey blends <strong>Software Development</strong> with a keen interest in
+                        <strong>AI</strong>.
+                        Beyond coding, I dive into <strong>Cybersecurity</strong> and <strong>Networks</strong> by
+                        managing
+                        my own <span class="highlight">Homelab</span>, constantly experimenting with new technologies.
+                    </p>
+
+                    <div class="cta-group">
+                        <a href="#projects" id="btn-see-projects" class="btn-primary">View Projects</a>
+
+                        <a href="https://github.com/LOI-mln" target="_blank" class="btn-secondary" title="GitHub">
+                            <i class="fa-brands fa-github"></i>
+                        </a>
+
+                        <a href="https://linkedin.com/in/milan-loi" target="_blank" class="btn-secondary"
+                            title="LinkedIn">
+                            <i class="fa-brands fa-linkedin-in"></i>
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2. SECTION COMPÉTENCES (Grille) -->
+            <section id="skills" class="page-section">
+                <h2 class="section-title">Competency Matrix</h2>
+
+                <div class="competency-grid">
+                    <!-- C1 -->
+                    <div class="comp-card" data-skill="c1">
+                        <div class="comp-icon"><i class="fa-solid fa-code"></i></div>
+                        <h3>C1 - REALIZE</h3>
+                        <p class="comp-mini-desc">App development & Architecture.</p>
+                        <span class="click-hint">View details <i class="fa-solid fa-arrow-right"></i></span>
+                    </div>
+
+                    <!-- C2 -->
+                    <div class="comp-card" data-skill="c2">
+                        <div class="comp-icon"><i class="fa-solid fa-microchip"></i></div>
+                        <h3>C2 - OPTIMIZE</h3>
+                        <p class="comp-mini-desc">Algorithms & Performance.</p>
+                        <span class="click-hint">View details <i class="fa-solid fa-arrow-right"></i></span>
+                    </div>
+
+                    <!-- C3 -->
+                    <div class="comp-card highlight-card" data-skill="c3">
+                        <div class="comp-icon"><i class="fa-brands fa-linux"></i></div>
+                        <h3>C3 - ADMINISTER</h3>
+                        <p class="comp-mini-desc">System Admin (Debian/macOS).</p>
+                        <span class="click-hint">View details <i class="fa-solid fa-arrow-right"></i></span>
+                    </div>
+
+                    <!-- C4 -->
+                    <div class="comp-card" data-skill="c4">
+                        <div class="comp-icon"><i class="fa-solid fa-database"></i></div>
+                        <h3>C4 - MANAGE</h3>
+                        <p class="comp-mini-desc">Databases & SQL.</p>
+                        <span class="click-hint">View details <i class="fa-solid fa-arrow-right"></i></span>
+                    </div>
+
+                    <!-- C5 -->
+                    <div class="comp-card" data-skill="c5">
+                        <div class="comp-icon"><i class="fa-solid fa-users-gear"></i></div>
+                        <h3>C5 - LEAD</h3>
+                        <p class="comp-mini-desc">Agile Project Management.</p>
+                        <span class="click-hint">View details <i class="fa-solid fa-arrow-right"></i></span>
+                    </div>
+
+                    <!-- C6 -->
+                    <div class="comp-card highlight-card" data-skill="c6">
+                        <div class="comp-icon"><i class="fa-solid fa-shield-virus"></i></div>
+                        <h3>C6 - SECURE</h3>
+                        <p class="comp-mini-desc">Cybersecurity & AI Awareness.</p>
+                        <span class="click-hint">View details <i class="fa-solid fa-arrow-right"></i></span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 3. VUE DÉTAILLÉE D'UNE COMPÉTENCE -->
+            <section id="skill-detail-view" class="page-section">
+                <button class="btn-back" id="back-to-skills">
+                    <i class="fa-solid fa-arrow-left"></i> Back to Competencies
+                </button>
+
+                <div class="detail-header">
+                    <div id="detail-icon" class="large-icon"><i class="fa-solid fa-code"></i></div>
+                    <div>
+                        <h2 id="detail-title">C1 - REALIZE</h2>
+                        <span id="detail-level" class="level-badge">Level 3: Adapt</span>
+                    </div>
+                </div>
+
+                <div class="detail-body">
+                    <p id="detail-desc" class="big-desc">Description...</p>
+
+                    <div class="proof-container">
+                        <h3><i class="fa-solid fa-star"></i> Key Achievements</h3>
+                        <div id="detail-proof">
+                            <!-- Le contenu sera injecté via JS -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 4. SECTION PARCOURS (Timeline) -->
+            <section id="timeline" class="page-section">
+                <h2 class="section-title">My Journey</h2>
+
+                <div class="timeline-container">
+                    <!-- Lycée -->
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <span class="timeline-date">2020 - 2024</span>
+                            <h3>High School - Baccalauréat</h3>
+                            <p>Specialized in Mathematics and Computer Science. First steps into programming with Python
+                                and web development.</p>
+                        </div>
+                    </div>
+
+                    <!-- BUT Informatique -->
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <span class="timeline-date">2024 - Present</span>
+                            <h3>BSc Computer Science - Year 2</h3>
+                            <p>Currently pursuing a Bachelor's degree in Computer Science. Focus on Software
+                                Development, Cybersecurity, and System Administration.</p>
+                        </div>
+                    </div>
+
+                    <!-- Stage Écosse -->
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <span class="timeline-date">April - June 2026</span>
+                            <h3>Internship in Scotland</h3>
+                            <p>Upcoming international internship in Scotland to gain professional experience in a
+                                multicultural environment.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 5. SECTION PROJETS (Code Lab) -->
+            <section id="projects" class="page-section">
+                <h2 class="section-title">Code Lab</h2>
+
+                <!-- Filtres -->
+                <div class="filter-container">
+                    <button class="filter-btn active" data-filter="all">All</button>
+                    <button class="filter-btn" data-filter="web">Web Dev</button>
+                    <button class="filter-btn" data-filter="software">Software</button>
+                    <button class="filter-btn" data-filter="sysadmin">SysAdmin</button>
+                </div>
+
+                <!-- Grille des Projets -->
+                <div class="projects-grid">
+
+                    <!-- Projet 1 : Questionary -->
+                    <div class="project-card expandable-card" data-category="web"
+                        data-image="img/cards/questionary.png">
+                        <div class="card-header">
+                            <i class="fa-solid fa-clipboard-list folder-icon"></i>
+                            <div class="links"><a href="https://github.com/Mdeterne/Web-app-questionary"
+                                    target="_blank"><i class="fa-brands fa-github"></i></a></div>
+                        </div>
+                        <h3>Questionary</h3>
+                        <p class="card-description">Web app for dynamic forms. Built with a full <strong>Vue.js</strong>
+                            frontend.</p>
+                        <p class="card-description-full" style="display: none;">
+                            A comprehensive web application for creating and managing dynamic questionnaires and
+                            surveys.
+                            The entire frontend is built with Vue.js, providing a highly reactive and smooth user
+                            experience with real-time form validation.
+                            The backend leverages PHP for robust data processing, form submission handling, and database
+                            management.
+                        </p>
+                        <ul class="tech-list">
+                            <li>Vue.js</li>
+                            <li>CSS3</li>
+                            <li>PHP</li>
+                        </ul>
+                        <div class="project-image-expanded" style="display: none;">
+                            <img src="img/cards/questionary.png" alt="Questionary Project">
+                        </div>
+                    </div>
+
+                    <!-- Projet 2 : Latice -->
+                    <div class="project-card expandable-card" data-category="software">
+                        <div class="card-header">
+                            <i class="fa-solid fa-chess-board folder-icon"></i>
+                            <div class="links"><a href="https://github.com/jules87000/latice" target="_blank"><i
+                                        class="fa-brands fa-github"></i></a></div>
+                        </div>
+                        <h3>Latice (Java)</h3>
+                        <p class="card-description">Strategy board game with <strong>Drag & Drop</strong> mechanics. Led
+                            a team of 4 developers using JavaFX.</p>
+                        <p class="card-description-full" style="display: none;">
+                            A fully-featured digital implementation of the Latice strategy board game using JavaFX.
+                            Led a team of 4 developers, coordinating task distribution and managing Git workflows.
+                            Features include smooth drag-and-drop tile placement, real-time game state validation, AI
+                            opponent with multiple difficulty levels, and a polished user interface.
+                        </p>
+                        <ul class="tech-list">
+                            <li>Java</li>
+                            <li>JavaFX</li>
+                            <li>Algo</li>
+                        </ul>
+                    </div>
+
+                    <!-- Projet 3 : Virtual Network -->
+                    <div class="project-card expandable-card" data-category="sysadmin">
+                        <div class="card-header">
+                            <i class="fa-solid fa-network-wired folder-icon"></i>
+                            <div class="links"><a href="https://github.com/LOI-mln/virtual-network" target="_blank"><i
+                                        class="fa-brands fa-github"></i></a></div>
+                        </div>
+                        <h3>Virtual Network</h3>
+                        <p class="card-description">Large-scale network simulation (2000+ machines). Manages
+                            <strong>DHCP, DNS</strong>, and routing protocols.
+                        </p>
+                        <p class="card-description-full" style="display: none;">
+                            A comprehensive network infrastructure simulation managing over 2000 virtual machines across
+                            multiple subnets.
+                            Implemented critical network services including DHCP for dynamic IP allocation, DNS for name
+                            resolution, and advanced routing protocols (RIP, OSPF) for inter-subnet communication.
+                        </p>
+                        <ul class="tech-list">
+                            <li>Networking</li>
+                            <li>SysAdmin</li>
+                            <li>Virtualization</li>
+                        </ul>
+                    </div>
+
+                    <!-- Projet 4 : Cooking Site -->
+                    <div class="project-card expandable-card" data-category="web"
+                        data-image="img/cards/cooking_site.png">
+                        <div class="card-header">
+                            <i class="fa-solid fa-utensils folder-icon"></i>
+                            <div class="links"><a href="https://github.com/LOI-mln/site-cuisine" target="_blank"><i
+                                        class="fa-brands fa-github"></i></a></div>
+                        </div>
+                        <h3>Cooking Site</h3>
+                        <p class="card-description">Recipe sharing platform with a relational database and user
+                            favorites.</p>
+                        <p class="card-description-full" style="display: none;">
+                            A full-stack recipe sharing web application with a robust MySQL database backend.
+                            Designed a normalized relational database schema to efficiently manage recipes, ingredients,
+                            and user accounts.
+                            Features include advanced recipe search with filters, user authentication, favorite recipe
+                            collections, and ingredient-based search.
+                        </p>
+                        <ul class="tech-list">
+                            <li>PHP</li>
+                            <li>MySQL</li>
+                            <li>HTML/CSS</li>
+                        </ul>
+                        <div class="project-image-expanded" style="display: none;">
+                            <img src="img/cards/cooking_site.png" alt="Cooking Site Project">
+                        </div>
+                    </div>
+
+                    <!-- Projet 5 : Password Manager -->
+                    <div class="project-card expandable-card" data-category="web">
+                        <div class="card-header">
+                            <i class="fa-solid fa-key folder-icon"></i>
+                            <div class="links"><a href="https://github.com/LOI-mln/password-manager" target="_blank"><i
+                                        class="fa-brands fa-github"></i></a></div>
+                        </div>
+                        <h3>Password Manager</h3>
+                        <p class="card-description">Secure web app for managing credentials. Features encryption and a
+                            clean UI.</p>
+                        <p class="card-description-full" style="display: none;">
+                            A secure password management web application built with Python and Flask.
+                            Implements industry-standard encryption (AES-256) to protect stored credentials, with a
+                            master password system for access control.
+                            Features include password generation with customizable complexity, secure password strength
+                            analysis, and encrypted storage.
+                        </p>
+                        <ul class="tech-list">
+                            <li>Python</li>
+                            <li>HTML/CSS</li>
+                            <li>Security</li>
+                        </ul>
+                        <div class="project-image-expanded" style="display: none;">
+                            <img src="img/cards/pasword.png" alt="Password Manager Project">
+                        </div>
+                    </div>
+
+                    <!-- Projet 6 : Game of Life -->
+                    <div class="project-card expandable-card" data-category="software">
+                        <div class="card-header">
+                            <i class="fa-solid fa-table-cells folder-icon"></i>
+                            <div class="links"><a href="https://github.com/LOI-mln/game-of-life" target="_blank"><i
+                                        class="fa-brands fa-github"></i></a></div>
+                        </div>
+                        <h3>Game of Life (Lua)</h3>
+                        <p class="card-description">Conway's Game of Life simulation. Optimized for performance with
+                            large grids.</p>
+                        <p class="card-description-full" style="display: none;">
+                            An optimized implementation of Conway's Game of Life using Lua and the Löve2D framework.
+                            The simulation handles massive grids with thousands of cells while maintaining smooth 60 FPS
+                            performance.
+                            Implemented spatial partitioning and efficient neighbor-counting algorithms to minimize
+                            computational overhead.
+                        </p>
+                        <ul class="tech-list">
+                            <li>Lua</li>
+                            <li>Löve2D</li>
+                            <li>Algorithm</li>
+                        </ul>
+                        <div class="project-image-expanded" style="display: none;">
+                            <img src="img/cards/life_game.png" alt="Game of Life Project">
+                        </div>
+                    </div>
+
+                    <!-- Projet 7 : To-Do Flask -->
+                    <div class="project-card expandable-card" data-category="web">
+                        <div class="card-header">
+                            <i class="fa-solid fa-list-check folder-icon"></i>
+                            <div class="links"><a href="https://github.com/LOI-mln/todo-app" target="_blank"><i
+                                        class="fa-brands fa-github"></i></a></div>
+                        </div>
+                        <h3>To-Do Flask</h3>
+                        <p class="card-description">Task manager app. Python backend using the <strong>Flask</strong>
+                            framework.</p>
+                        <p class="card-description-full" style="display: none;">
+                            A full-featured task management web application built with Python and Flask.
+                            Features include task creation, editing, and deletion with persistent storage using SQLite.
+                            Implements user authentication, task categorization, priority levels, and due date tracking.
+                        </p>
+                        <ul class="tech-list">
+                            <li>Python</li>
+                            <li>Flask</li>
+                            <li>HTML/CSS</li>
+                        </ul>
+                        <div class="project-image-expanded" style="display: none;">
+                            <img src="img/cards/todo.png" alt="To-Do Flask Project">
+                        </div>
+                    </div>
+
+                    <!-- Projet 8 : Hashing Algo -->
+                    <div class="project-card expandable-card" data-category="software">
+                        <div class="card-header">
+                            <i class="fa-solid fa-fingerprint folder-icon"></i>
+                            <div class="links"><a href="https://github.com/LOI-mln/hachage" target="_blank"><i
+                                        class="fa-brands fa-github"></i></a></div>
+                        </div>
+                        <h3>Hashing Algo (Java)</h3>
+                        <p class="card-description">Custom implementation of a cryptographic hashing algorithm built
+                            from scratch.</p>
+                        <p class="card-description-full" style="display: none;">
+                            A from-scratch implementation of a cryptographic hashing algorithm in Java to understand the
+                            mathematical foundations of data security.
+                            The project explores core cryptographic principles including collision resistance, avalanche
+                            effect, and one-way functions.
+                            Implemented using bitwise operations, modular arithmetic, and custom hash functions.
+                        </p>
+                        <ul class="tech-list">
+                            <li>Java</li>
+                            <li>Cryptography</li>
+                            <li>Math</li>
+                        </ul>
+                    </div>
+
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <!-- Curseur Personnalisé -->
+    <div id="custom-cursor"></div>
+
+    <!-- Script Principal -->
+    <script src="script.js"></script>
+</body>
+
+</html>
