@@ -1,99 +1,63 @@
-/* ==========================================================================
-   1. VARIABLES & RESET
-   ========================================================================== */
+/* --- VARIABLES & RESET --- */
 :root {
-    /* --- THÈME DE BASE (SOMBRE) --- */
+    /* dark theme base */
     --bg-main: #000000;
-    /* Noir pur pour le fond principal */
     --bg-card: #0a1929;
-    /* Bleu nuit très foncé pour les cartes */
-
-    /* --- COULEURS D'ACCENTUATION --- */
     --accent: #7dd3fc;
-    /* Bleu ciel clair (Sky-300) */
+    /* sky-300 */
     --accent-soft: rgba(125, 211, 252, 0.15);
-    /* Fond bleu transparent */
-
-    /* --- TYPOGRAPHIE --- */
     --text-main: #f1f5f9;
-    /* Blanc cassé (Slate-100) */
     --text-muted: #94a3b8;
-    /* Gris froid (Slate-400) */
 
-    /* --- EFFETS VISUELS --- */
+    /* effects */
     --shadow-soft: 0 10px 40px -10px rgba(0, 0, 0, 0.5);
     --border-light: 1px solid rgba(125, 211, 252, 0.1);
-    /* Bordure subtile */
-
-    /* --- POLICES --- */
     --font-main: 'Inter', sans-serif;
     --font-code: 'JetBrains Mono', monospace;
-
-    /* --- TRANSITIONS --- */
     --transition: all 0.25s cubic-bezier(0.645, 0.045, 0.355, 1);
 
-    /* --- ORBES D'ARRIÈRE-PLAN (Mode Sombre) --- */
+    /* orbs dark */
     --orb-1: rgba(10, 20, 35, 0.6);
     --orb-2: rgba(5, 15, 25, 0.5);
-    --orb-3: rgba(0, 10, 20, 0.4);
 }
 
-/* --- MODE CLAIR (Thème Crème & Bleu) --- */
+/* light mode overrides */
 body.light-mode {
     --bg-main: #fdfbf7;
-    /* Blanc crème chaleureux */
     --bg-card: #ffffff;
-    /* Blanc pur */
-
     --accent: #38bdf8;
-    /* Bleu ciel vif (Sky-400) */
     --accent-soft: rgba(56, 189, 248, 0.15);
-
     --text-main: #1e293b;
-    /* Gris ardoise foncé (Slate-800) */
     --text-muted: #64748b;
-    /* Gris ardoise moyen (Slate-500) */
-
-    --shadow-soft: 0 10px 40px -10px rgba(56, 189, 248, 0.2);
     --border-light: 1px solid rgba(56, 189, 248, 0.2);
-
-    /* Orbes plus lumineux en mode clair */
     --orb-1: rgba(56, 189, 248, 0.15);
     --orb-2: rgba(125, 211, 252, 0.15);
-    --orb-3: rgba(186, 230, 253, 0.1);
 }
 
-/* Ajustements spécifiques pour le texte en mode clair */
 body.light-mode .main-title,
 body.light-mode .section-title {
     color: #0f172a;
-    /* Slate-900 pour un contraste maximal */
 }
 
-/* --- RESET GLOBAL --- */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
     cursor: none !important;
-    /* Masquer le curseur système partout */
 }
 
-/* ==========================================================================
-   2. STYLES DE BASE
-   ========================================================================== */
+/* --- BASE STYLES --- */
 body {
     background-color: var(--bg-main);
     color: var(--text-main);
     font-family: var(--font-main);
     height: 100vh;
     overflow: hidden;
-    /* Empêcher le défilement global (géré par content-area) */
     position: relative;
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* --- ORBES D'ARRIÈRE-PLAN (Effet Parallaxe) --- */
+/* background orbs */
 .bg-orb {
     position: absolute;
     border-radius: 50%;
@@ -120,7 +84,6 @@ body {
     opacity: 0.10;
 }
 
-/* Surcharge pour le mode clair */
 body.light-mode .orb-1 {
     background: #bae6fd;
     opacity: 0.6;
@@ -131,22 +94,16 @@ body.light-mode .orb-2 {
     opacity: 0.6;
 }
 
-/* ==========================================================================
-   3. MISE EN PAGE (LAYOUT)
-   ========================================================================== */
-
-/* --- CONTENEUR PRINCIPAL (DASHBOARD) --- */
+/* --- LAYOUT --- */
 .dashboard-container {
     width: 100%;
     height: 100vh;
     background: rgba(30, 41, 59, 0.7);
-    /* Fond vitré sombre */
     backdrop-filter: blur(20px);
-    border: none;
     display: flex;
     z-index: 10;
     overflow: hidden;
-    transition: background 0.3s ease, border-color 0.3s ease;
+    transition: background 0.3s ease;
 }
 
 body.light-mode .dashboard-container {
@@ -155,7 +112,7 @@ body.light-mode .dashboard-container {
     backdrop-filter: blur(25px);
 }
 
-/* --- BARRE LATÉRALE (SIDEBAR) --- */
+/* sidebar */
 .sidebar {
     width: 280px;
     background: var(--bg-card);
@@ -163,16 +120,15 @@ body.light-mode .dashboard-container {
     display: flex;
     flex-direction: column;
     border-right: var(--border-light);
-    transition: background 0.3s ease, border-color 0.3s ease;
+    transition: background 0.3s ease;
 }
 
 body.light-mode .sidebar {
     background: #f8fafc;
-    /* Slate-50 */
     border-right: 1px solid #e2e8f0;
 }
 
-/* --- PROFIL MINIATURE --- */
+/* profile */
 .profile-mini {
     text-align: center;
     margin-bottom: 50px;
@@ -181,10 +137,7 @@ body.light-mode .sidebar {
 .avatar-placeholder {
     width: 90px;
     height: 90px;
-    background: var(--bg-main);
-    background-image: url('img/pp.jpg');
-    background-size: cover;
-    background-position: center;
+    background: var(--bg-main) url('img/pp.jpg') center/cover;
     border: 2px solid var(--accent);
     box-shadow: 0 0 25px rgba(91, 124, 250, 0.15);
     border-radius: 50%;
@@ -192,14 +145,9 @@ body.light-mode .sidebar {
     transition: all 0.3s ease;
 }
 
-body.light-mode .avatar-placeholder {
-    box-shadow: 0 4px 20px rgba(56, 189, 248, 0.2);
-}
-
 .profile-mini h3 {
     font-size: 1.3rem;
     margin-bottom: 5px;
-    color: var(--text-main);
     font-weight: 700;
 }
 
@@ -213,7 +161,7 @@ body.light-mode .avatar-placeholder {
     font-weight: 600;
 }
 
-/* --- MENU DE NAVIGATION --- */
+/* nav */
 .nav-menu {
     flex: 1;
     display: flex;
@@ -250,7 +198,7 @@ body.light-mode .avatar-placeholder {
     box-shadow: 0 4px 15px rgba(91, 124, 250, 0.4);
 }
 
-/* --- PIED DE PAGE MINIATURE --- */
+/* footer mini */
 .footer-mini {
     font-size: 0.8rem;
     color: var(--text-muted);
@@ -262,7 +210,7 @@ body.light-mode .avatar-placeholder {
     align-items: center;
 }
 
-/* --- ZONE DE CONTENU PRINCIPALE --- */
+/* content area */
 .content-area {
     flex: 1;
     padding: 60px;
@@ -276,7 +224,6 @@ body.light-mode .content-area {
     background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.4) 100%);
 }
 
-/* Personnalisation de la barre de défilement */
 .content-area::-webkit-scrollbar {
     width: 8px;
 }
@@ -286,15 +233,11 @@ body.light-mode .content-area {
     border-radius: 4px;
 }
 
-.content-area::-webkit-scrollbar-track {
-    background: transparent;
-}
-
 body.light-mode .content-area::-webkit-scrollbar-thumb {
     background-color: #cbd5e1;
 }
 
-/* --- SECTIONS DE PAGE --- */
+/* sections */
 .page-section {
     display: none;
     animation: fadeIn 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
@@ -316,11 +259,9 @@ body.light-mode .content-area::-webkit-scrollbar-thumb {
     }
 }
 
-/* ==========================================================================
-   4. COMPOSANTS & PAGES
-   ========================================================================== */
+/* --- COMPONENTS --- */
 
-/* --- PAGE D'ACCUEIL (HERO) --- */
+/* hero */
 .hero-text {
     max-width: 680px;
     margin-top: 40px;
@@ -339,7 +280,6 @@ body.light-mode .content-area::-webkit-scrollbar-thumb {
 
 h1 {
     font-size: 3.5rem;
-    color: var(--text-main);
     margin-bottom: 15px;
     font-weight: 800;
     line-height: 1.1;
@@ -365,7 +305,7 @@ h1 {
     font-weight: 700;
 }
 
-/* --- BOUTONS D'ACTION (CTA) --- */
+/* buttons */
 .cta-group {
     display: flex;
     align-items: center;
@@ -390,7 +330,7 @@ h1 {
 
 .btn-primary {
     background: var(--accent);
-    color: #ffffff;
+    color: #fff;
     box-shadow: 0 4px 15px rgba(91, 124, 250, 0.3);
 }
 
@@ -418,10 +358,9 @@ body.light-mode .btn-secondary {
     border-color: #e2e8f0;
 }
 
-/* --- GRILLE DE COMPÉTENCES --- */
+/* skills grid */
 .section-title {
     font-size: 1.8rem;
-    color: var(--text-main);
     margin-bottom: 40px;
     display: flex;
     align-items: center;
@@ -466,7 +405,6 @@ body.light-mode .comp-card:hover {
     box-shadow: 0 15px 35px rgba(56, 189, 248, 0.15);
 }
 
-/* Cartes spéciales (C3, C6) en mode clair */
 body.light-mode .comp-card[data-skill="c3"],
 body.light-mode .comp-card[data-skill="c6"] {
     background: #f8fafc;
@@ -487,10 +425,8 @@ body.light-mode .comp-card[data-skill="c6"] {
 }
 
 .comp-card h3 {
-    font-family: var(--font-main);
     font-weight: 700;
     font-size: 1.05rem;
-    color: var(--text-main);
     margin-bottom: 8px;
 }
 
@@ -514,7 +450,7 @@ body.light-mode .comp-card[data-skill="c6"] {
     transform: translateX(0);
 }
 
-/* --- VUE DÉTAILLÉE --- */
+/* detail view */
 .btn-back {
     background: var(--bg-card);
     border: var(--border-light);
@@ -553,7 +489,6 @@ body.light-mode .comp-card[data-skill="c6"] {
 
 #detail-title {
     font-size: 2rem;
-    color: var(--text-main);
     margin-bottom: 5px;
     font-weight: 800;
 }
@@ -602,7 +537,7 @@ body.light-mode .comp-card[data-skill="c6"] {
     font-weight: 700;
 }
 
-/* --- CHRONOLOGIE (TIMELINE) --- */
+/* timeline */
 .timeline-container {
     position: relative;
     max-width: 800px;
@@ -677,7 +612,6 @@ body.light-mode .timeline-content:hover {
 }
 
 .timeline-content h3 {
-    color: var(--text-main);
     font-size: 1.2rem;
     margin-bottom: 10px;
     font-weight: 700;
@@ -689,7 +623,7 @@ body.light-mode .timeline-content:hover {
     font-size: 0.95rem;
 }
 
-/* --- PROJETS --- */
+/* projects */
 .projects-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -718,7 +652,7 @@ body.light-mode .project-card:hover {
     border-color: var(--accent);
 }
 
-/* Cartes de projet extensibles */
+/* expandable cards */
 .expandable-card {
     cursor: pointer;
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
@@ -727,11 +661,9 @@ body.light-mode .project-card:hover {
 
 .expandable-card.expanded {
     grid-column: 1 / -1;
-    /* Prend toute la largeur */
     max-width: 100%;
     padding: 40px;
     transform: none !important;
-    /* Désactive l'effet 3D */
     min-height: auto;
     height: auto;
 }
@@ -778,7 +710,6 @@ body.light-mode .project-card:hover {
     display: none;
 }
 
-/* Indication de clic pour les cartes extensibles */
 .expandable-card::after {
     content: "Click to expand";
     position: absolute;
@@ -850,7 +781,7 @@ body.light-mode .project-card:hover {
     border-radius: 4px;
 }
 
-/* --- FILTRES DE PROJETS --- */
+/* filters */
 .filter-container {
     display: flex;
     justify-content: flex-start;
@@ -900,7 +831,6 @@ body.light-mode .filter-btn.active {
     color: #fff;
 }
 
-/* Animation pour le filtrage */
 .project-card.hide {
     display: none;
 }
@@ -921,7 +851,7 @@ body.light-mode .filter-btn.active {
     }
 }
 
-/* --- BOUTON DE THÈME (Toggle) --- */
+/* theme toggle */
 .theme-btn {
     background: var(--bg-card);
     border: 1px solid rgba(255, 255, 255, 0.1);
@@ -951,9 +881,7 @@ body.light-mode .theme-btn {
     transform: rotate(15deg);
 }
 
-/* ==========================================================================
-   5. RESPONSIVE (MOBILE)
-   ========================================================================== */
+/* --- RESPONSIVE --- */
 @media (max-width: 900px) {
     .dashboard-container {
         flex-direction: column;
@@ -1028,11 +956,7 @@ body.light-mode .theme-btn {
     }
 }
 
-/* ==========================================================================
-   6. CURSEUR PERSONNALISÉ & ÉCRAN DE CHARGEMENT
-   ========================================================================== */
-
-/* --- CURSEUR --- */
+/* --- CUSTOM CURSOR & LOADING --- */
 #custom-cursor {
     position: fixed;
     top: 0;
@@ -1044,9 +968,7 @@ body.light-mode .theme-btn {
     pointer-events: none;
     z-index: 9999;
     transform: translate(-50%, -50%);
-    transition: width 0.2s cubic-bezier(0.19, 1, 0.22, 1),
-        height 0.2s cubic-bezier(0.19, 1, 0.22, 1),
-        background-color 0.2s;
+    transition: width 0.2s cubic-bezier(0.19, 1, 0.22, 1), height 0.2s cubic-bezier(0.19, 1, 0.22, 1), background-color 0.2s;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1055,21 +977,18 @@ body.light-mode .theme-btn {
     font-weight: 700;
     font-family: var(--font-code);
     mix-blend-mode: difference;
-    /* Effet d'inversion sur fond sombre */
 }
 
 body.light-mode #custom-cursor {
     mix-blend-mode: normal;
 }
 
-/* État : Survol d'éléments interactifs */
 #custom-cursor.cursor-hover {
     width: 30px;
     height: 30px;
     opacity: 0.5;
 }
 
-/* État : Vue Projets */
 #custom-cursor.cursor-view {
     width: 60px;
     height: 60px;
@@ -1083,7 +1002,6 @@ body.light-mode #custom-cursor {
     font-size: 0.75rem;
 }
 
-/* État : Liens Externes */
 #custom-cursor.cursor-link {
     width: 50px;
     height: 50px;
@@ -1094,7 +1012,6 @@ body.light-mode #custom-cursor {
 
 #custom-cursor.cursor-link::after {
     content: "\f061";
-    /* Flèche FontAwesome */
     font-family: "Font Awesome 6 Free";
     font-weight: 900;
     font-size: 1rem;
@@ -1102,7 +1019,7 @@ body.light-mode #custom-cursor {
     color: #ffffff;
 }
 
-/* --- ÉCRAN DE CHARGEMENT (MATRIX) --- */
+/* loading screen */
 #loading-screen {
     position: fixed;
     top: 0;
@@ -1110,7 +1027,6 @@ body.light-mode #custom-cursor {
     width: 100%;
     height: 100%;
     background-color: #ffffff;
-    /* Fond clair */
     z-index: 9999;
     display: flex;
     justify-content: center;
@@ -1133,7 +1049,6 @@ body.light-mode #custom-cursor {
     font-size: 3rem;
     font-weight: 800;
     color: #0f172a;
-    /* Texte sombre */
     letter-spacing: 5px;
     text-shadow: 0 0 20px rgba(56, 189, 248, 0.5);
     opacity: 0;
@@ -1152,11 +1067,7 @@ body.light-mode #custom-cursor {
     pointer-events: none;
 }
 
-/* ==========================================================================
-   7. ANIMATIONS D'OUVERTURE (FLY-IN)
-   ========================================================================== */
-
-/* État initial (pendant le chargement) */
+/* --- FLY-IN ANIMATIONS --- */
 body.loading .sidebar {
     opacity: 0;
     transform: translateX(-50px);
@@ -1167,7 +1078,6 @@ body.loading .content-area {
     transform: translateY(50px);
 }
 
-/* État final (chargé) - Déclenchement des animations */
 body.loaded .sidebar {
     animation: slideInLeft 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
 }
