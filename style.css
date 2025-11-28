@@ -1151,3 +1151,51 @@ body.light-mode #custom-cursor {
     opacity: 0;
     pointer-events: none;
 }
+
+/* ==========================================================================
+   7. ANIMATIONS D'OUVERTURE (FLY-IN)
+   ========================================================================== */
+
+/* État initial (pendant le chargement) */
+body.loading .sidebar {
+    opacity: 0;
+    transform: translateX(-50px);
+}
+
+body.loading .content-area {
+    opacity: 0;
+    transform: translateY(50px);
+}
+
+/* État final (chargé) - Déclenchement des animations */
+body.loaded .sidebar {
+    animation: slideInLeft 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+body.loaded .content-area {
+    animation: slideInUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-50px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(50px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
