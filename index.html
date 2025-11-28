@@ -5,40 +5,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Milan Loi | CS Student Portfolio</title>
-
-    <!-- Styles CSS -->
     <link rel="stylesheet" href="style.css">
-
-    <!-- Polices Google Fonts (Inter & JetBrains Mono) -->
+    <!-- Fonts & Icons -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap"
         rel="stylesheet">
-
-    <!-- Icônes FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 
 <body class="light-mode loading">
 
-    <!-- =========================================
-         ÉCRAN DE CHARGEMENT (Style Matrix)
-         ========================================= -->
+    <!-- Loading Screen -->
     <div id="loading-screen">
         <canvas id="matrix-canvas"></canvas>
         <div class="loading-text">MILAN LOI</div>
     </div>
 
-    <!-- Orbes d'arrière-plan (Effet Parallaxe) -->
+    <!-- Background Orbs -->
     <div class="bg-orb orb-1"></div>
     <div class="bg-orb orb-2"></div>
 
-    <!-- Conteneur Principal (Dashboard) -->
+    <!-- Main Dashboard -->
     <main class="dashboard-container">
 
-        <!-- =========================================
-             BARRE LATÉRALE (Sidebar)
-             ========================================= -->
+        <!-- Sidebar -->
         <aside class="sidebar">
             <div class="profile-mini">
                 <div class="avatar-placeholder"></div>
@@ -47,43 +38,34 @@
             </div>
 
             <nav class="nav-menu">
-                <button class="nav-btn active" data-target="home">
-                    <i class="fa-solid fa-terminal"></i> <span>Home</span>
-                </button>
-                <button class="nav-btn" data-target="skills">
-                    <i class="fa-solid fa-graduation-cap"></i> <span>Competencies</span>
-                </button>
-                <button class="nav-btn" data-target="timeline">
-                    <i class="fa-solid fa-timeline"></i> <span>Timeline</span>
-                </button>
-                <button class="nav-btn" data-target="projects">
-                    <i class="fa-solid fa-code-branch"></i> <span>Projects</span>
-                </button>
+                <button class="nav-btn active" data-target="home"><i class="fa-solid fa-terminal"></i>
+                    <span>Home</span></button>
+                <button class="nav-btn" data-target="skills"><i class="fa-solid fa-graduation-cap"></i>
+                    <span>Competencies</span></button>
+                <button class="nav-btn" data-target="timeline"><i class="fa-solid fa-timeline"></i>
+                    <span>Timeline</span></button>
+                <button class="nav-btn" data-target="projects"><i class="fa-solid fa-code-branch"></i>
+                    <span>Projects</span></button>
             </nav>
 
             <div class="footer-mini">
-                <button id="theme-toggle" class="theme-btn" title="Toggle Dark Mode">
-                    <i class="fa-solid fa-moon"></i>
-                </button>
-
+                <button id="theme-toggle" class="theme-btn" title="Toggle Dark Mode"><i
+                        class="fa-solid fa-moon"></i></button>
                 <p><i class="fa-solid fa-location-dot"></i> Bordeaux / Limoges</p>
             </div>
         </aside>
 
-        <!-- =========================================
-             ZONE DE CONTENU
-             ========================================= -->
+        <!-- Content Area -->
         <div class="content-area">
 
-            <!-- 1. SECTION ACCUEIL -->
+            <!-- 1. Home -->
             <section id="home" class="page-section active">
                 <div class="hero-text">
                     <p class="greeting">Hi, I'm Milan.</p>
                     <h1 class="main-title">Computer Science <br>Student.</h1>
                     <h2 class="subtitle">Enthusiastic about Dev, AI & System Administration.</h2>
                     <p class="bio">
-                        French second-year Computer Science student (BSc Computer Science).
-                        <br><br>
+                        French second-year Computer Science student (BSc Computer Science).<br><br>
                         My journey blends <strong>Software Development</strong> with a keen interest in
                         <strong>AI</strong>.
                         Beyond coding, I dive into <strong>Cybersecurity</strong> and <strong>Networks</strong> by
@@ -93,65 +75,48 @@
 
                     <div class="cta-group">
                         <a href="#projects" id="btn-see-projects" class="btn-primary">View Projects</a>
-
-                        <a href="https://github.com/LOI-mln" target="_blank" class="btn-secondary" title="GitHub">
-                            <i class="fa-brands fa-github"></i>
-                        </a>
-
+                        <a href="https://github.com/LOI-mln" target="_blank" class="btn-secondary" title="GitHub"><i
+                                class="fa-brands fa-github"></i></a>
                         <a href="https://linkedin.com/in/milan-loi" target="_blank" class="btn-secondary"
-                            title="LinkedIn">
-                            <i class="fa-brands fa-linkedin-in"></i>
-                        </a>
+                            title="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
                     </div>
                 </div>
             </section>
 
-            <!-- 2. SECTION COMPÉTENCES (Grille) -->
+            <!-- 2. Skills -->
             <section id="skills" class="page-section">
                 <h2 class="section-title">Competency Matrix</h2>
-
                 <div class="competency-grid">
-                    <!-- C1 -->
                     <div class="comp-card" data-skill="c1">
                         <div class="comp-icon"><i class="fa-solid fa-code"></i></div>
                         <h3>C1 - REALIZE</h3>
                         <p class="comp-mini-desc">App development & Architecture.</p>
                         <span class="click-hint">View details <i class="fa-solid fa-arrow-right"></i></span>
                     </div>
-
-                    <!-- C2 -->
                     <div class="comp-card" data-skill="c2">
                         <div class="comp-icon"><i class="fa-solid fa-microchip"></i></div>
                         <h3>C2 - OPTIMIZE</h3>
                         <p class="comp-mini-desc">Algorithms & Performance.</p>
                         <span class="click-hint">View details <i class="fa-solid fa-arrow-right"></i></span>
                     </div>
-
-                    <!-- C3 -->
                     <div class="comp-card highlight-card" data-skill="c3">
                         <div class="comp-icon"><i class="fa-brands fa-linux"></i></div>
                         <h3>C3 - ADMINISTER</h3>
                         <p class="comp-mini-desc">System Admin (Debian/macOS).</p>
                         <span class="click-hint">View details <i class="fa-solid fa-arrow-right"></i></span>
                     </div>
-
-                    <!-- C4 -->
                     <div class="comp-card" data-skill="c4">
                         <div class="comp-icon"><i class="fa-solid fa-database"></i></div>
                         <h3>C4 - MANAGE</h3>
                         <p class="comp-mini-desc">Databases & SQL.</p>
                         <span class="click-hint">View details <i class="fa-solid fa-arrow-right"></i></span>
                     </div>
-
-                    <!-- C5 -->
                     <div class="comp-card" data-skill="c5">
                         <div class="comp-icon"><i class="fa-solid fa-users-gear"></i></div>
                         <h3>C5 - LEAD</h3>
                         <p class="comp-mini-desc">Agile Project Management.</p>
                         <span class="click-hint">View details <i class="fa-solid fa-arrow-right"></i></span>
                     </div>
-
-                    <!-- C6 -->
                     <div class="comp-card highlight-card" data-skill="c6">
                         <div class="comp-icon"><i class="fa-solid fa-shield-virus"></i></div>
                         <h3>C6 - SECURE</h3>
@@ -161,12 +126,10 @@
                 </div>
             </section>
 
-            <!-- 3. VUE DÉTAILLÉE D'UNE COMPÉTENCE -->
+            <!-- 3. Skill Detail -->
             <section id="skill-detail-view" class="page-section">
-                <button class="btn-back" id="back-to-skills">
-                    <i class="fa-solid fa-arrow-left"></i> Back to Competencies
-                </button>
-
+                <button class="btn-back" id="back-to-skills"><i class="fa-solid fa-arrow-left"></i> Back to
+                    Competencies</button>
                 <div class="detail-header">
                     <div id="detail-icon" class="large-icon"><i class="fa-solid fa-code"></i></div>
                     <div>
@@ -174,25 +137,19 @@
                         <span id="detail-level" class="level-badge">Level 3: Adapt</span>
                     </div>
                 </div>
-
                 <div class="detail-body">
                     <p id="detail-desc" class="big-desc">Description...</p>
-
                     <div class="proof-container">
                         <h3><i class="fa-solid fa-star"></i> Key Achievements</h3>
-                        <div id="detail-proof">
-                            <!-- Le contenu sera injecté via JS -->
-                        </div>
+                        <div id="detail-proof"></div>
                     </div>
                 </div>
             </section>
 
-            <!-- 4. SECTION PARCOURS (Timeline) -->
+            <!-- 4. Timeline -->
             <section id="timeline" class="page-section">
                 <h2 class="section-title">My Journey</h2>
-
                 <div class="timeline-container">
-                    <!-- Lycée -->
                     <div class="timeline-item">
                         <div class="timeline-dot"></div>
                         <div class="timeline-content">
@@ -202,8 +159,6 @@
                                 and web development.</p>
                         </div>
                     </div>
-
-                    <!-- BUT Informatique -->
                     <div class="timeline-item">
                         <div class="timeline-dot"></div>
                         <div class="timeline-content">
@@ -213,8 +168,6 @@
                                 Development, Cybersecurity, and System Administration.</p>
                         </div>
                     </div>
-
-                    <!-- Stage Écosse -->
                     <div class="timeline-item">
                         <div class="timeline-dot"></div>
                         <div class="timeline-content">
@@ -227,11 +180,9 @@
                 </div>
             </section>
 
-            <!-- 5. SECTION PROJETS (Code Lab) -->
+            <!-- 5. Projects -->
             <section id="projects" class="page-section">
                 <h2 class="section-title">Code Lab</h2>
-
-                <!-- Filtres -->
                 <div class="filter-container">
                     <button class="filter-btn active" data-filter="all">All</button>
                     <button class="filter-btn" data-filter="web">Web Dev</button>
@@ -239,10 +190,8 @@
                     <button class="filter-btn" data-filter="sysadmin">SysAdmin</button>
                 </div>
 
-                <!-- Grille des Projets -->
                 <div class="projects-grid">
-
-                    <!-- Projet 1 : Questionary -->
+                    <!-- Questionary -->
                     <div class="project-card expandable-card" data-category="web"
                         data-image="img/cards/questionary.png">
                         <div class="card-header">
@@ -266,12 +215,11 @@
                             <li>CSS3</li>
                             <li>PHP</li>
                         </ul>
-                        <div class="project-image-expanded" style="display: none;">
-                            <img src="img/cards/questionary.png" alt="Questionary Project">
-                        </div>
+                        <div class="project-image-expanded" style="display: none;"><img src="img/cards/questionary.png"
+                                alt="Questionary Project"></div>
                     </div>
 
-                    <!-- Projet 2 : Latice -->
+                    <!-- Latice -->
                     <div class="project-card expandable-card" data-category="software"
                         data-image="img/cards/latice.png">
                         <div class="card-header">
@@ -293,12 +241,11 @@
                             <li>JavaFX</li>
                             <li>Algo</li>
                         </ul>
-                        <div class="project-image-expanded" style="display: none;">
-                            <img src="img/cards/latice.png" alt="Latice Project">
-                        </div>
+                        <div class="project-image-expanded" style="display: none;"><img src="img/cards/latice.png"
+                                alt="Latice Project"></div>
                     </div>
 
-                    <!-- Projet 3 : Virtual Network -->
+                    <!-- Virtual Network -->
                     <div class="project-card expandable-card" data-category="sysadmin">
                         <div class="card-header">
                             <i class="fa-solid fa-network-wired folder-icon"></i>
@@ -307,8 +254,7 @@
                         </div>
                         <h3>Virtual Network</h3>
                         <p class="card-description">Large-scale network simulation (2000+ machines). Manages
-                            <strong>DHCP, DNS</strong>, and routing protocols.
-                        </p>
+                            <strong>DHCP, DNS</strong>, and routing protocols.</p>
                         <p class="card-description-full" style="display: none;">
                             A comprehensive network infrastructure simulation managing over 2000 virtual machines across
                             multiple subnets.
@@ -322,7 +268,7 @@
                         </ul>
                     </div>
 
-                    <!-- Projet 4 : Cooking Site -->
+                    <!-- Cooking Site -->
                     <div class="project-card expandable-card" data-category="web"
                         data-image="img/cards/cooking_site.png">
                         <div class="card-header">
@@ -345,12 +291,11 @@
                             <li>MySQL</li>
                             <li>HTML/CSS</li>
                         </ul>
-                        <div class="project-image-expanded" style="display: none;">
-                            <img src="img/cards/cooking_site.png" alt="Cooking Site Project">
-                        </div>
+                        <div class="project-image-expanded" style="display: none;"><img src="img/cards/cooking_site.png"
+                                alt="Cooking Site Project"></div>
                     </div>
 
-                    <!-- Projet 5 : Password Manager -->
+                    <!-- Password Manager -->
                     <div class="project-card expandable-card" data-category="web">
                         <div class="card-header">
                             <i class="fa-solid fa-key folder-icon"></i>
@@ -372,12 +317,11 @@
                             <li>HTML/CSS</li>
                             <li>Security</li>
                         </ul>
-                        <div class="project-image-expanded" style="display: none;">
-                            <img src="img/cards/pasword.png" alt="Password Manager Project">
-                        </div>
+                        <div class="project-image-expanded" style="display: none;"><img src="img/cards/pasword.png"
+                                alt="Password Manager Project"></div>
                     </div>
 
-                    <!-- Projet 6 : Game of Life -->
+                    <!-- Game of Life -->
                     <div class="project-card expandable-card" data-category="software">
                         <div class="card-header">
                             <i class="fa-solid fa-table-cells folder-icon"></i>
@@ -399,12 +343,11 @@
                             <li>Löve2D</li>
                             <li>Algorithm</li>
                         </ul>
-                        <div class="project-image-expanded" style="display: none;">
-                            <img src="img/cards/life_game.png" alt="Game of Life Project">
-                        </div>
+                        <div class="project-image-expanded" style="display: none;"><img src="img/cards/life_game.png"
+                                alt="Game of Life Project"></div>
                     </div>
 
-                    <!-- Projet 7 : To-Do Flask -->
+                    <!-- To-Do Flask -->
                     <div class="project-card expandable-card" data-category="web">
                         <div class="card-header">
                             <i class="fa-solid fa-list-check folder-icon"></i>
@@ -424,12 +367,11 @@
                             <li>Flask</li>
                             <li>HTML/CSS</li>
                         </ul>
-                        <div class="project-image-expanded" style="display: none;">
-                            <img src="img/cards/todo.png" alt="To-Do Flask Project">
-                        </div>
+                        <div class="project-image-expanded" style="display: none;"><img src="img/cards/todo.png"
+                                alt="To-Do Flask Project"></div>
                     </div>
 
-                    <!-- Projet 8 : Hashing Algo -->
+                    <!-- Hashing Algo -->
                     <div class="project-card expandable-card" data-category="software">
                         <div class="card-header">
                             <i class="fa-solid fa-fingerprint folder-icon"></i>
@@ -459,10 +401,9 @@
         </div>
     </main>
 
-    <!-- Curseur Personnalisé -->
+    <!-- Custom Cursor -->
     <div id="custom-cursor"></div>
 
-    <!-- Script Principal -->
     <script src="script.js"></script>
 </body>
 
