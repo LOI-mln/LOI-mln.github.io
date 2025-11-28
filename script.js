@@ -66,6 +66,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // Disparition progressive de l'écran de chargement après 2 secondes
     setTimeout(() => {
         ecranChargement.classList.add('fade-out');
+
+        // Déclencher les animations d'entrée (Fly-in)
+        document.body.classList.remove('loading');
+        document.body.classList.add('loaded');
+
         clearInterval(intervalleAnimation); // Arrêter l'animation pour économiser les ressources
 
         // Supprimer l'élément du DOM une fois la transition CSS terminée
