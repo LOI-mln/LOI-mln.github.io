@@ -3,69 +3,51 @@
 
 document.addEventListener('DOMContentLoaded', () => {
 
-    // --- MATRIX LOADING ---
+    // --- LE NOUVEAU ECRAN DE CHARGEMENT QUI CLAQUE ---
     const loader = document.getElementById('loading-screen');
-    const canvas = document.getElementById('matrix-canvas');
-    const ctx = canvas.getContext('2d');
+    const loaderBar = document.querySelector('.loader-bar');
+    const loaderText = document.getElementById('loader-text');
+    const loaderPercentage = document.getElementById('loader-percentage');
 
-    // full screen canvas
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+    const statuses = ["INITIALIZING", "LOADING ASSETS", "CONNECTING...", "CONFIGURING", "READY"];
+    let progress = 0;
+    let statusIndex = 0;
 
-    // charactères pour la pluie (katakana + latin)
-    const chars = 'アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブヅプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッンABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    const fontSize = 16;
-    const cols = canvas.width / fontSize;
+    const updateLoader = () => {
+        progress += Math.random() * 2; // On avance un peu au pif
+        if (progress > 100) progress = 100;
 
-    // positions des gouttes
-    const drops = Array(Math.floor(cols)).fill(1);
+        // On met a jour l'interface
+        loaderBar.style.width = `${progress}%`;
+        loaderPercentage.innerText = `${Math.floor(progress)}%`;
 
-    const drawMatrix = () => {
-        // petit fade out pour l'effet de traînée
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.1)';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        // On change le texte selon ou on en est
+        if (progress < 30) statusIndex = 0;
+        else if (progress < 50) statusIndex = 1;
+        else if (progress < 70) statusIndex = 2;
+        else if (progress < 90) statusIndex = 3;
+        else statusIndex = 4;
 
-        ctx.font = fontSize + 'px monospace';
+        loaderText.innerText = statuses[statusIndex];
 
-        drops.forEach((y, i) => {
-            const text = chars.charAt(Math.floor(Math.random() * chars.length));
-
-            // random colors (bleu foncé ou clair)
-            ctx.fillStyle = Math.random() > 0.95 ? '#0f172a' : '#38bdf8';
-            ctx.fillText(text, i * fontSize, y * fontSize);
-
-            // reset random en haut
-            if (y * fontSize > canvas.height && Math.random() > 0.975) {
-                drops[i] = 0;
-            }
-            drops[i]++;
-        });
+        if (progress < 100) {
+            requestAnimationFrame(updateLoader);
+        } else {
+            // C'est fini, on lance la machine
+            setTimeout(() => {
+                loader.classList.add('fade-out');
+                document.body.classList.remove('loading');
+                document.body.classList.add('loaded');
+                setTimeout(() => loader.style.display = 'none', 800);
+            }, 500);
+        }
     };
 
-    // lance l'anim (15ms)
-    const interval = setInterval(drawMatrix, 15);
-
-    // stop loading après 2s
-    setTimeout(() => {
-        loader.classList.add('fade-out');
-
-        // lance les anims d'entrée (fly-in)
-        document.body.classList.remove('loading');
-        document.body.classList.add('loaded');
-
-        clearInterval(interval); // stop pour perf
-
-        setTimeout(() => loader.style.display = 'none', 800);
-    }, 2000);
-
-    // resize canvas si besoin
-    window.addEventListener('resize', () => {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-    });
+    // ca commence
+    requestAnimationFrame(updateLoader);
 
 
-    // --- SKILLS DATA ---
+    // --- LES COMPETENCES DU CHEF ---
     const skills = {
         c1: {
             title: "C1 - REALIZE",
@@ -112,27 +94,27 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
 
-    // --- NAVIGATION (TABS) ---
+    // --- LA NAVIGATION (LES ONGLETS) ---
     const navBtns = document.querySelectorAll('.nav-btn');
     const sections = document.querySelectorAll('.page-section');
     const seeProjectsBtn = document.getElementById('btn-see-projects');
     const contentArea = document.querySelector('.content-area');
 
     function switchTab(id) {
-        // update buttons
+        // on change les boutons
         navBtns.forEach(btn => {
             btn.classList.remove('active');
             if (id === 'skill-detail-view' && btn.dataset.target === 'skills') btn.classList.add('active');
             else if (btn.dataset.target === id) btn.classList.add('active');
         });
 
-        // show section
+        // on affiche la section
         sections.forEach(sec => {
             sec.classList.remove('active');
             if (sec.id === id) sec.classList.add('active');
         });
 
-        // scroll top
+        // retour en haut
         if (contentArea) contentArea.scrollTop = 0;
     }
 
@@ -146,11 +128,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 
-    // --- SKILL DETAIL VIEW ---
+    // --- LE DETAIL DES SKILLS ---
     const skillCards = document.querySelectorAll('.comp-card');
     const backBtn = document.getElementById('back-to-skills');
 
-    // elements du detail
+    // on chope les elements
     const dIcon = document.getElementById('detail-icon');
     const dTitle = document.getElementById('detail-title');
     const dLevel = document.getElementById('detail-level');
@@ -174,17 +156,17 @@ document.addEventListener('DOMContentLoaded', () => {
     if (backBtn) backBtn.addEventListener('click', () => switchTab('skills'));
 
 
-    // --- THEME TOGGLE ---
+    // --- LE BOUTON DARK MODE ---
     const themeBtn = document.getElementById('theme-toggle');
     const themeIcon = themeBtn ? themeBtn.querySelector('i') : null;
     const body = document.body;
 
-    // default light
+    // mode clair par defaut (mal aux yeu
     body.classList.add('light-mode');
     if (themeIcon) themeIcon.classList.replace('fa-moon', 'fa-moon');
 
     if (themeBtn && themeIcon) {
-        // check saved theme
+        // on regarde si le gars a deja choisi
         if (localStorage.getItem('selected-theme') === 'dark') {
             body.classList.remove('light-mode');
             themeIcon.classList.replace('fa-moon', 'fa-sun');
@@ -202,7 +184,7 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log("Welcome to Milan's portfolio.");
 
 
-    // --- PROJECT FILTERS ---
+    // --- LES FILTRES DES PROJETS ---
     const filterBtns = document.querySelectorAll('.filter-btn');
     const projectCards = document.querySelectorAll('.project-card');
 
@@ -227,14 +209,14 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
 
-    // --- EXPANDABLE CARDS ---
+    // --- LES CARTES QUI S'OUVRENT ---
     const expandCards = document.querySelectorAll('.expandable-card');
 
     expandCards.forEach(card => {
         card.addEventListener('click', (e) => {
-            if (e.target.closest('a')) return; // ignore links
+            if (e.target.closest('a')) return; // on s'en fout des liens
 
-            // close others
+            // on ferme les autres
             expandCards.forEach(c => {
                 if (c !== card) {
                     c.classList.remove('expanded');
@@ -247,7 +229,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
 
-            // toggle current
+            // on ouvre/ferme celle la
             card.classList.toggle('expanded');
             const img = card.querySelector('.project-image-expanded');
             const full = card.querySelector('.card-description-full');
@@ -268,9 +250,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
 
-    // --- VISUAL EFFECTS ---
+    // --- LES EFFETS VISUELS QUI CLAQUENT ---
 
-    // Parallax orbs
+    // Les boules qui bougent
     document.addEventListener('mousemove', (e) => {
         document.querySelectorAll('.bg-orb').forEach((orb, i) => {
             const speed = (i + 1) * 20;
@@ -278,7 +260,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // 3D Tilt
+    // L'effet 3D stylé
     const tiltCards = [...document.querySelectorAll('.comp-card'), ...document.querySelectorAll('.project-card')];
     tiltCards.forEach(card => {
         card.addEventListener('mousemove', (e) => {
@@ -289,7 +271,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const cx = rect.width / 2;
             const cy = rect.height / 2;
 
-            // rotate max 10deg
+            // on tourne pas trop non plus
             card.style.transform = `perspective(1000px) rotateX(${((y - cy) / cy) * -10}deg) rotateY(${((x - cx) / cx) * 10}deg) scale(1.02)`;
         });
 
@@ -298,7 +280,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Typing effect
+    // L'effet machine a ecrire
     const greeting = document.querySelector('.greeting');
     if (greeting) {
         const text = greeting.textContent;
@@ -313,14 +295,14 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(type, 500);
     }
 
-    // Custom Cursor
+    // Le curseur custom
     const cursor = document.getElementById('custom-cursor');
     document.addEventListener('mousemove', e => {
         cursor.style.left = `${e.clientX}px`;
         cursor.style.top = `${e.clientY}px`;
     });
 
-    // Cursor states
+    // Les etats du curseur
     document.querySelectorAll('.comp-card').forEach(c => {
         c.addEventListener('mouseenter', () => cursor.classList.add('cursor-view'));
         c.addEventListener('mouseleave', () => cursor.classList.remove('cursor-view'));

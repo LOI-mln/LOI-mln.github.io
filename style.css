@@ -1,27 +1,27 @@
-/* --- VARIABLES & RESET --- */
+/* --- LES VARIABLES ET LE RESET (la base quoi) --- */
 :root {
-    /* dark theme base */
+    /* theme sombre de base */
     --bg-main: #000000;
     --bg-card: #0a1929;
     --accent: #7dd3fc;
-    /* sky-300 */
+    /* un petit bleu ciel sympa */
     --accent-soft: rgba(125, 211, 252, 0.15);
     --text-main: #f1f5f9;
     --text-muted: #94a3b8;
 
-    /* effects */
+    /* les petits effets */
     --shadow-soft: 0 10px 40px -10px rgba(0, 0, 0, 0.5);
     --border-light: 1px solid rgba(125, 211, 252, 0.1);
     --font-main: 'Inter', sans-serif;
     --font-code: 'JetBrains Mono', monospace;
     --transition: all 0.25s cubic-bezier(0.645, 0.045, 0.355, 1);
 
-    /* orbs dark */
+    /* les boules en mode sombre */
     --orb-1: rgba(10, 20, 35, 0.6);
     --orb-2: rgba(5, 15, 25, 0.5);
 }
 
-/* light mode overrides */
+/* on ecrase tout pour le mode clair */
 body.light-mode {
     --bg-main: #fdfbf7;
     --bg-card: #ffffff;
@@ -46,7 +46,7 @@ body.light-mode .section-title {
     cursor: none !important;
 }
 
-/* --- BASE STYLES --- */
+/* --- LE STYLE DE BASE --- */
 body {
     background-color: var(--bg-main);
     color: var(--text-main);
@@ -57,7 +57,7 @@ body {
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* background orbs */
+/* les boules en arriere plan */
 .bg-orb {
     position: absolute;
     border-radius: 50%;
@@ -94,7 +94,7 @@ body.light-mode .orb-2 {
     opacity: 0.6;
 }
 
-/* --- LAYOUT --- */
+/* --- LA MISE EN PAGE --- */
 .dashboard-container {
     width: 100%;
     height: 100vh;
@@ -112,7 +112,7 @@ body.light-mode .dashboard-container {
     backdrop-filter: blur(25px);
 }
 
-/* sidebar */
+/* la barre laterale */
 .sidebar {
     width: 280px;
     background: var(--bg-card);
@@ -128,7 +128,7 @@ body.light-mode .sidebar {
     border-right: 1px solid #e2e8f0;
 }
 
-/* profile */
+/* le profil du boss */
 .profile-mini {
     text-align: center;
     margin-bottom: 50px;
@@ -161,7 +161,7 @@ body.light-mode .sidebar {
     font-weight: 600;
 }
 
-/* nav */
+/* le menu de navigation */
 .nav-menu {
     flex: 1;
     display: flex;
@@ -198,7 +198,7 @@ body.light-mode .sidebar {
     box-shadow: 0 4px 15px rgba(91, 124, 250, 0.4);
 }
 
-/* footer mini */
+/* le petit footer en bas */
 .footer-mini {
     font-size: 0.8rem;
     color: var(--text-muted);
@@ -210,7 +210,7 @@ body.light-mode .sidebar {
     align-items: center;
 }
 
-/* content area */
+/* la zone de contenu principal */
 .content-area {
     flex: 1;
     padding: 60px;
@@ -237,7 +237,7 @@ body.light-mode .content-area::-webkit-scrollbar-thumb {
     background-color: #cbd5e1;
 }
 
-/* sections */
+/* les sections */
 .page-section {
     display: none;
     animation: fadeIn 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
@@ -259,9 +259,9 @@ body.light-mode .content-area::-webkit-scrollbar-thumb {
     }
 }
 
-/* --- COMPONENTS --- */
+/* --- LES COMPOSANTS --- */
 
-/* hero */
+/* la section hero (l'accueil) */
 .hero-text {
     max-width: 680px;
     margin-top: 40px;
@@ -305,7 +305,7 @@ h1 {
     font-weight: 700;
 }
 
-/* buttons */
+/* les boutons */
 .cta-group {
     display: flex;
     align-items: center;
@@ -358,7 +358,7 @@ body.light-mode .btn-secondary {
     border-color: #e2e8f0;
 }
 
-/* skills grid */
+/* la grille de competences */
 .section-title {
     font-size: 1.8rem;
     margin-bottom: 40px;
@@ -450,7 +450,7 @@ body.light-mode .comp-card[data-skill="c6"] {
     transform: translateX(0);
 }
 
-/* detail view */
+/* la vue detaillee */
 .btn-back {
     background: var(--bg-card);
     border: var(--border-light);
@@ -1026,40 +1026,278 @@ body.light-mode #custom-cursor {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: #ffffff;
+    background-color: var(--bg-main);
     z-index: 9999;
     display: flex;
     justify-content: center;
     align-items: center;
     transition: opacity 0.8s ease-out;
+
+    /* Tech Grid Background */
+    background-image:
+        radial-gradient(circle at center, transparent 20%, var(--bg-main) 100%),
+        linear-gradient(rgba(125, 211, 252, 0.1) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(125, 211, 252, 0.1) 1px, transparent 1px);
+    background-size: 100% 100%, 40px 40px, 40px 40px;
+    animation: gridPan 20s linear infinite;
 }
 
-#matrix-canvas {
+@keyframes gridPan {
+    0% {
+        background-position: center, 0 0, 0 0;
+    }
+
+    100% {
+        background-position: center, 40px 40px, 40px 40px;
+    }
+}
+
+.loader-content {
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.loader-title {
+    font-family: var(--font-main);
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--text-main);
+    text-align: center;
+    margin-bottom: 5px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    position: relative;
+}
+
+.loader-title::before,
+.loader-title::after {
+    content: attr(data-text);
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
+    background: var(--bg-main);
 }
 
-.loading-text {
-    position: relative;
-    z-index: 10000;
-    font-family: 'Outfit', sans-serif;
-    font-size: 3rem;
-    font-weight: 800;
-    color: #0f172a;
-    letter-spacing: 5px;
-    text-shadow: 0 0 20px rgba(56, 189, 248, 0.5);
-    opacity: 0;
-    animation: fadeInText 1s ease-out forwards 0.5s;
+.loader-title::before {
+    left: 2px;
+    text-shadow: -1px 0 #ff00c1;
+    clip: rect(44px, 450px, 56px, 0);
+    animation: glitch-anim 5s infinite linear alternate-reverse;
 }
 
-@keyframes fadeInText {
-    to {
-        opacity: 1;
-        transform: scale(1.1);
+.loader-title::after {
+    left: -2px;
+    text-shadow: -1px 0 #00fff9;
+    clip: rect(44px, 450px, 56px, 0);
+    animation: glitch-anim2 5s infinite linear alternate-reverse;
+}
+
+@keyframes glitch-anim {
+    0% {
+        clip: rect(30px, 9999px, 10px, 0);
     }
+
+    5% {
+        clip: rect(80px, 9999px, 90px, 0);
+    }
+
+    10% {
+        clip: rect(50px, 9999px, 20px, 0);
+    }
+
+    15% {
+        clip: rect(10px, 9999px, 60px, 0);
+    }
+
+    20% {
+        clip: rect(90px, 9999px, 30px, 0);
+    }
+
+    25% {
+        clip: rect(20px, 9999px, 80px, 0);
+    }
+
+    30% {
+        clip: rect(60px, 9999px, 10px, 0);
+    }
+
+    35% {
+        clip: rect(40px, 9999px, 50px, 0);
+    }
+
+    40% {
+        clip: rect(70px, 9999px, 90px, 0);
+    }
+
+    45% {
+        clip: rect(10px, 9999px, 40px, 0);
+    }
+
+    50% {
+        clip: rect(50px, 9999px, 20px, 0);
+    }
+
+    55% {
+        clip: rect(90px, 9999px, 70px, 0);
+    }
+
+    60% {
+        clip: rect(30px, 9999px, 10px, 0);
+    }
+
+    65% {
+        clip: rect(80px, 9999px, 50px, 0);
+    }
+
+    70% {
+        clip: rect(20px, 9999px, 90px, 0);
+    }
+
+    75% {
+        clip: rect(60px, 9999px, 30px, 0);
+    }
+
+    80% {
+        clip: rect(40px, 9999px, 80px, 0);
+    }
+
+    85% {
+        clip: rect(10px, 9999px, 50px, 0);
+    }
+
+    90% {
+        clip: rect(70px, 9999px, 20px, 0);
+    }
+
+    95% {
+        clip: rect(50px, 9999px, 90px, 0);
+    }
+
+    100% {
+        clip: rect(30px, 9999px, 60px, 0);
+    }
+}
+
+@keyframes glitch-anim2 {
+    0% {
+        clip: rect(10px, 9999px, 50px, 0);
+    }
+
+    5% {
+        clip: rect(60px, 9999px, 20px, 0);
+    }
+
+    10% {
+        clip: rect(30px, 9999px, 80px, 0);
+    }
+
+    15% {
+        clip: rect(90px, 9999px, 10px, 0);
+    }
+
+    20% {
+        clip: rect(50px, 9999px, 40px, 0);
+    }
+
+    25% {
+        clip: rect(20px, 9999px, 90px, 0);
+    }
+
+    30% {
+        clip: rect(80px, 9999px, 30px, 0);
+    }
+
+    35% {
+        clip: rect(40px, 9999px, 70px, 0);
+    }
+
+    40% {
+        clip: rect(10px, 9999px, 60px, 0);
+    }
+
+    45% {
+        clip: rect(70px, 9999px, 20px, 0);
+    }
+
+    50% {
+        clip: rect(30px, 9999px, 80px, 0);
+    }
+
+    55% {
+        clip: rect(60px, 9999px, 10px, 0);
+    }
+
+    60% {
+        clip: rect(90px, 9999px, 50px, 0);
+    }
+
+    65% {
+        clip: rect(20px, 9999px, 40px, 0);
+    }
+
+    70% {
+        clip: rect(50px, 9999px, 90px, 0);
+    }
+
+    75% {
+        clip: rect(80px, 9999px, 20px, 0);
+    }
+
+    80% {
+        clip: rect(10px, 9999px, 70px, 0);
+    }
+
+    85% {
+        clip: rect(40px, 9999px, 30px, 0);
+    }
+
+    90% {
+        clip: rect(70px, 9999px, 60px, 0);
+    }
+
+    95% {
+        clip: rect(30px, 9999px, 10px, 0);
+    }
+
+    100% {
+        clip: rect(60px, 9999px, 50px, 0);
+    }
+}
+
+.loader-bar-container {
+    width: 100%;
+    height: 4px;
+    background: rgba(125, 211, 252, 0.1);
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+}
+
+.loader-bar {
+    width: 0%;
+    height: 100%;
+    background: var(--accent);
+    box-shadow: 0 0 20px var(--accent);
+    border-radius: 4px;
+    transition: width 0.1s linear;
+}
+
+.loader-status {
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--font-code);
+    font-size: 0.8rem;
+    color: var(--accent);
+    letter-spacing: 1px;
+    font-weight: 600;
+}
+
+#loader-text {
+    text-transform: uppercase;
 }
 
 .fade-out {
