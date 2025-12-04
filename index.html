@@ -4,9 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Milan Loi | CS Student Portfolio</title>
-    <link rel="stylesheet" href="style.css">
-    <!-- Fonts & Icons -->
+    <title>Milan LOÏ | CS Student Portfolio</title>
+    <link rel="stylesheet" href="style.css?v=6">
+    <!-- Les polices et les icones (pour faire joli) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap"
@@ -16,24 +16,32 @@
 
 <body class="light-mode loading">
 
-    <!-- Loading Screen -->
+    <!-- L'ecran de chargement (pour faire patienter) -->
     <div id="loading-screen">
-        <canvas id="matrix-canvas"></canvas>
-        <div class="loading-text">MILAN LOI</div>
+        <div class="loader-content">
+            <div class="loader-title" data-text="Portfolio Milan LOÏ">Portfolio Milan LOÏ</div>
+            <div class="loader-bar-container">
+                <div class="loader-bar"></div>
+            </div>
+            <div class="loader-status">
+                <span id="loader-text">INITIALIZING</span>
+                <span id="loader-percentage">0%</span>
+            </div>
+        </div>
     </div>
 
-    <!-- Background Orbs -->
+    <!-- Les boules en fond  -->
     <div class="bg-orb orb-1"></div>
     <div class="bg-orb orb-2"></div>
 
-    <!-- Main Dashboard -->
+    <!-- Le tableau de bord principal -->
     <main class="dashboard-container">
 
-        <!-- Sidebar -->
+        <!-- La barre laterale -->
         <aside class="sidebar">
             <div class="profile-mini">
                 <div class="avatar-placeholder"></div>
-                <h3>Milan Loi</h3>
+                <h3>Milan LOÏ</h3>
                 <span class="role-badge">CS Student</span>
             </div>
 
@@ -55,10 +63,10 @@
             </div>
         </aside>
 
-        <!-- Content Area -->
+        <!-- La zone de contenu -->
         <div class="content-area">
 
-            <!-- 1. Home -->
+            <!-- 1. L'accueil -->
             <section id="home" class="page-section active">
                 <div class="hero-text">
                     <p class="greeting">Hi, I'm Milan.</p>
@@ -83,7 +91,7 @@
                 </div>
             </section>
 
-            <!-- 2. Skills -->
+            <!-- 2. Les competences -->
             <section id="skills" class="page-section">
                 <h2 class="section-title">Competency Matrix</h2>
                 <div class="competency-grid">
@@ -254,7 +262,8 @@
                         </div>
                         <h3>Virtual Network</h3>
                         <p class="card-description">Large-scale network simulation (2000+ machines). Manages
-                            <strong>DHCP, DNS</strong>, and routing protocols.</p>
+                            <strong>DHCP, DNS</strong>, and routing protocols.
+                        </p>
                         <p class="card-description-full" style="display: none;">
                             A comprehensive network infrastructure simulation managing over 2000 virtual machines across
                             multiple subnets.
@@ -354,7 +363,7 @@
                             <div class="links"><a href="https://github.com/LOI-mln/todo-app" target="_blank"><i
                                         class="fa-brands fa-github"></i></a></div>
                         </div>
-                        <h3>To-Do Flask</h3>
+                        <h3>To-Do App</h3>
                         <p class="card-description">Task manager app. Python backend using the <strong>Flask</strong>
                             framework.</p>
                         <p class="card-description-full" style="display: none;">
