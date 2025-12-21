@@ -54,14 +54,14 @@ document.addEventListener('DOMContentLoaded', () => {
             level: "Level 3: Adapt",
             icon: '<i class="fa-solid fa-code"></i>',
             desc: "Develop complex IT apps, choosing data structures & patterns.",
-            proof: `<div class="proof-content"><p><strong>Projects:</strong> Password Manager & Questionary.</p><p>Built secure Web App with <strong>Python/Flask</strong>. Handled Frontend with <strong>Vue.js</strong>.</p></div>`
+            proof: `<div class="proof-content"><p><strong>Projects:</strong> M-Play, Password Manager & Questionary.</p><p>Built Desktop App with <strong>Electron/Node.js</strong>. Built secure Web App with <strong>Python/Flask</strong>.</p></div>`
         },
         c2: {
             title: "C2 - OPTIMIZE",
             level: "Level 2: Apply",
             icon: '<i class="fa-solid fa-microchip"></i>',
             desc: "Analyze and optimize apps for perf.",
-            proof: `<div class="proof-content"><p><strong>Projects:</strong> Game of Life & Latice.</p><p>Optimized <em>Game of Life</em> (Lua) grid rendering. Optimized JavaFX Drag & Drop for <em>Latice</em>.</p></div>`
+            proof: `<div class="proof-content"><p><strong>Projects:</strong> M-Play, Game of Life & Latice.</p><p>Optimized <em>M-Play</em> streaming engine (FFmpeg). Optimized <em>Game of Life</em> (Lua) grid rendering.</p></div>`
         },
         c3: {
             title: "C3 - ADMINISTER",
@@ -184,29 +184,46 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log("Welcome to Milan's portfolio.");
 
 
-    // --- LES FILTRES DES PROJETS ---
-    const filterBtns = document.querySelectorAll('.filter-btn');
+    // --- LES PROJETS & SEE MORE ---
     const projectCards = document.querySelectorAll('.project-card');
+    const showMoreBtn = document.getElementById('btn-show-more');
+    const showMoreContainer = document.querySelector('.show-more-container');
 
-    filterBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            filterBtns.forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
+    // Etat actuel
+    let showAll = false;
 
-            const filter = btn.getAttribute('data-filter');
+    // Fonction pour mettre a jour l'affichage
+    const updateProjectsVisibility = () => {
+        projectCards.forEach(card => {
+            const isFeatured = card.getAttribute('data-featured') === 'true';
 
-            projectCards.forEach(card => {
-                const cat = card.getAttribute('data-category');
-                if (filter === 'all' || filter === cat) {
-                    card.classList.remove('hide');
-                    card.classList.add('show');
-                } else {
-                    card.classList.add('hide');
-                    card.classList.remove('show');
-                }
-            });
+            if (showAll || isFeatured) {
+                card.classList.remove('hide');
+                card.classList.add('show');
+            } else {
+                card.classList.add('hide');
+                card.classList.remove('show');
+            }
         });
-    });
+
+        // Gestion du bouton "Show More"
+        // Il ne doit apparaitre que si on n'a pas encore tout montré
+        if (!showAll) {
+            showMoreContainer.style.display = 'block';
+        } else {
+            showMoreContainer.style.display = 'none';
+        }
+    };
+
+    if (showMoreBtn) {
+        showMoreBtn.addEventListener('click', () => {
+            showAll = true;
+            updateProjectsVisibility();
+        });
+    }
+
+    // Init
+    updateProjectsVisibility();
 
 
     // --- LES CARTES QUI S'OUVRENT ---

@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Milan LOÏ | CS Student Portfolio</title>
     <link rel="stylesheet" href="style.css?v=6">
-    <!-- Les polices et les icones (pour faire joli) -->
+    <!-- Les polices et les icones -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap"
@@ -192,16 +192,72 @@
             <section id="projects" class="page-section">
                 <h2 class="section-title">Code Lab</h2>
                 <div class="filter-container">
-                    <button class="filter-btn active" data-filter="all">All</button>
-                    <button class="filter-btn" data-filter="web">Web Dev</button>
-                    <button class="filter-btn" data-filter="software">Software</button>
-                    <button class="filter-btn" data-filter="sysadmin">SysAdmin</button>
+                    <!-- Filters removed per user request -->
                 </div>
 
                 <div class="projects-grid">
-                    <!-- Questionary -->
-                    <div class="project-card expandable-card" data-category="web"
-                        data-image="img/cards/questionary.png">
+                    <!-- FEATURED PROJECTS -->
+
+                    <!-- M-Play (Featured) -->
+                    <div class="project-card expandable-card featured" data-category="software"
+                        data-image="img/cards/m_play.png" data-featured="true">
+                        <div class="card-header">
+                            <i class="fa-solid fa-play folder-icon"></i>
+                            <div class="links"><a href="https://github.com/LOI-mln/M-Play" target="_blank"><i
+                                        class="fa-brands fa-github"></i></a></div>
+                        </div>
+                        <h3>M-Play</h3>
+                        <p class="card-description">Modern Desktop IPTV Player. Netflix-like UI & robust streaming
+                            engine.</p>
+                        <p class="card-description-full" style="display: none;">
+                            <strong>M-Play</strong> is a high-performance desktop application designed to transform the
+                            IPTV streaming experience.
+                            It combines a polished "Netflix-like" UI with a robust technical architecture capable of
+                            handling huge VOD and Live TV catalogs.
+                            <br><br>
+                            <strong>Key Features:</strong><br>
+                            - <strong>Premium UX:</strong> Dark Mode, fluid animations, dynamic Hero Headers.<br>
+                            - <strong>Advanced Player:</strong> Direct VOD & Transcoding support (FFmpeg), multi-track
+                            audio/subs.<br>
+                            - <strong>Smart Resume:</strong> Cross-type resume (Movies/Series), auto-save progress.<br>
+                            - <strong>Unified Management:</strong> Rich details (Cast, Synopsis), global search.
+                        </p>
+                        <ul class="tech-list">
+                            <li>Electron</li>
+                            <li>Node.js</li>
+                            <li>FFmpeg</li>
+                        </ul>
+                        <div class="project-image-expanded" style="display: none;"><img src="img/cards/m_play.png"
+                                alt="M-Play Project"></div>
+                    </div>
+
+                    <!-- Virtual Network (Featured) -->
+                    <div class="project-card expandable-card featured" data-category="sysadmin" data-featured="true">
+                        <div class="card-header">
+                            <i class="fa-solid fa-network-wired folder-icon"></i>
+                            <div class="links"><a href="https://github.com/LOI-mln/virtual-network" target="_blank"><i
+                                        class="fa-brands fa-github"></i></a></div>
+                        </div>
+                        <h3>Virtual Network</h3>
+                        <p class="card-description">Large-scale network simulation (2000+ machines). Manages
+                            <strong>DHCP, DNS</strong>, and routing protocols.
+                        </p>
+                        <p class="card-description-full" style="display: none;">
+                            A comprehensive network infrastructure simulation managing over 2000 virtual machines across
+                            multiple subnets.
+                            Implemented critical network services including DHCP for dynamic IP allocation, DNS for name
+                            resolution, and advanced routing protocols (RIP, OSPF) for inter-subnet communication.
+                        </p>
+                        <ul class="tech-list">
+                            <li>Networking</li>
+                            <li>SysAdmin</li>
+                            <li>Virtualization</li>
+                        </ul>
+                    </div>
+
+                    <!-- Questionary (Featured) -->
+                    <div class="project-card expandable-card featured" data-category="web"
+                        data-image="img/cards/questionary.png" data-featured="true">
                         <div class="card-header">
                             <i class="fa-solid fa-clipboard-list folder-icon"></i>
                             <div class="links"><a href="https://github.com/Mdeterne/Web-app-questionary"
@@ -227,8 +283,8 @@
                                 alt="Questionary Project"></div>
                     </div>
 
-                    <!-- Latice -->
-                    <div class="project-card expandable-card" data-category="software"
+                    <!-- Latice (Moved to Secondary) -->
+                    <div class="project-card expandable-card secondary-project" data-category="software"
                         data-image="img/cards/latice.png">
                         <div class="card-header">
                             <i class="fa-solid fa-chess-board folder-icon"></i>
@@ -253,32 +309,60 @@
                                 alt="Latice Project"></div>
                     </div>
 
-                    <!-- Virtual Network -->
-                    <div class="project-card expandable-card" data-category="sysadmin">
+                    <!-- Game of Life (Moved to Secondary) -->
+                    <div class="project-card expandable-card secondary-project" data-category="software">
                         <div class="card-header">
-                            <i class="fa-solid fa-network-wired folder-icon"></i>
-                            <div class="links"><a href="https://github.com/LOI-mln/virtual-network" target="_blank"><i
+                            <i class="fa-solid fa-table-cells folder-icon"></i>
+                            <div class="links"><a href="https://github.com/LOI-mln/game-of-life" target="_blank"><i
                                         class="fa-brands fa-github"></i></a></div>
                         </div>
-                        <h3>Virtual Network</h3>
-                        <p class="card-description">Large-scale network simulation (2000+ machines). Manages
-                            <strong>DHCP, DNS</strong>, and routing protocols.
-                        </p>
+                        <h3>Game of Life (Lua)</h3>
+                        <p class="card-description">Conway's Game of Life simulation. Optimized for performance with
+                            large grids.</p>
                         <p class="card-description-full" style="display: none;">
-                            A comprehensive network infrastructure simulation managing over 2000 virtual machines across
-                            multiple subnets.
-                            Implemented critical network services including DHCP for dynamic IP allocation, DNS for name
-                            resolution, and advanced routing protocols (RIP, OSPF) for inter-subnet communication.
+                            An optimized implementation of Conway's Game of Life using Lua and the Löve2D framework.
+                            The simulation handles massive grids with thousands of cells while maintaining smooth 60 FPS
+                            performance.
+                            Implemented spatial partitioning and efficient neighbor-counting algorithms to minimize
+                            computational overhead.
                         </p>
                         <ul class="tech-list">
-                            <li>Networking</li>
-                            <li>SysAdmin</li>
-                            <li>Virtualization</li>
+                            <li>Lua</li>
+                            <li>Löve2D</li>
+                            <li>Algorithm</li>
+                        </ul>
+                        <div class="project-image-expanded" style="display: none;"><img src="img/cards/life_game.png"
+                                alt="Game of Life Project"></div>
+                    </div>
+
+                    <!-- Hashing Algo (Moved to Secondary) -->
+                    <div class="project-card expandable-card secondary-project" data-category="software">
+                        <div class="card-header">
+                            <i class="fa-solid fa-fingerprint folder-icon"></i>
+                            <div class="links"><a href="https://github.com/LOI-mln/hachage" target="_blank"><i
+                                        class="fa-brands fa-github"></i></a></div>
+                        </div>
+                        <h3>Hashing Algo (Java)</h3>
+                        <p class="card-description">Custom implementation of a cryptographic hashing algorithm built
+                            from scratch.</p>
+                        <p class="card-description-full" style="display: none;">
+                            A from-scratch implementation of a cryptographic hashing algorithm in Java to understand the
+                            mathematical foundations of data security.
+                            The project explores core cryptographic principles including collision resistance, avalanche
+                            effect, and one-way functions.
+                            Implemented using bitwise operations, modular arithmetic, and custom hash functions.
+                        </p>
+                        <ul class="tech-list">
+                            <li>Java</li>
+                            <li>Cryptography</li>
+                            <li>Math</li>
                         </ul>
                     </div>
 
+                    <!-- SECONDARY PROJECTS (Hidden by default) -->
+
                     <!-- Cooking Site -->
-                    <div class="project-card expandable-card" data-category="web"
+                    <div class="project-card expandable-card secondary-project" data-category="web"
                         data-image="img/cards/cooking_site.png">
                         <div class="card-header">
                             <i class="fa-solid fa-utensils folder-icon"></i>
@@ -305,7 +389,7 @@
                     </div>
 
                     <!-- Password Manager -->
-                    <div class="project-card expandable-card" data-category="web">
+                    <div class="project-card expandable-card secondary-project" data-category="web">
                         <div class="card-header">
                             <i class="fa-solid fa-key folder-icon"></i>
                             <div class="links"><a href="https://github.com/LOI-mln/password-manager" target="_blank"><i
@@ -330,34 +414,8 @@
                                 alt="Password Manager Project"></div>
                     </div>
 
-                    <!-- Game of Life -->
-                    <div class="project-card expandable-card" data-category="software">
-                        <div class="card-header">
-                            <i class="fa-solid fa-table-cells folder-icon"></i>
-                            <div class="links"><a href="https://github.com/LOI-mln/game-of-life" target="_blank"><i
-                                        class="fa-brands fa-github"></i></a></div>
-                        </div>
-                        <h3>Game of Life (Lua)</h3>
-                        <p class="card-description">Conway's Game of Life simulation. Optimized for performance with
-                            large grids.</p>
-                        <p class="card-description-full" style="display: none;">
-                            An optimized implementation of Conway's Game of Life using Lua and the Löve2D framework.
-                            The simulation handles massive grids with thousands of cells while maintaining smooth 60 FPS
-                            performance.
-                            Implemented spatial partitioning and efficient neighbor-counting algorithms to minimize
-                            computational overhead.
-                        </p>
-                        <ul class="tech-list">
-                            <li>Lua</li>
-                            <li>Löve2D</li>
-                            <li>Algorithm</li>
-                        </ul>
-                        <div class="project-image-expanded" style="display: none;"><img src="img/cards/life_game.png"
-                                alt="Game of Life Project"></div>
-                    </div>
-
                     <!-- To-Do Flask -->
-                    <div class="project-card expandable-card" data-category="web">
+                    <div class="project-card expandable-card secondary-project" data-category="web">
                         <div class="card-header">
                             <i class="fa-solid fa-list-check folder-icon"></i>
                             <div class="links"><a href="https://github.com/LOI-mln/todo-app" target="_blank"><i
@@ -380,30 +438,10 @@
                                 alt="To-Do Flask Project"></div>
                     </div>
 
-                    <!-- Hashing Algo -->
-                    <div class="project-card expandable-card" data-category="software">
-                        <div class="card-header">
-                            <i class="fa-solid fa-fingerprint folder-icon"></i>
-                            <div class="links"><a href="https://github.com/LOI-mln/hachage" target="_blank"><i
-                                        class="fa-brands fa-github"></i></a></div>
-                        </div>
-                        <h3>Hashing Algo (Java)</h3>
-                        <p class="card-description">Custom implementation of a cryptographic hashing algorithm built
-                            from scratch.</p>
-                        <p class="card-description-full" style="display: none;">
-                            A from-scratch implementation of a cryptographic hashing algorithm in Java to understand the
-                            mathematical foundations of data security.
-                            The project explores core cryptographic principles including collision resistance, avalanche
-                            effect, and one-way functions.
-                            Implemented using bitwise operations, modular arithmetic, and custom hash functions.
-                        </p>
-                        <ul class="tech-list">
-                            <li>Java</li>
-                            <li>Cryptography</li>
-                            <li>Math</li>
-                        </ul>
-                    </div>
+                </div>
 
+                <div class="show-more-container" style="text-align: center; margin-top: 2rem;">
+                    <button id="btn-show-more" class="btn-primary" style="min-width: 150px;">See More Projects</button>
                 </div>
             </section>
 
