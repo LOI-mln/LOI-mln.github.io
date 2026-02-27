@@ -1,22 +1,21 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr" data-theme="dark">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Milan LOÏ | CS Student Portfolio</title>
-    <link rel="stylesheet" href="style.css?v=6">
-    <!-- Les polices et les icones -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap"
-        rel="stylesheet">
+    <link rel="stylesheet" href="style.css?v=7">
+    <!-- Font Awesome pour les icones -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Les polices -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 </head>
 
-<body class="light-mode loading">
+<body class="loading dark-mode">
 
-    <!-- L'ecran de chargement (pour faire patienter) -->
+    <!-- Ecran de chargement -->
     <div id="loading-screen">
         <div class="loader-content">
             <div class="loader-title" data-text="Portfolio Milan LOÏ">Portfolio Milan LOÏ</div>
@@ -24,173 +23,162 @@
                 <div class="loader-bar"></div>
             </div>
             <div class="loader-status">
-                <span id="loader-text">INITIALIZING</span>
+                <span id="loader-text">INITIALISATION</span>
                 <span id="loader-percentage">0%</span>
             </div>
         </div>
     </div>
 
-    <!-- Les boules en fond  -->
-    <div class="bg-orb orb-1"></div>
-    <div class="bg-orb orb-2"></div>
+    <!-- Background 3D Network -->
+    <canvas id="network-canvas"></canvas>
 
-    <!-- Le tableau de bord principal -->
-    <main class="dashboard-container">
+    <!-- La Camera Explorateur 2D -->
+    <div id="map-viewport" class="map-viewport">
+        
+        <!-- Contient la carte géante et le SVG des liens -->
+        <svg id="connection-lines" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0;"></svg>
+        
+        <div id="map-content" class="map-content">
 
-        <!-- La barre laterale -->
-        <aside class="sidebar">
-            <div class="profile-mini">
-                <div class="avatar-placeholder"></div>
-                <h3>Milan LOÏ</h3>
-                <span class="role-badge">CS Student</span>
-            </div>
-
-            <nav class="nav-menu">
-                <button class="nav-btn active" data-target="home"><i class="fa-solid fa-terminal"></i>
-                    <span>Home</span></button>
-                <button class="nav-btn" data-target="skills"><i class="fa-solid fa-graduation-cap"></i>
-                    <span>Competencies</span></button>
-                <button class="nav-btn" data-target="timeline"><i class="fa-solid fa-timeline"></i>
-                    <span>Timeline</span></button>
-                <button class="nav-btn" data-target="projects"><i class="fa-solid fa-code-branch"></i>
-                    <span>Projects</span></button>
-            </nav>
-
-            <div class="footer-mini">
-                <button id="theme-toggle" class="theme-btn" title="Toggle Dark Mode"><i
-                        class="fa-solid fa-moon"></i></button>
-                <p><i class="fa-solid fa-location-dot"></i> Bordeaux / Limoges</p>
-            </div>
-        </aside>
-
-        <!-- La zone de contenu -->
-        <div class="content-area">
-
-            <!-- 1. L'accueil -->
-            <section id="home" class="page-section active">
+            <!-- 1. Le Hub Central -->
+            <section id="home" class="map-section active-node" data-x="0" data-y="0">
                 <div class="hero-text">
                     <p class="greeting">Hi, I'm Milan.</p>
                     <h1 class="main-title">Computer Science <br>Student.</h1>
-                    <h2 class="subtitle">Enthusiastic about Dev, AI & System Administration.</h2>
+                    <h2 class="subtitle">Passionné par le Dév, l'IA & l'Administration Système.</h2>
                     <p class="bio">
-                        French second-year Computer Science student (BSc Computer Science).<br><br>
-                        My journey blends <strong>Software Development</strong> with a keen interest in
-                        <strong>AI</strong>.
-                        Beyond coding, I dive into <strong>Cybersecurity</strong> and <strong>Networks</strong> by
-                        managing
-                        my own <span class="highlight">Homelab</span>, constantly experimenting with new technologies.
+                        Étudiant français en deuxième année d'informatique (BUT Informatique).<br><br>
+                        Mon parcours mêle <strong>Développement Logiciel</strong> et un vif intérêt pour
+                        <strong>l'IA</strong>.
+                        Au-delà du code, je me plonge dans la <strong>Cybersécurité</strong> et les <strong>Réseaux</strong> en
+                        gérant
+                        mon propre <span class="highlight">Homelab</span>, expérimentant constamment de nouvelles technologies.
                     </p>
 
-                    <div class="cta-group">
-                        <a href="#projects" id="btn-see-projects" class="btn-primary">View Projects</a>
+                    <div class="cta-group" style="margin-top: 2rem; display: flex; flex-wrap: wrap; gap: 15px;">
+                        <a href="#skills" class="btn-primary nav-link-btn" title="Compétences"><i class="fa-solid fa-graduation-cap"></i> Compétences</a>
+                        <a href="#timeline" class="btn-primary nav-link-btn" title="Parcours"><i class="fa-solid fa-timeline"></i> Parcours</a>
+                        <a href="#projects" class="btn-primary nav-link-btn" title="Projets"><i class="fa-solid fa-code-branch"></i> Labo Code</a>
+                        
+                        <div style="width: 100%; height: 0;"></div> <!-- Break to next line for socials -->
+                        
                         <a href="https://github.com/LOI-mln" target="_blank" class="btn-secondary" title="GitHub"><i
-                                class="fa-brands fa-github"></i></a>
+                                class="fa-brands fa-github"></i> GitHub</a>
                         <a href="https://linkedin.com/in/milan-loi" target="_blank" class="btn-secondary"
-                            title="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+                            title="LinkedIn"><i class="fa-brands fa-linkedin-in"></i> LinkedIn</a>
+                        <!-- Le theme toggle retourne ici sur la page centrale -->
+                        <button id="theme-toggle" class="btn-secondary" title="Toggle Dark Mode"><i class="fa-solid fa-moon"></i> Thème</button>
                     </div>
                 </div>
             </section>
 
-            <!-- 2. Les competences -->
-            <section id="skills" class="page-section">
-                <h2 class="section-title">Competency Matrix</h2>
+            <!-- 2. Les competences (En haut à droite) -->
+            <section id="skills" class="map-section" data-x="1200" data-y="-800">
+                <a href="#home" class="btn-back-hub nav-link-btn" title="Retour au Centre">
+                    <i class="fa-solid fa-location-crosshairs"></i> Retour au Centre
+                </a>
+                <h2 class="section-title">Matrice de Compétences</h2>
                 <div class="competency-grid">
                     <div class="comp-card" data-skill="c1">
                         <div class="comp-icon"><i class="fa-solid fa-code"></i></div>
-                        <h3>C1 - REALIZE</h3>
-                        <p class="comp-mini-desc">App development & Architecture.</p>
-                        <span class="click-hint">View details <i class="fa-solid fa-arrow-right"></i></span>
+                        <h3>C1 - RÉALISER</h3>
+                        <p class="comp-mini-desc">Développement & Architecture app.</p>
+                        <span class="click-hint">Voir détails <i class="fa-solid fa-arrow-right"></i></span>
                     </div>
                     <div class="comp-card" data-skill="c2">
                         <div class="comp-icon"><i class="fa-solid fa-microchip"></i></div>
-                        <h3>C2 - OPTIMIZE</h3>
-                        <p class="comp-mini-desc">Algorithms & Performance.</p>
-                        <span class="click-hint">View details <i class="fa-solid fa-arrow-right"></i></span>
+                        <h3>C2 - OPTIMISER</h3>
+                        <p class="comp-mini-desc">Algorithmes & Performance.</p>
+                        <span class="click-hint">Voir détails <i class="fa-solid fa-arrow-right"></i></span>
                     </div>
                     <div class="comp-card highlight-card" data-skill="c3">
                         <div class="comp-icon"><i class="fa-brands fa-linux"></i></div>
-                        <h3>C3 - ADMINISTER</h3>
-                        <p class="comp-mini-desc">System Admin (Debian/macOS).</p>
-                        <span class="click-hint">View details <i class="fa-solid fa-arrow-right"></i></span>
+                        <h3>C3 - ADMINISTRER</h3>
+                        <p class="comp-mini-desc">Admin Système (Debian/macOS).</p>
+                        <span class="click-hint">Voir détails <i class="fa-solid fa-arrow-right"></i></span>
                     </div>
                     <div class="comp-card" data-skill="c4">
                         <div class="comp-icon"><i class="fa-solid fa-database"></i></div>
-                        <h3>C4 - MANAGE</h3>
-                        <p class="comp-mini-desc">Databases & SQL.</p>
-                        <span class="click-hint">View details <i class="fa-solid fa-arrow-right"></i></span>
+                        <h3>C4 - GÉRER</h3>
+                        <p class="comp-mini-desc">Bases de données & SQL.</p>
+                        <span class="click-hint">Voir détails <i class="fa-solid fa-arrow-right"></i></span>
                     </div>
                     <div class="comp-card" data-skill="c5">
                         <div class="comp-icon"><i class="fa-solid fa-users-gear"></i></div>
-                        <h3>C5 - LEAD</h3>
-                        <p class="comp-mini-desc">Agile Project Management.</p>
-                        <span class="click-hint">View details <i class="fa-solid fa-arrow-right"></i></span>
+                        <h3>C5 - CONDUIRE</h3>
+                        <p class="comp-mini-desc">Gestion de Projet Agile.</p>
+                        <span class="click-hint">Voir détails <i class="fa-solid fa-arrow-right"></i></span>
                     </div>
                     <div class="comp-card highlight-card" data-skill="c6">
                         <div class="comp-icon"><i class="fa-solid fa-shield-virus"></i></div>
-                        <h3>C6 - SECURE</h3>
-                        <p class="comp-mini-desc">Cybersecurity & AI Awareness.</p>
-                        <span class="click-hint">View details <i class="fa-solid fa-arrow-right"></i></span>
+                        <h3>C6 - SÉCURISER</h3>
+                        <p class="comp-mini-desc">Cybersécurité & Sensibilisation IA.</p>
+                        <span class="click-hint">Voir détails <i class="fa-solid fa-arrow-right"></i></span>
                     </div>
                 </div>
             </section>
 
-            <!-- 3. Skill Detail -->
-            <section id="skill-detail-view" class="page-section">
-                <button class="btn-back" id="back-to-skills"><i class="fa-solid fa-arrow-left"></i> Back to
-                    Competencies</button>
-                <div class="detail-header">
-                    <div id="detail-icon" class="large-icon"><i class="fa-solid fa-code"></i></div>
-                    <div>
-                        <h2 id="detail-title">C1 - REALIZE</h2>
-                        <span id="detail-level" class="level-badge">Level 3: Adapt</span>
+            <!-- 3. Skill Detail (Maintenant une modale Glassmorphism) -->
+            <div id="skill-modal" class="glass-modal hide-modal">
+                <div class="modal-content">
+                    <button class="btn-close-modal" id="close-modal"><i class="fa-solid fa-xmark"></i></button>
+                    <div class="detail-header">
+                        <div id="detail-icon" class="large-icon"><i class="fa-solid fa-code"></i></div>
+                        <div>
+                            <h2 id="detail-title">C1 - REALIZE</h2>
+                            <span id="detail-level" class="level-badge">Level 3: Adapt</span>
+                        </div>
+                    </div>
+                    <div class="detail-body">
+                        <p id="detail-desc" class="big-desc">Description...</p>
+                        <div class="proof-container">
+                            <h3><i class="fa-solid fa-star"></i> Key Achievements</h3>
+                            <div id="detail-proof"></div>
+                        </div>
                     </div>
                 </div>
-                <div class="detail-body">
-                    <p id="detail-desc" class="big-desc">Description...</p>
-                    <div class="proof-container">
-                        <h3><i class="fa-solid fa-star"></i> Key Achievements</h3>
-                        <div id="detail-proof"></div>
-                    </div>
-                </div>
-            </section>
+            </div>
 
-            <!-- 4. Timeline -->
-            <section id="timeline" class="page-section">
-                <h2 class="section-title">My Journey</h2>
+            <!-- 4. Timeline (En bas à gauche) -->
+            <section id="timeline" class="map-section" data-x="-1200" data-y="800">
+                <a href="#home" class="btn-back-hub nav-link-btn" title="Retour au Centre">
+                    <i class="fa-solid fa-location-crosshairs"></i> Retour au Centre
+                </a>
+                <h2 class="section-title">Mon Parcours</h2>
                 <div class="timeline-container">
                     <div class="timeline-item">
                         <div class="timeline-dot"></div>
                         <div class="timeline-content">
                             <span class="timeline-date">2020 - 2024</span>
-                            <h3>High School - Baccalauréat</h3>
-                            <p>Specialized in Mathematics and Computer Science. First steps into programming with Python
-                                and web development.</p>
+                            <h3>Lycée - Baccalauréat</h3>
+                            <p>Spécialités Mathématiques et Numérique et Sciences Informatiques. Premiers pas en programmation avec Python et le développement web.</p>
                         </div>
                     </div>
                     <div class="timeline-item">
                         <div class="timeline-dot"></div>
                         <div class="timeline-content">
-                            <span class="timeline-date">2024 - Present</span>
-                            <h3>BSc Computer Science - Year 2</h3>
-                            <p>Currently pursuing a Bachelor's degree in Computer Science. Focus on Software
-                                Development, Cybersecurity, and System Administration.</p>
+                            <span class="timeline-date">2024 - Présent</span>
+                            <h3>BUT Informatique - 2ème Année</h3>
+                            <p>Actuellement en BUT Informatique. Focus sur le développement logiciel, la cybersécurité et l'administration système.</p>
                         </div>
                     </div>
                     <div class="timeline-item">
                         <div class="timeline-dot"></div>
                         <div class="timeline-content">
-                            <span class="timeline-date">April - June 2026</span>
-                            <h3>Internship in Scotland</h3>
-                            <p>Upcoming international internship in Scotland to gain professional experience in a
-                                multicultural environment.</p>
+                            <span class="timeline-date">Avril - Juin 2026</span>
+                            <h3>Stage en Écosse</h3>
+                            <p>Stage international à venir en Écosse pour acquérir une expérience professionnelle dans un environnement multiculturel.</p>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <!-- 5. Projects -->
-            <section id="projects" class="page-section">
-                <h2 class="section-title">Code Lab</h2>
+            <!-- 5. Projects (En bas à droite) -->
+            <section id="projects" class="map-section" data-x="1800" data-y="1200">
+                <a href="#home" class="btn-back-hub nav-link-btn" title="Retour au Centre">
+                    <i class="fa-solid fa-location-crosshairs"></i> Retour au Centre
+                </a>
+                <h2 class="section-title">Labo Code</h2>
                 <div class="filter-container">
                     <!-- Filters removed per user request -->
                 </div>
@@ -207,51 +195,41 @@
                                         class="fa-brands fa-github"></i></a></div>
                         </div>
                         <h3>M-Play</h3>
-                        <p class="card-description">Modern Desktop IPTV Player. Netflix-like UI & robust streaming
-                            engine.</p>
+                        <p class="card-description">Lecteur IPTV Desktop moderne. Interface style Netflix & moteur de streaming robuste.</p>
                         <p class="card-description-full" style="display: none;">
-                            <strong>M-Play</strong> is a high-performance desktop application designed to transform the
-                            IPTV streaming experience.
-                            It combines a polished "Netflix-like" UI with a robust technical architecture capable of
-                            handling huge VOD and Live TV catalogs.
+                            <strong>M-Play</strong> est une application de bureau performante conçue pour transformer l'expérience de streaming IPTV.
+                            Elle combine une interface soignée "façon Netflix" avec une architecture technique capable de gérer d'énormes catalogues VOD et TV en direct.
                             <br><br>
-                            <strong>Key Features:</strong><br>
-                            - <strong>Premium UX:</strong> Dark Mode, fluid animations, dynamic Hero Headers.<br>
-                            - <strong>Advanced Player:</strong> Direct VOD & Transcoding support (FFmpeg), multi-track
-                            audio/subs.<br>
-                            - <strong>Smart Resume:</strong> Cross-type resume (Movies/Series), auto-save progress.<br>
-                            - <strong>Unified Management:</strong> Rich details (Cast, Synopsis), global search.
+                            <strong>Fonctionnalités Clés :</strong><br>
+                            - <strong>UX Premium :</strong> Mode Sombre, animations fluides, en-têtes de héros dynamiques.<br>
+                            - <strong>Lecteur Avancé :</strong> Support VOD direct & Transcodage (FFmpeg), multi-pistes audio/sous-titres.<br>
+                            - <strong>Reprise Intelligente :</strong> Reprise inter-type (Films/Séries), sauvegarde automatique de la progression.<br>
+                            - <strong>Gestion Unifiée :</strong> Détails riches (Casting, Synopsis), recherche globale.
                         </p>
                         <ul class="tech-list">
                             <li>Electron</li>
                             <li>Node.js</li>
                             <li>FFmpeg</li>
                         </ul>
-                        <div class="project-image-expanded" style="display: none;"><img src="img/cards/m_play.png"
-                                alt="M-Play Project"></div>
+                        <div class="project-image-expanded" style="display: none;"><img src="img/cards/m_play.png" alt="M-Play Project"></div>
                     </div>
 
                     <!-- Virtual Network (Featured) -->
                     <div class="project-card expandable-card featured" data-category="sysadmin" data-featured="true">
                         <div class="card-header">
                             <i class="fa-solid fa-network-wired folder-icon"></i>
-                            <div class="links"><a href="https://github.com/LOI-mln/virtual-network" target="_blank"><i
-                                        class="fa-brands fa-github"></i></a></div>
+                            <div class="links"><a href="https://github.com/LOI-mln/virtual-network" target="_blank"><i class="fa-brands fa-github"></i></a></div>
                         </div>
-                        <h3>Virtual Network</h3>
-                        <p class="card-description">Large-scale network simulation (2000+ machines). Manages
-                            <strong>DHCP, DNS</strong>, and routing protocols.
-                        </p>
+                        <h3>Réseau Virtuel</h3>
+                        <p class="card-description">Simulation réseau à grande échelle (2000+ machines). Gère <strong>DHCP, DNS</strong> et le routage.</p>
                         <p class="card-description-full" style="display: none;">
-                            A comprehensive network infrastructure simulation managing over 2000 virtual machines across
-                            multiple subnets.
-                            Implemented critical network services including DHCP for dynamic IP allocation, DNS for name
-                            resolution, and advanced routing protocols (RIP, OSPF) for inter-subnet communication.
+                            Une simulation complète d'infrastructure réseau gérant plus de 2000 machines virtuelles réparties sur plusieurs sous-réseaux.
+                            Mise en place de services réseau critiques incluant le DHCP pour l'allocation dynamique d'IP, le DNS pour la résolution de noms, et des protocoles de routage avancés (RIP, OSPF) pour la communication inter-sous-réseaux.
                         </p>
                         <ul class="tech-list">
-                            <li>Networking</li>
+                            <li>Réseaux</li>
                             <li>SysAdmin</li>
-                            <li>Virtualization</li>
+                            <li>Virtualisation</li>
                         </ul>
                     </div>
 
@@ -264,23 +242,18 @@
                                     target="_blank"><i class="fa-brands fa-github"></i></a></div>
                         </div>
                         <h3>Questionary</h3>
-                        <p class="card-description">Web app for dynamic forms. Built with a full <strong>Vue.js</strong>
-                            frontend.</p>
+                        <p class="card-description">Application web de formulaires dynamiques. Construite avec un frontend <strong>Vue.js</strong> complet.</p>
                         <p class="card-description-full" style="display: none;">
-                            A comprehensive web application for creating and managing dynamic questionnaires and
-                            surveys.
-                            The entire frontend is built with Vue.js, providing a highly reactive and smooth user
-                            experience with real-time form validation.
-                            The backend leverages PHP for robust data processing, form submission handling, and database
-                            management.
+                            Une application web complète pour la création et la gestion de questionnaires et sondages dynamiques.
+                            L'ensemble du frontend est réalisé avec Vue.js, offrant une expérience utilisateur fluide et hautement réactive avec validation de formulaire en temps réel.
+                            Le backend utilise PHP pour un traitement de données robuste, la gestion des soumissions et la base de données.
                         </p>
                         <ul class="tech-list">
                             <li>Vue.js</li>
                             <li>CSS3</li>
                             <li>PHP</li>
                         </ul>
-                        <div class="project-image-expanded" style="display: none;"><img src="img/cards/questionary.png"
-                                alt="Questionary Project"></div>
+                        <div class="project-image-expanded" style="display: none;"><img src="img/cards/questionary.png" alt="Questionary Project"></div>
                     </div>
 
                     <!-- Latice (Moved to Secondary) -->
@@ -292,21 +265,18 @@
                                         class="fa-brands fa-github"></i></a></div>
                         </div>
                         <h3>Latice (Java)</h3>
-                        <p class="card-description">Strategy board game with <strong>Drag & Drop</strong> mechanics. Led
-                            a team of 4 developers using JavaFX.</p>
+                        <p class="card-description">Jeu de plateau de stratégie avec mécaniques <strong>Drag & Drop</strong>. Direction d'une équipe de 4 développeurs (JavaFX).</p>
                         <p class="card-description-full" style="display: none;">
-                            A fully-featured digital implementation of the Latice strategy board game using JavaFX.
-                            Led a team of 4 developers, coordinating task distribution and managing Git workflows.
-                            Features include smooth drag-and-drop tile placement, real-time game state validation, AI
-                            opponent with multiple difficulty levels, and a polished user interface.
+                            Implémentation numérique complète du jeu de plateau stratégique Latice via JavaFX.
+                            J'ai dirigé une équipe de 4 développeurs, coordonné la répartition des tâches et géré les flux Git.
+                            Les fonctionnalités incluent le placement fluide de tuiles en drag-and-drop, la validation de l'état du jeu en temps réel, une IA avec plusieurs niveaux de difficulté, et une interface utilisateur soignée.
                         </p>
                         <ul class="tech-list">
                             <li>Java</li>
                             <li>JavaFX</li>
                             <li>Algo</li>
                         </ul>
-                        <div class="project-image-expanded" style="display: none;"><img src="img/cards/latice.png"
-                                alt="Latice Project"></div>
+                        <div class="project-image-expanded" style="display: none;"><img src="img/cards/latice.png" alt="Latice Project"></div>
                     </div>
 
                     <!-- Game of Life (Moved to Secondary) -->
@@ -316,41 +286,32 @@
                             <div class="links"><a href="https://github.com/LOI-mln/game-of-life" target="_blank"><i
                                         class="fa-brands fa-github"></i></a></div>
                         </div>
-                        <h3>Game of Life (Lua)</h3>
-                        <p class="card-description">Conway's Game of Life simulation. Optimized for performance with
-                            large grids.</p>
+                        <h3>Jeu de la Vie (Lua)</h3>
+                        <p class="card-description">Simulation cellulaire d'automates. Écrite en <strong>Lua</strong> avec le framework Löve2D.</p>
                         <p class="card-description-full" style="display: none;">
-                            An optimized implementation of Conway's Game of Life using Lua and the Löve2D framework.
-                            The simulation handles massive grids with thousands of cells while maintaining smooth 60 FPS
-                            performance.
-                            Implemented spatial partitioning and efficient neighbor-counting algorithms to minimize
-                            computational overhead.
+                            Une simulation d'automates cellulaires haute performance basée sur le Jeu de la Vie de Conway, construite de zéro avec Lua et Löve2D.
+                            J'ai conçu l'algorithme moteur pour gérer d'énormes grilles de cellules avec des mises à jour d'état instantanées, avec des contrôles interactifs pour que l'utilisateur puisse "dessiner" des cellules vivantes et ajuster la vitesse de simulation. C'était un excellent exercice en algorithmie pour minimiser la charge de calcul.
                         </p>
                         <ul class="tech-list">
                             <li>Lua</li>
                             <li>Löve2D</li>
                             <li>Algorithm</li>
                         </ul>
-                        <div class="project-image-expanded" style="display: none;"><img src="img/cards/life_game.png"
-                                alt="Game of Life Project"></div>
+                        <div class="project-image-expanded" style="display: none;"><img src="img/cards/life_game.png" alt="Game of Life Project"></div>
                     </div>
 
                     <!-- Hashing Algo (Moved to Secondary) -->
                     <div class="project-card expandable-card secondary-project" data-category="software">
                         <div class="card-header">
                             <i class="fa-solid fa-fingerprint folder-icon"></i>
-                            <div class="links"><a href="https://github.com/LOI-mln/hachage" target="_blank"><i
-                                        class="fa-brands fa-github"></i></a></div>
+                            <div class="links"><a href="https://github.com/LOI-mln/hachage" target="_blank"><i class="fa-brands fa-github"></i></a></div>
                         </div>
-                        <h3>Hashing Algo (Java)</h3>
-                        <p class="card-description">Custom implementation of a cryptographic hashing algorithm built
-                            from scratch.</p>
+                        <h3>Algorithme de Hachage (Java)</h3>
+                        <p class="card-description">Implémentation maison d'un algorithme de hachage cryptographique créé de zéro.</p>
                         <p class="card-description-full" style="display: none;">
-                            A from-scratch implementation of a cryptographic hashing algorithm in Java to understand the
-                            mathematical foundations of data security.
-                            The project explores core cryptographic principles including collision resistance, avalanche
-                            effect, and one-way functions.
-                            Implemented using bitwise operations, modular arithmetic, and custom hash functions.
+                            Une implémentation "from scratch" d'un algorithme de hachage en Java pour comprendre les fondations mathématiques de la sécurité des données.
+                            Le projet explore les principes majeurs de la cryptographie : résistance aux collisions, effet avalanche (avalanche effect), et fonctions à sens unique.
+                            Implémenté via des opérations bit-à-bit, de l'arithmétique modulaire, et des fonctions mathématiques personnalisées.
                         </p>
                         <ul class="tech-list">
                             <li>Java</li>
@@ -369,23 +330,19 @@
                             <div class="links"><a href="https://github.com/LOI-mln/site-cuisine" target="_blank"><i
                                         class="fa-brands fa-github"></i></a></div>
                         </div>
-                        <h3>Cooking Site</h3>
-                        <p class="card-description">Recipe sharing platform with a relational database and user
-                            favorites.</p>
+                        <h3>Site de Cuisine</h3>
+                        <p class="card-description">Plateforme de partage de recettes avec base de données relationnelle et favoris utilisateurs.</p>
                         <p class="card-description-full" style="display: none;">
-                            A full-stack recipe sharing web application with a robust MySQL database backend.
-                            Designed a normalized relational database schema to efficiently manage recipes, ingredients,
-                            and user accounts.
-                            Features include advanced recipe search with filters, user authentication, favorite recipe
-                            collections, and ingredient-based search.
+                            Une application web full-stack de recettes avec un backend en base de données MySQL.
+                            Conception d'un schéma de BDD relationnelle normalisé pour gérer efficacement les recettes, les ingrédients et les comptes utilisateurs.
+                            Les fonctionnalités incluent une recherche avancée avec filtres, l'authentification des utilisateurs, et la gestion d'une liste de favoris.
                         </p>
                         <ul class="tech-list">
                             <li>PHP</li>
                             <li>MySQL</li>
                             <li>HTML/CSS</li>
                         </ul>
-                        <div class="project-image-expanded" style="display: none;"><img src="img/cards/cooking_site.png"
-                                alt="Cooking Site Project"></div>
+                        <div class="project-image-expanded" style="display: none;"><img src="img/cards/cooking_site.png" alt="Cooking Site Project"></div>
                     </div>
 
                     <!-- Password Manager -->
@@ -395,63 +352,69 @@
                             <div class="links"><a href="https://github.com/LOI-mln/password-manager" target="_blank"><i
                                         class="fa-brands fa-github"></i></a></div>
                         </div>
-                        <h3>Password Manager</h3>
-                        <p class="card-description">Secure web app for managing credentials. Features encryption and a
-                            clean UI.</p>
+                        <h3>Gestionnaire de Mots de Passe</h3>
+                        <p class="card-description">App web sécurisée pour la gestion d'identifiants. Intègre du chiffrement et une interface épurée.</p>
                         <p class="card-description-full" style="display: none;">
-                            A secure password management web application built with Python and Flask.
-                            Implements industry-standard encryption (AES-256) to protect stored credentials, with a
-                            master password system for access control.
-                            Features include password generation with customizable complexity, secure password strength
-                            analysis, and encrypted storage.
+                            Une application web de gestion de mots de passe sécurisée construite avec Python et Flask.
+                            Implémente les standards de l'industrie (chiffrement AES-256) pour protéger les données, avec un système de mot de passe maître (master password).
+                            Inclut la génération de mots de passe paramétrables, l'analyse de sécurité cryptographique, et le stockage sécurisé.
                         </p>
                         <ul class="tech-list">
                             <li>Python</li>
                             <li>HTML/CSS</li>
                             <li>Security</li>
                         </ul>
-                        <div class="project-image-expanded" style="display: none;"><img src="img/cards/pasword.png"
-                                alt="Password Manager Project"></div>
+                        <div class="project-image-expanded" style="display: none;"><img src="img/cards/pasword.png" alt="Password Manager Project"></div>
                     </div>
 
                     <!-- To-Do Flask -->
                     <div class="project-card expandable-card secondary-project" data-category="web">
                         <div class="card-header">
                             <i class="fa-solid fa-list-check folder-icon"></i>
-                            <div class="links"><a href="https://github.com/LOI-mln/todo-app" target="_blank"><i
-                                        class="fa-brands fa-github"></i></a></div>
+                            <div class="links"><a href="https://github.com/LOI-mln/todo-app" target="_blank"><i class="fa-brands fa-github"></i></a></div>
                         </div>
-                        <h3>To-Do App</h3>
-                        <p class="card-description">Task manager app. Python backend using the <strong>Flask</strong>
-                            framework.</p>
+                        <h3>Application To-Do</h3>
+                        <p class="card-description">Gestionnaire de tâches (To-Do list). Backend Python utilisant le framework <strong>Flask</strong>.</p>
                         <p class="card-description-full" style="display: none;">
-                            A full-featured task management web application built with Python and Flask.
-                            Features include task creation, editing, and deletion with persistent storage using SQLite.
-                            Implements user authentication, task categorization, priority levels, and due date tracking.
+                            Une application web complète pour la gestion des tâches avec Python et Flask.
+                            Permet la création, l'édition et la suppression de tâches avec un stockage persistant sous SQLite.
+                            Met en place l'authentification utilisateur, les catégories de tâches, les niveaux de priorité et le suivi des dates d'échéance.
                         </p>
                         <ul class="tech-list">
                             <li>Python</li>
                             <li>Flask</li>
                             <li>HTML/CSS</li>
                         </ul>
-                        <div class="project-image-expanded" style="display: none;"><img src="img/cards/todo.png"
-                                alt="To-Do Flask Project"></div>
+                        <div class="project-image-expanded" style="display: none;"><img src="img/cards/todo.png" alt="To-Do Flask Project"></div>
                     </div>
 
                 </div>
 
                 <div class="show-more-container" style="text-align: center; margin-top: 2rem;">
-                    <button id="btn-show-more" class="btn-primary" style="min-width: 150px;">See More Projects</button>
+                    <button id="btn-show-more" class="btn-primary" style="min-width: 150px;">Voir Plus</button>
                 </div>
             </section>
 
         </div>
-    </main>
+    </div> <!-- /map-viewport -->
 
-    <!-- Custom Cursor -->
+    <!-- UI: Mini-Map Radar -->
+    <div class="minimap-container">
+        <div class="minimap-title">RADAR RÉSEAU</div>
+        <div class="minimap-grid">
+            <div class="minimap-node" style="left: 50%; top: 50%;" data-target="home"></div>
+            <div class="minimap-node" style="left: 75%; top: 25%;" data-target="skills"></div>
+            <div class="minimap-node" style="left: 25%; top: 75%;" data-target="timeline"></div>
+            <div class="minimap-node" style="left: 85%; top: 85%;" data-target="projects"></div>
+            <div id="minimap-viewport"></div>
+        </div>
+    </div>
+
+    <!-- Le curseur interactif personnalisé -->
     <div id="custom-cursor"></div>
+    <div id="custom-cursor-follower"></div>
 
-    <script src="script.js"></script>
+    <script src="script.js?v=6"></script>
 </body>
 
 </html>
