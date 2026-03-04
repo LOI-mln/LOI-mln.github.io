@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Milan LOÏ | CS Student Portfolio</title>
+    <title>Milan LOÏ | Portfolio d'Étudiant en Informatique</title>
     <link rel="stylesheet" href="style.css?v=7">
     <!-- Font Awesome pour les icones -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -43,8 +43,8 @@
             <!-- 1. Le Hub Central -->
             <section id="home" class="map-section active-node" data-x="0" data-y="0">
                 <div class="hero-text">
-                    <p class="greeting">Hi, I'm Milan.</p>
-                    <h1 class="main-title">Computer Science <br>Student.</h1>
+                    <p class="greeting">Bonjour, je m'appelle Milan.</p>
+                    <h1 class="main-title">Étudiant en <br>Informatique.</h1>
                     <h2 class="subtitle">Passionné par le Dév, l'IA & l'Administration Système.</h2>
                     <p class="bio">
                         Étudiant français en deuxième année d'informatique (BUT Informatique).<br><br>
@@ -67,7 +67,7 @@
                         <a href="https://linkedin.com/in/milan-loi" target="_blank" class="btn-secondary"
                             title="LinkedIn"><i class="fa-brands fa-linkedin-in"></i> LinkedIn</a>
                         <!-- Le theme toggle retourne ici sur la page centrale -->
-                        <button id="theme-toggle" class="btn-secondary" title="Toggle Dark Mode"><i class="fa-solid fa-moon"></i> Thème</button>
+                        <button id="theme-toggle" class="btn-secondary" title="Changer de thème"><i class="fa-solid fa-moon"></i> Thème</button>
                     </div>
                 </div>
             </section>
@@ -118,26 +118,7 @@
                 </div>
             </section>
 
-            <!-- 3. Skill Detail (Maintenant une modale Glassmorphism) -->
-            <div id="skill-modal" class="glass-modal hide-modal">
-                <div class="modal-content">
-                    <button class="btn-close-modal" id="close-modal"><i class="fa-solid fa-xmark"></i></button>
-                    <div class="detail-header">
-                        <div id="detail-icon" class="large-icon"><i class="fa-solid fa-code"></i></div>
-                        <div>
-                            <h2 id="detail-title">C1 - REALIZE</h2>
-                            <span id="detail-level" class="level-badge">Level 3: Adapt</span>
-                        </div>
-                    </div>
-                    <div class="detail-body">
-                        <p id="detail-desc" class="big-desc">Description...</p>
-                        <div class="proof-container">
-                            <h3><i class="fa-solid fa-star"></i> Key Achievements</h3>
-                            <div id="detail-proof"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+
 
             <!-- 4. Timeline (En bas à gauche) -->
             <section id="timeline" class="map-section" data-x="-1200" data-y="800">
@@ -397,6 +378,27 @@
 
         </div>
     </div> <!-- /map-viewport -->
+
+    <!-- 3. Skill Detail (Maintenant une modale Glassmorphism) -->
+    <div id="skill-modal" class="glass-modal hide-modal">
+        <div class="modal-content">
+            <button class="btn-close-modal" id="close-modal"><i class="fa-solid fa-xmark"></i></button>
+            <div class="detail-header">
+                <div id="detail-icon" class="large-icon"><i class="fa-solid fa-code"></i></div>
+                <div>
+                    <h2 id="detail-title">C1 - RÉALISER</h2>
+                    <span id="detail-level" class="level-badge">Niveau 3 : Adapter</span>
+                </div>
+            </div>
+            <div class="detail-body">
+                <p id="detail-desc" class="big-desc">Chargement...</p>
+                <div class="proof-container">
+                    <h3><i class="fa-solid fa-star"></i> Réalisations clés</h3>
+                    <div id="detail-proof"></div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- UI: Mini-Map Radar -->
     <div class="minimap-container">
