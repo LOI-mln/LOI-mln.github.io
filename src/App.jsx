@@ -58,6 +58,16 @@ function App() {
   }, []);
 
 
+  // Masquer le scrollbar pendant le chargement
+  useEffect(() => {
+    if (loading) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => { document.body.style.overflow = ''; };
+  }, [loading]);
+
   // Simulation de l'écran de chargement
   useEffect(() => {
     const statuses = [

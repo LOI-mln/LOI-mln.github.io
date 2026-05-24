@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowRight, Sparkles, MapPin, Award, Shield, FileText } from 'lucide-react';
 import MetricGrid from '../components/MetricGrid';
-import AntigravityCanvas from '../components/AntigravityCanvas';
 
 const Hero = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -32,14 +31,7 @@ const Hero = () => {
         backgroundColor: '#ffffff',
       }}
     >
-      {/* Fond interactif de particules en constellation */}
-      <AntigravityCanvas
-        mode="light"
-        colorScheme="neon"
-        density="medium"
-        clusterRight={false}
-        velocityStretch={true}
-      />
+
 
       <div
         style={{
