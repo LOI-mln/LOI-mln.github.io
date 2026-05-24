@@ -110,7 +110,7 @@ function App() {
             mode="dark"
             colorScheme="neon"
             density="high"
-            clusterRight={true}
+            clusterRight={false}
             velocityStretch={true}
           />
           
