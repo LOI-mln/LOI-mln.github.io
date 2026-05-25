@@ -437,11 +437,11 @@ const Projects = () => {
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px 30px', borderTop: '1px solid var(--border-color)', paddingTop: '24px', marginBottom: '32px' }}>
               <div>
                 <span style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Rôle</span>
-                <span style={{ fontFamily: 'var(--font-subtitle)', fontWeight: 700, fontSize: '0.9rem', color: 'var(--text-primary)' }}>Co-Lead Dev & NLP Integration</span>
+                <span style={{ fontFamily: 'var(--font-subtitle)', fontWeight: 700, fontSize: '0.9rem', color: 'var(--text-primary)' }}>Lead Dev & NLP Integration</span>
               </div>
               <div>
                 <span style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Année</span>
-                <span style={{ fontFamily: 'var(--font-subtitle)', fontWeight: 700, fontSize: '0.9rem', color: 'var(--text-primary)' }}>2024</span>
+                <span style={{ fontFamily: 'var(--font-subtitle)', fontWeight: 700, fontSize: '0.9rem', color: 'var(--text-primary)' }}>2025</span>
               </div>
               <div>
                 <span style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Statut</span>
@@ -449,7 +449,7 @@ const Projects = () => {
               </div>
               <div>
                 <span style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Équipe</span>
-                <span style={{ fontFamily: 'var(--font-subtitle)', fontWeight: 700, fontSize: '0.9rem', color: 'var(--text-primary)' }}>3 Développeurs</span>
+                <span style={{ fontFamily: 'var(--font-subtitle)', fontWeight: 700, fontSize: '0.9rem', color: 'var(--text-primary)' }}>6 Développeurs</span>
               </div>
             </div>
 
@@ -591,7 +591,7 @@ const Projects = () => {
               </div>
               <div>
                 <span style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Année</span>
-                <span style={{ fontFamily: 'var(--font-subtitle)', fontWeight: 700, fontSize: '0.9rem', color: 'var(--text-primary)' }}>2024</span>
+                <span style={{ fontFamily: 'var(--font-subtitle)', fontWeight: 700, fontSize: '0.9rem', color: 'var(--text-primary)' }}>2026</span>
               </div>
               <div>
                 <span style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Statut</span>
@@ -805,11 +805,11 @@ const Projects = () => {
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px 30px', borderTop: '1px solid var(--border-color)', paddingTop: '24px', marginBottom: '32px' }}>
               <div>
                 <span style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Rôle</span>
-                <span style={{ fontFamily: 'var(--font-subtitle)', fontWeight: 700, fontSize: '0.9rem', color: 'var(--text-primary)' }}>Architecte Réseau & Admin</span>
+                <span style={{ fontFamily: 'var(--font-subtitle)', fontWeight: 700, fontSize: '0.9rem', color: 'var(--text-primary)' }}>Lead Architecte Réseau</span>
               </div>
               <div>
                 <span style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Année</span>
-                <span style={{ fontFamily: 'var(--font-subtitle)', fontWeight: 700, fontSize: '0.9rem', color: 'var(--text-primary)' }}>2023</span>
+                <span style={{ fontFamily: 'var(--font-subtitle)', fontWeight: 700, fontSize: '0.9rem', color: 'var(--text-primary)' }}>2025</span>
               </div>
               <div>
                 <span style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Statut</span>
@@ -817,7 +817,7 @@ const Projects = () => {
               </div>
               <div>
                 <span style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Équipe</span>
-                <span style={{ fontFamily: 'var(--font-subtitle)', fontWeight: 700, fontSize: '0.9rem', color: 'var(--text-primary)' }}>Solo</span>
+                <span style={{ fontFamily: 'var(--font-subtitle)', fontWeight: 700, fontSize: '0.9rem', color: 'var(--text-primary)' }}>3 Collaborateurs</span>
               </div>
             </div>
 
@@ -924,11 +924,11 @@ const Projects = () => {
         </div>
       </div>
 
-        {/* 4. M-Play (IPTV Desktop Application) */}
+        {/* 4. M-Play (Media Streaming Application) */}
         <div className="project-row" style={{ display: 'flex', gap: '60px', alignItems: 'center', marginBottom: '40px', flexDirection: 'row-reverse' }}>
           <div className="project-content reveal-on-scroll" style={{ flex: '1', minWidth: '320px' }}>
             <span style={{ fontFamily: 'var(--font-subtitle)', fontSize: '0.85rem', fontWeight: 700, color: 'var(--text-secondary)', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
-              N° 004 / IPTV & MULTIMÉDIA
+              N° 004 / MOTEUR DE STREAMING & MULTIMÉDIA
             </span>
             <h3 style={{ fontFamily: 'var(--font-title)', fontSize: 'clamp(2.2rem, 5vw, 3.2rem)', fontWeight: 800, color: 'var(--text-primary)', marginTop: '8px', marginBottom: '4px', letterSpacing: '-0.02em' }}>
               <TextScramble text="M-Play" hover={true} />
@@ -937,7 +937,7 @@ const Projects = () => {
               Le cinéma à la maison, sans compromis.
             </p>
             <p style={{ fontFamily: 'var(--font-body)', fontSize: '1rem', color: 'var(--text-secondary)', lineHeight: 1.65, marginBottom: '32px' }}>
-              M-Play est une application de bureau hautes performances conçue pour transformer l'expérience de streaming IPTV. Elle associe une interface soignée "façon Netflix" avec un moteur de transcodage et lecture robuste (basé sur FFmpeg) capable de gérer d'énormes catalogues VOD et TV en direct avec reprise automatique de lecture.
+              M-Play est une application de bureau de hautes performances dédiée à l'agrégation et au décodage de flux multimédias réseau (HLS, DASH, RTSP). Elle associe une interface utilisateur moderne et réactive à un moteur de lecture hybride customisé (basé sur FFmpeg), optimisant le traitement en temps réel de flux VOD et de diffusions en direct avec reprise intelligente de lecture.
             </p>
 
             {/* 2x2 Specs Grid */}
@@ -948,7 +948,7 @@ const Projects = () => {
               </div>
               <div>
                 <span style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Année</span>
-                <span style={{ fontFamily: 'var(--font-subtitle)', fontWeight: 700, fontSize: '0.9rem', color: 'var(--text-primary)' }}>2024</span>
+                <span style={{ fontFamily: 'var(--font-subtitle)', fontWeight: 700, fontSize: '0.9rem', color: 'var(--text-primary)' }}>2025 - 2026</span>
               </div>
               <div>
                 <span style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Statut</span>
@@ -1000,7 +1000,7 @@ const Projects = () => {
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '6px 8px', borderRadius: '8px', background: 'linear-gradient(90deg, rgba(239, 68, 68, 0.15) 0%, rgba(239, 68, 68, 0) 100%)', borderLeft: '2.5px solid #ef4444', color: '#ffffff', cursor: 'pointer' }}>
                       <span style={{ fontSize: '0.62rem', fontWeight: 800 }}>Accueil</span>
                     </div>
-                    {['Live TV', 'Films', 'Séries'].map(tab => (
+                    {['Flux Live', 'VOD', 'Playlists'].map(tab => (
                       <div key={tab} style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '6px 8px', borderRadius: '8px', color: '#71717a', cursor: 'pointer' }}>
                         <span style={{ fontSize: '0.62rem', fontWeight: 700 }}>{tab}</span>
                       </div>
