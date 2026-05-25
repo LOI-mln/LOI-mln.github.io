@@ -36,7 +36,7 @@ function App() {
       orientation: 'vertical',
       gestureOrientation: 'vertical',
       smoothWheel: true,
-      wheelMultiplier: 1.2,
+      wheelMultiplier: 0.95,
       touchMultiplier: 1.5,
     });
 
@@ -252,7 +252,7 @@ function App() {
                         Sports & Outdoor
                       </h3>
                       <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', lineHeight: 1.5, margin: 0 }}>
-                        Pratique régulière de la boxe anglaise en club pour le cardio, le focus et le dépassement de soi. Adepte de randonnées d'endurance en autonomie dans les Pyrénées, les Alpes ou les Highlands, tennis et ski.
+                        Pratique régulière de la boxe anglaise en club pour le cardio et la condition physique. Adepte de randonnées d'endurance en autonomie dans les Pyrénées, les Alpes ou les Highlands, tennis et ski.
                       </p>
                     </div>
                   </div>
@@ -399,7 +399,7 @@ function App() {
                         Achat-Revente & Trade
                       </h3>
                       <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', lineHeight: 1.5, margin: 0 }}>
-                        Achat, estimation et revente de collections (Pokémon), vêtements/chaussures de marque (sneakers) et matériel informatique (hardware) sur les plateformes en ligne (Cardmarket, Vinted). Gestion des stocks, logistique d'envoi et service client.
+                        Achat, estimation et revente d'objets de collection (cartes de jeux, rétro-gaming), d'articles de mode en édition limitée (sneakers) et de matériel informatique de pointe (hardware) sur les plateformes en ligne (eBay, Vinted, etc.). Gestion des stocks, logistique internationale d'envoi et relations clients.
                       </p>
                     </div>
                   </div>
