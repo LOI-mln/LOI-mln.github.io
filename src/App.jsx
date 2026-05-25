@@ -15,11 +15,17 @@ import useScrollReveal from './hooks/useScrollReveal';
 function App() {
   const [loading, setLoading] = useState(true);
   const [loadingFade, setLoadingFade] = useState(false);
-  const [progress, setProgress] = useState(0);
-  const [loaderText, setLoaderText] = useState('SYS.INITIALIZATION');
 
   // Activer l'animation au défilement
   useScrollReveal();
+
+  // Désactiver la restauration automatique du défilement du navigateur et forcer le retour en haut
+  useEffect(() => {
+    if ('scrollRestoration' in window.history) {
+      window.history.scrollRestoration = 'manual';
+    }
+    window.scrollTo(0, 0);
+  }, []);
 
 
   // Initialiser le défilement fluide Lenis
@@ -30,9 +36,12 @@ function App() {
       orientation: 'vertical',
       gestureOrientation: 'vertical',
       smoothWheel: true,
-      wheelMultiplier: 0.95,
+      wheelMultiplier: 1.2,
       touchMultiplier: 1.5,
     });
+
+    // Forcer le défilement de Lenis tout en haut au démarrage
+    lenis.scrollTo(0, { immediate: true });
 
     function raf(time) {
       lenis.raf(time);
@@ -68,89 +77,32 @@ function App() {
     return () => { document.body.style.overflow = ''; };
   }, [loading]);
 
-  // Simulation de l'écran de chargement
+  // Écran de chargement minimaliste
   useEffect(() => {
-    const statuses = [
-      'SYS.INITIALIZATION',
-      'RESOLVING.CORE.DEPENDENCIES',
-      'MOUNTING.ORGANIC.GRID',
-      'OPTIMIZING.INTERFACES',
-      'SYS.READY'
-    ];
-
-    let currentProgress = 0;
-    const interval = setInterval(() => {
-      currentProgress += Math.floor(Math.random() * 3) + 1;
-      
-      if (currentProgress >= 100) {
-        currentProgress = 100;
-        setProgress(100);
-        setLoaderText(statuses[4]);
-        clearInterval(interval);
-        
-        setTimeout(() => {
-          setLoadingFade(true);
-          setTimeout(() => {
-            setLoading(false);
-          }, 800);
-        }, 600);
-      } else {
-        setProgress(currentProgress);
-        
-        if (currentProgress < 25) setLoaderText(statuses[0]);
-        else if (currentProgress < 50) setLoaderText(statuses[1]);
-        else if (currentProgress < 75) setLoaderText(statuses[2]);
-        else setLoaderText(statuses[3]);
-      }
-    }, 45);
-
-    return () => clearInterval(interval);
+    const timer = setTimeout(() => {
+      setLoadingFade(true);
+      setTimeout(() => setLoading(false), 800);
+    }, 1800);
+    return () => clearTimeout(timer);
   }, []);
 
   return (
     <>
-      {/* Écran de chargement */}
+      {/* Écran de chargement minimaliste */}
       {loading && (
         <div className={`loader-overlay ${loadingFade ? 'fade-out' : ''}`}>
-          <div className="loader-grid-bg" />
-          <div className="loader-scanlines" />
-          
-          {/* Système de particules interactif en constellation */}
-          <AntigravityCanvas
-            mode="dark"
-            colorScheme="neon"
-            density="high"
-            clusterRight={false}
-            velocityStretch={true}
-          />
-          
-          {/* Barre supérieure HUD */}
-          <div className="loader-hud-top">
-            <span>SYSTEM: MILAN_LOI_PORTFOLIO</span>
-            <span>STATUS: {loaderText}</span>
-            <span>TEMP CPU: 42°C</span>
-          </div>
+          {/* Particules ambiantes flottantes */}
+          <div className="loader-ambient-particle" style={{ top: '18%', left: '12%', animationDelay: '0s', animationDuration: '6s' }} />
+          <div className="loader-ambient-particle" style={{ top: '72%', left: '78%', animationDelay: '1.2s', animationDuration: '7s' }} />
+          <div className="loader-ambient-particle" style={{ top: '35%', left: '85%', animationDelay: '2.5s', animationDuration: '5.5s' }} />
+          <div className="loader-ambient-particle" style={{ top: '80%', left: '25%', animationDelay: '0.8s', animationDuration: '8s' }} />
+          <div className="loader-ambient-particle" style={{ top: '55%', left: '45%', animationDelay: '3s', animationDuration: '6.5s' }} />
 
-          {/* Zone centrale en plein écran */}
-          <div className="loader-center-content">
-            <div className="loader-circle-wrapper-huge">
-              <svg className="loader-circle-svg" viewBox="0 0 36 36">
-                <circle cx="18" cy="18" r="16" className="loader-circle-bg" />
-                <circle
-                  cx="18"
-                  cy="18"
-                  r="16"
-                  className="loader-circle-fill"
-                  strokeDasharray="100 100"
-                  strokeDashoffset={100 - progress}
-                />
-              </svg>
-              <span className="loader-circle-percentage-huge">{progress}%</span>
-            </div>
-            <h1 className="loader-fullscreen-title">
-              MILAN<span style={{ color: 'var(--accent)', fontWeight: 300 }}>.LOÏ</span>
-            </h1>
-            <p className="loader-fullscreen-subtitle">CONCEPTEUR LOGICIEL & DÉVELOPPEUR IA</p>
+          {/* Point central pulsant + anneaux ripple */}
+          <div className="loader-center-group">
+            <div className="loader-ripple" />
+            <div className="loader-ripple loader-ripple--delayed" />
+            <div className="loader-pulse-dot" />
           </div>
         </div>
       )}
