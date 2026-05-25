@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Sparkles, ArrowUpRight, Menu, X } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { ArrowUpRight, Menu, X } from 'lucide-react';
 
 const GithubIcon = ({ size = 18 }) => (
   <svg viewBox="0 0 24 24" width={size} height={size} stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round">
@@ -20,11 +20,17 @@ const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [showContact, setShowContact] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [hovered, setHovered] = useState(false);
+  const [isTitleVisible, setIsTitleVisible] = useState(false);
+  
+  const visibleTitlesRef = useRef(new Set());
 
+  // Détecter le défilement général pour le style de la barre
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 60);
-      setShowContact(window.scrollY > 60);
+      const isScrolled = window.scrollY > 60;
+      setScrolled(isScrolled);
+      setShowContact(isScrolled);
     };
 
     window.addEventListener('scroll', handleScroll);
@@ -32,6 +38,15 @@ const Navbar = () => {
   }, []);
 
   const toggleMobileMenu = () => setMobileMenuOpen(!mobileMenuOpen);
+
+  // La barre ne se replie plus automatiquement sur les titres
+  const isCollapsed = false;
+
+  const handleContainerClick = () => {
+    if (isCollapsed) {
+      setHovered(true);
+    }
+  };
 
   return (
     <header
@@ -47,55 +62,88 @@ const Navbar = () => {
     >
       <div
         className="glass-panel"
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+        onClick={handleContainerClick}
         style={{
-          maxWidth: '1200px',
-          margin: '0 auto',
-          padding: scrolled ? '12px 28px' : '18px 36px',
+          maxWidth: isCollapsed ? '48px' : (scrolled ? '900px' : '1200px'),
+          height: isCollapsed ? '48px' : 'auto',
+          margin: isCollapsed ? '0 0 0 8px' : '0 auto',
+          padding: isCollapsed ? '0' : (scrolled ? '12px 28px' : '18px 36px'),
           display: 'flex',
-          justifyContent: 'space-between',
+          justifyContent: isCollapsed ? 'center' : 'space-between',
           alignItems: 'center',
           pointerEvents: 'auto',
-          borderRadius: scrolled ? '50px' : '24px',
-          transition: 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
-          boxShadow: scrolled ? '0 12px 30px rgba(0, 0, 0, 0.05)' : '0 4px 15px rgba(0, 0, 0, 0.01)',
-          background: scrolled ? 'rgba(255, 255, 255, 0.85)' : 'rgba(255, 255, 255, 0.65)',
-          borderWidth: '1px',
+          borderRadius: isCollapsed ? '50%' : (scrolled ? '50px' : '24px'),
+          transition: 'all 0.5s cubic-bezier(0.16, 1, 0.3, 1)',
+          boxShadow: isCollapsed ? '0 8px 24px rgba(255, 159, 28, 0.18)' : (scrolled ? '0 12px 30px rgba(0, 0, 0, 0.05)' : '0 4px 15px rgba(0, 0, 0, 0.01)'),
+          background: isCollapsed ? 'rgba(255, 255, 255, 0.95)' : (scrolled ? 'rgba(255, 255, 255, 0.85)' : 'rgba(255, 255, 255, 0.65)'),
+          border: isCollapsed ? '1.5px solid var(--accent)' : '1px solid var(--border-color)',
+          cursor: isCollapsed ? 'pointer' : 'default',
         }}
       >
-        {/* Logo de la marque */}
-        <a
-          href="#home"
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px',
-            textDecoration: 'none',
-            fontFamily: 'var(--font-title)',
-            fontSize: '1.25rem',
-            fontWeight: 800,
-            color: 'var(--text-primary)',
-            letterSpacing: '-0.02em',
-          }}
-        >
-          <span>MILAN</span>
-          <span style={{ color: 'var(--accent)', fontWeight: 400 }}>LOÏ</span>
+        {/* 1. Icône de menu quand replié en cercle */}
+        {isCollapsed && (
           <div
             style={{
-              width: '6px',
-              height: '6px',
-              backgroundColor: '#10b981', // Indicateur en ligne vert
-              borderRadius: '50%',
-              boxShadow: '0 0 10px #10b981',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: 'var(--accent)',
+              animation: 'fadeIn 0.3s ease',
             }}
-          />
-        </a>
+          >
+            <Menu size={20} />
+          </div>
+        )}
 
-        {/* Liens de navigation bureau */}
+        {/* 2. Logo (Masqué quand replié) */}
+        <div
+          style={{
+            display: isCollapsed ? 'none' : 'flex',
+            alignItems: 'center',
+            opacity: isCollapsed ? 0 : 1,
+            pointerEvents: isCollapsed ? 'none' : 'auto',
+            transition: 'opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1)',
+          }}
+        >
+          <a
+            href="#home"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              textDecoration: 'none',
+              fontFamily: 'var(--font-title)',
+              fontSize: '1.25rem',
+              fontWeight: 800,
+              color: 'var(--text-primary)',
+              letterSpacing: '-0.02em',
+            }}
+          >
+            <span>MILAN</span>
+            <span style={{ color: 'var(--accent)', fontWeight: 400 }}>LOÏ</span>
+            <div
+              style={{
+                width: '6px',
+                height: '6px',
+                backgroundColor: '#10b981', // Indicateur en ligne vert
+                borderRadius: '50%',
+                boxShadow: '0 0 10px #10b981',
+              }}
+            />
+          </a>
+        </div>
+
+        {/* 3. Liens de navigation bureau (Masqués quand replié) */}
         <nav
           style={{
-            display: 'flex',
+            display: isCollapsed ? 'none' : 'flex',
             alignItems: 'center',
             gap: '32px',
+            opacity: isCollapsed ? 0 : 1,
+            pointerEvents: isCollapsed ? 'none' : 'auto',
+            transition: 'opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1)',
           }}
           className="desktop-only"
         >
@@ -126,12 +174,15 @@ const Navbar = () => {
           ))}
         </nav>
 
-        {/* Liens sociaux et boutons */}
+        {/* 4. Liens sociaux et boutons (Masqués quand replié) */}
         <div
           style={{
-            display: 'flex',
+            display: isCollapsed ? 'none' : 'flex',
             alignItems: 'center',
             gap: '12px',
+            opacity: isCollapsed ? 0 : 1,
+            pointerEvents: isCollapsed ? 'none' : 'auto',
+            transition: 'opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1)',
           }}
           className="desktop-only"
         >
@@ -193,7 +244,7 @@ const Navbar = () => {
           </div>
         </div>
 
-        {/* Bouton menu mobile */}
+        {/* Bouton menu mobile (Masqué quand replié) */}
         <button
           onClick={toggleMobileMenu}
           style={{
@@ -201,7 +252,7 @@ const Navbar = () => {
             border: 'none',
             color: 'var(--text-primary)',
             padding: '4px',
-            display: 'none',
+            display: isCollapsed ? 'none' : 'none',
             alignItems: 'center',
             justifyContent: 'center',
           }}
@@ -212,7 +263,7 @@ const Navbar = () => {
       </div>
 
       {/* Menu mobile dépliant */}
-      {mobileMenuOpen && (
+      {mobileMenuOpen && !isCollapsed && (
         <div
           className="glass-panel"
           style={{
@@ -287,9 +338,13 @@ const Navbar = () => {
         </div>
       )}
 
-      {/* Règles CSS pour le comportement adaptatif */}
+      {/* Règles CSS pour le comportement adaptatif et animations de fondu */}
       <style dangerouslySetInnerHTML={{
         __html: `
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
         @media (max-width: 768px) {
           .desktop-only {
             display: none !important;
