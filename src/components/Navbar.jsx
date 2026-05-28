@@ -190,10 +190,14 @@ const Navbar = () => {
             href="https://github.com/LOI-mln"
             target="_blank"
             rel="noopener noreferrer"
+            aria-label="Profil GitHub de Milan"
             style={{
               color: 'var(--text-secondary)',
               transition: 'var(--transition-fast)',
-              padding: '6px',
+              padding: '12px',
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
             }}
             onMouseEnter={(e) => (e.target.style.color = 'var(--accent)')}
             onMouseLeave={(e) => (e.target.style.color = 'var(--text-secondary)')}
@@ -204,11 +208,15 @@ const Navbar = () => {
             href="https://linkedin.com/in/milan-loi"
             target="_blank"
             rel="noopener noreferrer"
+            aria-label="Profil LinkedIn de Milan"
             style={{
               color: 'var(--text-secondary)',
               transition: 'var(--transition-fast)',
-              padding: '6px',
-              marginRight: '12px',
+              padding: '12px',
+              marginRight: '6px',
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
             }}
             onMouseEnter={(e) => (e.target.style.color = 'var(--accent)')}
             onMouseLeave={(e) => (e.target.style.color = 'var(--text-secondary)')}
@@ -247,11 +255,16 @@ const Navbar = () => {
         {/* Bouton menu mobile (Masqué quand replié) */}
         <button
           onClick={toggleMobileMenu}
+          aria-label="Menu de navigation"
+          aria-expanded={mobileMenuOpen}
+          aria-controls="mobile-menu"
           style={{
             background: 'transparent',
             border: 'none',
             color: 'var(--text-primary)',
-            padding: '4px',
+            padding: '10px',
+            minWidth: '44px',
+            minHeight: '44px',
             display: isCollapsed ? 'none' : 'none',
             alignItems: 'center',
             justifyContent: 'center',
@@ -265,6 +278,7 @@ const Navbar = () => {
       {/* Menu mobile dépliant */}
       {mobileMenuOpen && !isCollapsed && (
         <div
+          id="mobile-menu"
           className="glass-panel"
           style={{
             position: 'absolute',
@@ -298,7 +312,7 @@ const Navbar = () => {
                 fontSize: '1.1rem',
                 fontWeight: 700,
                 color: 'var(--text-secondary)',
-                paddingBottom: '8px',
+                padding: '12px 0', /* Touch Target améliorée */
                 borderBottom: '1px solid rgba(0,0,0,0.03)',
               }}
             >
@@ -314,11 +328,35 @@ const Navbar = () => {
               marginTop: '10px',
             }}
           >
-            <div style={{ display: 'flex', gap: '16px' }}>
-              <a href="https://github.com/LOI-mln" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--text-secondary)' }}>
+            <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+              <a
+                href="https://github.com/LOI-mln"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Profil GitHub"
+                style={{
+                  color: 'var(--text-secondary)',
+                  padding: '10px',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
                 <GithubIcon size={20} />
               </a>
-              <a href="https://linkedin.com/in/milan-loi" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--text-secondary)' }}>
+              <a
+                href="https://linkedin.com/in/milan-loi"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Profil LinkedIn"
+                style={{
+                  color: 'var(--text-secondary)',
+                  padding: '10px',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
                 <LinkedinIcon size={20} />
               </a>
             </div>

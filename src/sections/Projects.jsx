@@ -467,6 +467,7 @@ const Projects = () => {
               target="_blank" 
               rel="noopener noreferrer"
               className="btn-editorial"
+              aria-label="Explorer le dépôt GitHub de l'application Questionary"
               style={{ padding: '12px 28px', fontSize: '0.85rem' }}
             >
               <span>Explorer le Dépôt</span>
@@ -617,6 +618,7 @@ const Projects = () => {
               target="_blank" 
               rel="noopener noreferrer"
               className="btn-editorial"
+              aria-label="Explorer mes travaux de recherche au laboratoire RGU Aberdeen"
               style={{ padding: '12px 28px', fontSize: '0.85rem' }}
             >
               <span>Explorer mes travaux</span>
@@ -835,6 +837,7 @@ const Projects = () => {
               target="_blank" 
               rel="noopener noreferrer"
               className="btn-editorial"
+              aria-label="Explorer le dépôt GitHub du projet Réseau Virtuel"
               style={{ padding: '12px 28px', fontSize: '0.85rem' }}
             >
               <span>Explorer le Dépôt</span>
@@ -974,6 +977,7 @@ const Projects = () => {
               target="_blank" 
               rel="noopener noreferrer"
               className="btn-editorial"
+              aria-label="Explorer le dépôt GitHub de l'application M-Play"
               style={{ padding: '12px 28px', fontSize: '0.85rem' }}
             >
               <span>Explorer le Dépôt</span>
