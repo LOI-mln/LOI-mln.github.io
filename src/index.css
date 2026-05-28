@@ -8,7 +8,7 @@
   
   --text-primary: #111827;
   --text-secondary: #4b5563;
-  --text-muted: #9ca3af;
+  --text-muted: #6b7280; /* Ratio > 4.5:1 sur fond blanc */
   
   --accent: #ff9f1c;
   --accent-hover: #e07a00;
@@ -19,6 +19,13 @@
   
   --border-color: rgba(17, 24, 39, 0.08);
   --border-color-hover: rgba(255, 159, 28, 0.3);
+
+  /* Jetons sémantiques d'état et d'inversion */
+  --status-success: #10b981;
+  --status-success-glow: rgba(16, 185, 129, 0.25);
+  --bg-inverse: #111827;
+  --text-inverse: #ffffff;
+  --bg-mockup: #f9fafb;
   
   /* Typographie */
   --font-creative: 'Cormorant Garamond', serif;

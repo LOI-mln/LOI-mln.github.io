@@ -75,7 +75,7 @@ const Hero = () => {
           >
             <h1
               style={{
-                fontFamily: "-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', Helvetica, Arial, sans-serif",
+                fontFamily: "var(--font-title)", /* Alignement avec la charte Space Grotesk */
                 fontSize: 'clamp(4.5rem, 16vw, 11rem)',
                 fontWeight: 900,
                 color: 'var(--accent)',
@@ -164,7 +164,7 @@ const Hero = () => {
               display: 'flex',
               alignItems: 'center',
               gap: '10px',
-              backgroundColor: '#ffffff',
+              backgroundColor: 'var(--bg-primary)',
               zIndex: 3,
               boxShadow: '0 10px 25px rgba(0,0,0,0.03)',
             }}
@@ -174,8 +174,8 @@ const Hero = () => {
               style={{
                 width: '8px',
                 height: '8px',
-                backgroundColor: '#10b981', // Point clignotant vert
-                boxShadow: '0 0 10px #10b981',
+                backgroundColor: 'var(--status-success)', // Point clignotant vert sémantique
+                boxShadow: '0 0 10px var(--status-success)',
               }}
             />
             <span
@@ -238,7 +238,7 @@ const Hero = () => {
               display: 'inline-flex',
               alignItems: 'center',
               gap: '8px',
-              backgroundColor: '#ffffff',
+              backgroundColor: 'var(--bg-primary)',
             }}
           >
             <span
@@ -246,7 +246,7 @@ const Hero = () => {
               style={{
                 width: '8px',
                 height: '8px',
-                backgroundColor: '#10b981',
+                backgroundColor: 'var(--status-success)',
               }}
             />
             <span style={{ fontFamily: 'var(--font-subtitle)', fontSize: '0.75rem', fontWeight: 700 }}>
@@ -279,13 +279,13 @@ const Hero = () => {
               gap: '12px',
               padding: '16px 36px',
               borderRadius: '50px',
-              backgroundColor: '#111827', // Fond sombre premium
-              color: '#ffffff',
+              backgroundColor: 'var(--bg-inverse)', // Fond sombre sémantique
+              color: 'var(--text-inverse)',
               textDecoration: 'none',
               fontFamily: 'var(--font-subtitle)',
               fontWeight: 600,
               fontSize: '0.9rem',
-              boxShadow: '0 10px 25px rgba(17, 24, 39, 0.15)',
+              boxShadow: '0 10px 25px rgba(17, 24, 39, 0.12)',
               transition: 'var(--transition-smooth)',
             }}
             onMouseEnter={(e) => {
@@ -295,8 +295,8 @@ const Hero = () => {
             }}
             onMouseLeave={(e) => {
               e.currentTarget.style.transform = 'translateY(0)';
-              e.currentTarget.style.backgroundColor = '#111827';
-              e.currentTarget.style.boxShadow = '0 10px 25px rgba(17, 24, 39, 0.15)';
+              e.currentTarget.style.backgroundColor = 'var(--bg-inverse)';
+              e.currentTarget.style.boxShadow = '0 10px 25px rgba(17, 24, 39, 0.12)';
             }}
           >
             <span>Parlons-en</span>
