@@ -65,9 +65,9 @@ const MetricCard = ({ m }) => {
         borderRadius: '24px',
         height: '215px',
         background: 'rgba(255, 255, 255, 0.45)',
-        border: isHovered ? '1px solid rgba(255, 159, 28, 0.35)' : '1px solid var(--border-color)',
+        border: isHovered ? '1px solid rgba(227, 93, 59, 0.35)' : '1px solid var(--border-color)',
         transform: isHovered ? 'translateY(-4px)' : 'translateY(0)',
-        boxShadow: isHovered ? '0 20px 40px rgba(255, 159, 28, 0.06)' : 'none',
+        boxShadow: isHovered ? '0 20px 40px rgba(227, 93, 59, 0.06)' : 'none',
         transition: 'var(--transition-smooth)',
       }}
     >
@@ -78,7 +78,7 @@ const MetricCard = ({ m }) => {
           position: 'absolute',
           inset: 0,
           borderRadius: '24px',
-          background: 'radial-gradient(circle 180px at var(--mx, 50%) var(--my, 50%), rgba(255, 159, 28, 0.08), transparent)',
+          background: 'radial-gradient(circle 180px at var(--mx, 50%) var(--my, 50%), rgba(227, 93, 59, 0.08), transparent)',
           opacity: isHovered ? 1 : 0,
           transition: 'opacity 0.3s ease',
           pointerEvents: 'none',
@@ -117,12 +117,12 @@ const MetricCard = ({ m }) => {
       >
         <span
           style={{
-            fontFamily: 'var(--font-title)',
-            fontSize: '2.8rem',
-            fontWeight: 800,
+            fontFamily: 'var(--font-mono)',
+            fontSize: '2.5rem',
+            fontWeight: 700,
             color: 'var(--text-primary)',
             lineHeight: 1.1,
-            letterSpacing: '-0.02em',
+            letterSpacing: '-0.05em',
           }}
         >
           <AnimatedNumber
@@ -179,9 +179,9 @@ const MetricCard = ({ m }) => {
           <div style={{ display: 'flex', alignItems: 'baseline' }}>
             <span
               style={{
-                fontFamily: 'var(--font-title)',
-                fontSize: '1.5rem',
-                fontWeight: 800,
+                fontFamily: 'var(--font-mono)',
+                fontSize: '1.4rem',
+                fontWeight: 700,
                 color: 'var(--text-primary)',
               }}
             >
@@ -215,10 +215,10 @@ const MetricCard = ({ m }) => {
                 fontFamily: 'var(--font-title)',
                 letterSpacing: '0.05em',
                 color: 'var(--accent)',
-                background: 'rgba(255, 159, 28, 0.08)',
+                background: 'rgba(227, 93, 59, 0.08)',
                 padding: '2px 8px',
                 borderRadius: '8px',
-                border: '1px solid rgba(255, 159, 28, 0.15)',
+                border: '1px solid rgba(227, 93, 59, 0.15)',
               }}
             >
               <span className="pulse-badge-dot" />
@@ -234,7 +234,7 @@ const MetricCard = ({ m }) => {
           {m.id === 'projects' && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', width: '100%' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '0.72rem' }}>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '20px', height: '20px', borderRadius: '6px', background: 'rgba(255, 159, 28, 0.08)', color: 'var(--accent)' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '20px', height: '20px', borderRadius: '6px', background: 'rgba(227, 93, 59, 0.08)', color: 'var(--accent)' }}>
                   <GithubIcon size={11} />
                 </div>
                 <span style={{ color: 'var(--text-secondary)', fontWeight: 500 }}>Dépôts GitHub</span>
@@ -245,7 +245,7 @@ const MetricCard = ({ m }) => {
               </div>
               
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '0.72rem' }}>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '20px', height: '20px', borderRadius: '6px', background: 'rgba(255, 159, 28, 0.08)', color: 'var(--accent)' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '20px', height: '20px', borderRadius: '6px', background: 'rgba(227, 93, 59, 0.08)', color: 'var(--accent)' }}>
                   <GraduationCap size={11} />
                 </div>
                 <span style={{ color: 'var(--text-secondary)', fontWeight: 500 }}>Académiques</span>
@@ -256,7 +256,7 @@ const MetricCard = ({ m }) => {
               </div>
               
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '0.72rem' }}>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '20px', height: '20px', borderRadius: '6px', background: 'rgba(255, 159, 28, 0.08)', color: 'var(--accent)' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '20px', height: '20px', borderRadius: '6px', background: 'rgba(227, 93, 59, 0.08)', color: 'var(--accent)' }}>
                   <Server size={11} />
                 </div>
                 <span style={{ color: 'var(--text-secondary)', fontWeight: 500 }}>Homelab & Infra</span>
@@ -470,7 +470,7 @@ const MetricGrid = () => {
         .pulse-badge-dot {
           width: 6px;
           height: 6px;
-          background-color: #ff9f1c;
+          background-color: var(--accent);
           border-radius: 50%;
           display: inline-block;
           animation: badgePulse 1.5s infinite ease-in-out;

@@ -51,7 +51,7 @@ const Timeline = () => {
           right: '-10%',
           width: '50vw',
           height: '50vw',
-          background: 'radial-gradient(circle, rgba(255, 159, 28, 0.02) 0%, rgba(255, 255, 255, 0) 70%)',
+          background: 'radial-gradient(circle, rgba(227, 93, 59, 0.02) 0%, rgba(255, 255, 255, 0) 70%)',
           zIndex: 0,
           pointerEvents: 'none',
         }}
@@ -64,11 +64,10 @@ const Timeline = () => {
             EVOLUTIONARY PATH
           </div>
           <h2
+            className="section-title"
             style={{
-              fontFamily: 'var(--font-title)',
               fontSize: 'clamp(2rem, 5vw, 3.2rem)',
               color: 'var(--text-primary)',
-              letterSpacing: '-0.03em',
               textTransform: 'uppercase',
               lineHeight: '1.25',
               padding: '0.1em 0',
@@ -146,8 +145,8 @@ const Timeline = () => {
                       backgroundColor: '#ffffff',
                       border: isCurrent || isHovered ? '3px solid var(--accent)' : '2px solid var(--accent)',
                       boxShadow: isCurrent || isHovered
-                        ? '0 0 25px rgba(255, 159, 28, 0.4)'
-                        : '0 8px 24px rgba(255, 159, 28, 0.15)',
+                        ? '0 0 25px rgba(227, 93, 59, 0.4)'
+                        : '0 8px 24px rgba(227, 93, 59, 0.15)',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
@@ -171,14 +170,14 @@ const Timeline = () => {
                       padding: '28px',
                       background: '#ffffff',
                       borderWidth: '1px',
-                      borderColor: isCurrent || isHovered ? 'rgba(255, 159, 28, 0.35)' : 'var(--border-color)',
+                      borderColor: isCurrent || isHovered ? 'rgba(227, 93, 59, 0.35)' : 'var(--border-color)',
                       borderRadius: '24px',
                       flexGrow: 1,
                       display: 'flex',
                       flexDirection: 'column',
                       alignItems: 'flex-start',
                       boxShadow: isCurrent || isHovered
-                        ? '0 20px 40px rgba(255, 159, 28, 0.05)'
+                        ? '0 20px 40px rgba(227, 93, 59, 0.05)'
                         : '0 10px 30px rgba(0,0,0,0.01)',
                       transition: 'var(--transition-smooth)',
                       position: 'relative',
@@ -193,7 +192,7 @@ const Timeline = () => {
                         position: 'absolute',
                         inset: 0,
                         borderRadius: '24px',
-                        background: 'radial-gradient(circle 180px at var(--mx, 50%) var(--my, 50%), rgba(255, 159, 28, 0.08), transparent)',
+                        background: 'radial-gradient(circle 180px at var(--mx, 50%) var(--my, 50%), rgba(227, 93, 59, 0.08), transparent)',
                         opacity: isHovered ? 1 : 0,
                         transition: 'opacity 0.3s ease',
                         pointerEvents: 'none',

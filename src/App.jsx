@@ -15,6 +15,8 @@ import useScrollReveal from './hooks/useScrollReveal';
 function App() {
   const [loading, setLoading] = useState(true);
   const [loadingFade, setLoadingFade] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [loaderLog, setLoaderLog] = useState('SYS.INIT // Initializing...');
 
   // Activer l'animation au défilement
   useScrollReveal();
@@ -26,6 +28,38 @@ function App() {
     }
     window.scrollTo(0, 0);
   }, []);
+
+  // Animation de progression du chargement
+  useEffect(() => {
+    let start = 0;
+    const interval = setInterval(() => {
+      start += Math.floor(Math.random() * 8) + 4;
+      if (start >= 100) {
+        start = 100;
+        clearInterval(interval);
+      }
+      setProgress(start);
+    }, 50);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  // Textes de logs du chargeur selon la progression
+  useEffect(() => {
+    if (progress < 20) {
+      setLoaderLog('SYS.INIT // Connecting to server...');
+    } else if (progress < 45) {
+      setLoaderLog('LOAD.CORE // Importing system variables...');
+    } else if (progress < 70) {
+      setLoaderLog('DB.QUERY // Mapping academic index...');
+    } else if (progress < 85) {
+      setLoaderLog('NET.EST // Establishing Aberdeen R&D link...');
+    } else if (progress < 100) {
+      setLoaderLog('MESH.GEN // Rendering dynamic lighting...');
+    } else {
+      setLoaderLog('SYS.READY // Milan Loï online.');
+    }
+  }, [progress]);
 
 
   // Initialiser le défilement fluide Lenis
@@ -88,21 +122,48 @@ function App() {
 
   return (
     <>
-      {/* Écran de chargement minimaliste */}
+      {/* Écran de chargement plein écran technique */}
       {loading && (
         <div className={`loader-overlay ${loadingFade ? 'fade-out' : ''}`}>
-          {/* Particules ambiantes flottantes */}
-          <div className="loader-ambient-particle" style={{ top: '18%', left: '12%', animationDelay: '0s', animationDuration: '6s' }} />
-          <div className="loader-ambient-particle" style={{ top: '72%', left: '78%', animationDelay: '1.2s', animationDuration: '7s' }} />
-          <div className="loader-ambient-particle" style={{ top: '35%', left: '85%', animationDelay: '2.5s', animationDuration: '5.5s' }} />
-          <div className="loader-ambient-particle" style={{ top: '80%', left: '25%', animationDelay: '0.8s', animationDuration: '8s' }} />
-          <div className="loader-ambient-particle" style={{ top: '55%', left: '45%', animationDelay: '3s', animationDuration: '6.5s' }} />
+          {/* Grille technique en arrière-plan */}
+          <div className="loader-grid-bg" />
+          <div className="loader-scanlines" />
 
-          {/* Point central pulsant + anneaux ripple */}
-          <div className="loader-center-group">
-            <div className="loader-ripple" />
-            <div className="loader-ripple loader-ripple--delayed" />
-            <div className="loader-pulse-dot" />
+          {/* Brackets de coin HUD */}
+          <div className="loader-corner loader-corner-tl" />
+          <div className="loader-corner loader-corner-tr" />
+          <div className="loader-corner loader-corner-bl" />
+          <div className="loader-corner loader-corner-br" />
+
+          {/* Particules ambiantes flottantes */}
+          <div className="loader-ambient-particle" style={{ top: '15%', left: '10%', animationDelay: '0s', animationDuration: '6s' }} />
+          <div className="loader-ambient-particle" style={{ top: '75%', left: '80%', animationDelay: '1.2s', animationDuration: '7s' }} />
+          <div className="loader-ambient-particle" style={{ top: '30%', left: '85%', animationDelay: '2.5s', animationDuration: '5.5s' }} />
+          <div className="loader-ambient-particle" style={{ top: '85%', left: '20%', animationDelay: '0.8s', animationDuration: '8s' }} />
+
+          {/* En-tête technique supérieur */}
+          <div className="loader-top-bar">
+            <span className="loader-title">SYS.INIT // MILAN LOI PORTFOLIO</span>
+            <span className="loader-status">SYS.LOC // ABERDEEN, SCOTLAND</span>
+          </div>
+
+          {/* Chiffres géants centrés en arrière-plan */}
+          <div className="loader-center-giant">
+            <span className="loader-percentage-giant">
+              {progress.toString().padStart(3, '0')}
+              <span className="loader-percentage-symbol">%</span>
+            </span>
+          </div>
+
+          {/* Pied de page technique inférieur */}
+          <div className="loader-bottom-bar">
+            <span className="loader-log-stream">{loaderLog}</span>
+            <span className="loader-version">V3.1.0 // PROD</span>
+          </div>
+
+          {/* Ligne de progression pleine largeur tout en bas */}
+          <div className="loader-progress-line-container">
+            <div className="loader-progress-line" style={{ width: `${progress}%` }} />
           </div>
         </div>
       )}
@@ -123,7 +184,7 @@ function App() {
 
         {/* Sections principales */}
         <main>
-          {/* Section d'accueil et statistiques */}
+          {/* Section d'accueil */}
           <Hero />
 
           {/* Matrice de compétences */}
@@ -171,15 +232,13 @@ function App() {
                     HORS-PISTE
                   </div>
                   <h2
+                    className="section-title"
                     style={{
                       fontSize: 'clamp(2rem, 5vw, 3.2rem)',
                       color: 'var(--text-primary)',
-                      letterSpacing: '-0.03em',
                       textTransform: 'uppercase',
                       lineHeight: '1.2',
                       margin: '0 0 20px 0',
-                      fontFamily: 'var(--font-title)',
-                      fontWeight: 800,
                     }}
                   >
                     Au-delà <span className="accent-glow-text" style={{ padding: '0 0.05em' }}>du code</span>
@@ -215,7 +274,7 @@ function App() {
                       padding: '24px',
                       background: 'rgba(255, 255, 255, 0.45)',
                       backdropFilter: 'blur(12px)',
-                      borderRadius: '20px',
+                      borderRadius: '24px',
                       display: 'flex',
                       gap: '20px',
                       border: '1px solid rgba(255, 255, 255, 0.5)',
@@ -224,7 +283,7 @@ function App() {
                     onMouseEnter={(e) => {
                       e.currentTarget.style.transform = 'translateY(-3px)';
                       e.currentTarget.style.borderColor = 'var(--accent-hover)';
-                      e.currentTarget.style.boxShadow = '0 10px 25px rgba(255, 159, 28, 0.05)';
+                      e.currentTarget.style.boxShadow = '0 10px 25px rgba(227, 93, 59, 0.05)';
                     }}
                     onMouseLeave={(e) => {
                       e.currentTarget.style.transform = 'translateY(0)';
@@ -238,7 +297,7 @@ function App() {
                         width: '40px',
                         height: '40px',
                         borderRadius: '50%',
-                        backgroundColor: 'rgba(255, 159, 28, 0.08)',
+                        backgroundColor: 'rgba(227, 93, 59, 0.08)',
                         color: 'var(--accent-hover)',
                         display: 'flex',
                         alignItems: 'center',
@@ -264,7 +323,7 @@ function App() {
                       padding: '24px',
                       background: 'rgba(255, 255, 255, 0.45)',
                       backdropFilter: 'blur(12px)',
-                      borderRadius: '20px',
+                      borderRadius: '24px',
                       display: 'flex',
                       gap: '20px',
                       border: '1px solid rgba(255, 255, 255, 0.5)',
@@ -273,7 +332,7 @@ function App() {
                     onMouseEnter={(e) => {
                       e.currentTarget.style.transform = 'translateY(-3px)';
                       e.currentTarget.style.borderColor = 'var(--accent-hover)';
-                      e.currentTarget.style.boxShadow = '0 10px 25px rgba(255, 159, 28, 0.05)';
+                      e.currentTarget.style.boxShadow = '0 10px 25px rgba(227, 93, 59, 0.05)';
                     }}
                     onMouseLeave={(e) => {
                       e.currentTarget.style.transform = 'translateY(0)';
@@ -287,7 +346,7 @@ function App() {
                         width: '40px',
                         height: '40px',
                         borderRadius: '50%',
-                        backgroundColor: 'rgba(255, 159, 28, 0.08)',
+                        backgroundColor: 'rgba(227, 93, 59, 0.08)',
                         color: 'var(--accent-hover)',
                         display: 'flex',
                         alignItems: 'center',
@@ -313,7 +372,7 @@ function App() {
                       padding: '24px',
                       background: 'rgba(255, 255, 255, 0.45)',
                       backdropFilter: 'blur(12px)',
-                      borderRadius: '20px',
+                      borderRadius: '24px',
                       display: 'flex',
                       gap: '20px',
                       border: '1px solid rgba(255, 255, 255, 0.5)',
@@ -322,7 +381,7 @@ function App() {
                     onMouseEnter={(e) => {
                       e.currentTarget.style.transform = 'translateY(-3px)';
                       e.currentTarget.style.borderColor = 'var(--accent-hover)';
-                      e.currentTarget.style.boxShadow = '0 10px 25px rgba(255, 159, 28, 0.05)';
+                      e.currentTarget.style.boxShadow = '0 10px 25px rgba(227, 93, 59, 0.05)';
                     }}
                     onMouseLeave={(e) => {
                       e.currentTarget.style.transform = 'translateY(0)';
@@ -336,7 +395,7 @@ function App() {
                         width: '40px',
                         height: '40px',
                         borderRadius: '50%',
-                        backgroundColor: 'rgba(255, 159, 28, 0.08)',
+                        backgroundColor: 'rgba(227, 93, 59, 0.08)',
                         color: 'var(--accent-hover)',
                         display: 'flex',
                         alignItems: 'center',
@@ -362,7 +421,7 @@ function App() {
                       padding: '24px',
                       background: 'rgba(255, 255, 255, 0.45)',
                       backdropFilter: 'blur(12px)',
-                      borderRadius: '20px',
+                      borderRadius: '24px',
                       display: 'flex',
                       gap: '20px',
                       border: '1px solid rgba(255, 255, 255, 0.5)',
@@ -371,7 +430,7 @@ function App() {
                     onMouseEnter={(e) => {
                       e.currentTarget.style.transform = 'translateY(-3px)';
                       e.currentTarget.style.borderColor = 'var(--accent-hover)';
-                      e.currentTarget.style.boxShadow = '0 10px 25px rgba(255, 159, 28, 0.05)';
+                      e.currentTarget.style.boxShadow = '0 10px 25px rgba(227, 93, 59, 0.05)';
                     }}
                     onMouseLeave={(e) => {
                       e.currentTarget.style.transform = 'translateY(0)';
@@ -385,7 +444,7 @@ function App() {
                         width: '40px',
                         height: '40px',
                         borderRadius: '50%',
-                        backgroundColor: 'rgba(255, 159, 28, 0.08)',
+                        backgroundColor: 'rgba(227, 93, 59, 0.08)',
                         color: 'var(--accent-hover)',
                         display: 'flex',
                         alignItems: 'center',
@@ -411,7 +470,7 @@ function App() {
                       padding: '24px',
                       background: 'rgba(255, 255, 255, 0.45)',
                       backdropFilter: 'blur(12px)',
-                      borderRadius: '20px',
+                      borderRadius: '24px',
                       display: 'flex',
                       gap: '20px',
                       border: '1px solid rgba(255, 255, 255, 0.5)',
@@ -420,7 +479,7 @@ function App() {
                     onMouseEnter={(e) => {
                       e.currentTarget.style.transform = 'translateY(-3px)';
                       e.currentTarget.style.borderColor = 'var(--accent-hover)';
-                      e.currentTarget.style.boxShadow = '0 10px 25px rgba(255, 159, 28, 0.05)';
+                      e.currentTarget.style.boxShadow = '0 10px 25px rgba(227, 93, 59, 0.05)';
                     }}
                     onMouseLeave={(e) => {
                       e.currentTarget.style.transform = 'translateY(0)';
@@ -434,7 +493,7 @@ function App() {
                         width: '40px',
                         height: '40px',
                         borderRadius: '50%',
-                        backgroundColor: 'rgba(255, 159, 28, 0.08)',
+                        backgroundColor: 'rgba(227, 93, 59, 0.08)',
                         color: 'var(--accent-hover)',
                         display: 'flex',
                         alignItems: 'center',

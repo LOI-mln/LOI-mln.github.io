@@ -190,11 +190,11 @@ const Skills = () => {
         /* Styles de l'en-tête */
         .sk-header { text-align: center; margin-bottom: 40px; }
         .sk-title {
-          font-family: var(--font-title);
+          font-family: var(--font-display);
           font-size: clamp(2rem, 4.5vw, 3.2rem);
           font-weight: 800;
           color: var(--text-primary);
-          letter-spacing: -0.03em;
+          letter-spacing: -0.04em;
           text-transform: uppercase;
           line-height: 1.2;
           margin: 0;
@@ -259,10 +259,10 @@ const Skills = () => {
           font-size: 0.7rem;
           color: var(--accent-hover);
           background: var(--accent-light);
-          border: 1px solid rgba(255,159,28,0.18);
+          border: 1px solid rgba(var(--accent-rgb), 0.18);
           padding: 4px 14px;
           border-radius: 50px;
-          box-shadow: 0 2px 6px rgba(255,159,28,0.02);
+          box-shadow: 0 2px 6px rgba(var(--accent-rgb), 0.02);
         }
 
         /* Styles des nœuds */
@@ -291,7 +291,7 @@ const Skills = () => {
         }
         .sk-node:hover {
           background: rgba(255,255,255,0.9);
-          border-color: rgba(255,159,28,0.4);
+          border-color: rgba(var(--accent-rgb), 0.4);
           transform: translateY(-4px);
           box-shadow: 0 16px 36px rgba(0,0,0,0.06);
         }
@@ -314,7 +314,7 @@ const Skills = () => {
         .sk-node-icon--on {
           background: var(--accent-gradient);
           color: #ffffff;
-          box-shadow: 0 6px 18px rgba(255,159,28,0.35);
+          box-shadow: 0 6px 18px rgba(var(--accent-rgb), 0.35);
         }
 
         .sk-node-body {
@@ -357,7 +357,7 @@ const Skills = () => {
         }
         .sk-ring-fill {
           fill: none;
-          stroke: rgba(255,159,28,0.25);
+          stroke: rgba(var(--accent-rgb), 0.25);
           stroke-width: 3.5;
           stroke-linecap: round;
           transition: stroke 0.3s ease;

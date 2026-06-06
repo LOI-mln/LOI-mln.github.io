@@ -377,7 +377,7 @@ const Projects = () => {
           transform: 'translate(-50%, -50%)',
           width: '80vw',
           height: '80vw',
-          background: 'radial-gradient(circle, rgba(255, 159, 28, 0.03) 0%, rgba(255, 255, 255, 0) 70%)',
+          background: 'radial-gradient(circle, rgba(227, 93, 59, 0.03) 0%, rgba(255, 255, 255, 0) 70%)',
           zIndex: 0,
           pointerEvents: 'none',
         }}
@@ -390,12 +390,10 @@ const Projects = () => {
             RÉALISATIONS MAJEURES
           </div>
           <h2
+            className="section-title"
             style={{
-              fontFamily: 'var(--font-title)',
               fontSize: 'clamp(2.4rem, 6vw, 3.8rem)',
-              fontWeight: 800,
               color: 'var(--text-primary)',
-              letterSpacing: '-0.03em',
               textTransform: 'uppercase',
               lineHeight: '1.15',
               margin: 0,
@@ -456,7 +454,7 @@ const Projects = () => {
             {/* Tech & CTA */}
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '32px' }}>
               {['Vue.js', 'PHP', 'MariaDB', 'NLP / Sentiment', 'SQL', 'Alerting API'].map(tech => (
-                <span key={tech} className="organic-badge" style={{ fontSize: '0.75rem', padding: '4px 12px', background: 'rgba(255, 159, 28, 0.06)' }}>
+                <span key={tech} className="organic-badge" style={{ fontSize: '0.75rem', padding: '4px 12px', background: 'rgba(227, 93, 59, 0.06)' }}>
                   {tech}
                 </span>
               ))}
@@ -607,7 +605,7 @@ const Projects = () => {
             {/* Tech & CTA */}
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '32px' }}>
               {['Python', 'NLP / Langage', 'Social Media Analysis', 'Group Polarization', 'SpaCy & NLTK', 'Erasmus+'].map(tech => (
-                <span key={tech} className="organic-badge" style={{ fontSize: '0.75rem', padding: '4px 12px', background: 'rgba(255, 159, 28, 0.06)' }}>
+                <span key={tech} className="organic-badge" style={{ fontSize: '0.75rem', padding: '4px 12px', background: 'rgba(227, 93, 59, 0.06)' }}>
                   {tech}
                 </span>
               ))}
@@ -638,7 +636,7 @@ const Projects = () => {
               <div style={{ width: '135px', backgroundColor: 'rgba(6, 8, 14, 0.7)', borderRight: '1px solid rgba(255, 255, 255, 0.06)', display: 'flex', flexDirection: 'column', padding: '16px 10px', gap: '18px', zIndex: 1 }}>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
                   <span style={{ fontSize: '0.55rem', fontWeight: 900, color: 'rgba(255, 255, 255, 0.3)', letterSpacing: '0.08em', textTransform: 'uppercase' }}>ANALYSIS TOOLKIT</span>
-                  <div style={{ width: '15px', height: '2px', backgroundColor: '#ff9f1c', borderRadius: '1px' }} />
+                  <div style={{ width: '15px', height: '2px', backgroundColor: 'var(--accent)', borderRadius: '1px' }} />
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                   {[
@@ -653,8 +651,8 @@ const Projects = () => {
                         width: '6px', 
                         height: '6px', 
                         borderRadius: '50%', 
-                        backgroundColor: nav.active ? '#ff9f1c' : 'rgba(255, 255, 255, 0.15)',
-                        boxShadow: nav.active ? '0 0 10px #ff9f1c, 0 0 4px #ff9f1c' : 'none',
+                        backgroundColor: nav.active ? 'var(--accent)' : 'rgba(255, 255, 255, 0.15)',
+                        boxShadow: nav.active ? '0 0 10px var(--accent), 0 0 4px var(--accent)' : 'none',
                         border: nav.active ? 'none' : '1px solid rgba(255, 255, 255, 0.2)'
                       }} />
                       <span style={{ 
@@ -676,10 +674,10 @@ const Projects = () => {
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <span style={{ fontSize: '0.72rem', fontWeight: 800, color: '#ffffff', letterSpacing: '0.02em', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                      <span style={{ width: '4px', height: '10px', backgroundColor: '#ff9f1c', borderRadius: '2px' }} />
+                      <span style={{ width: '4px', height: '10px', backgroundColor: 'var(--accent)', borderRadius: '2px' }} />
                       Polarization Heatmap
                     </span>
-                    <span style={{ fontFamily: 'monospace', fontSize: '0.48rem', color: '#ff9f1c', backgroundColor: 'rgba(255, 159, 28, 0.08)', padding: '2px 6px', borderRadius: '4px', border: '1px solid rgba(255, 159, 28, 0.15)' }}>SYS.ACTIVE</span>
+                    <span style={{ fontFamily: 'monospace', fontSize: '0.48rem', color: 'var(--accent)', backgroundColor: 'rgba(227, 93, 59, 0.08)', padding: '2px 6px', borderRadius: '4px', border: '1px solid rgba(227, 93, 59, 0.15)' }}>SYS.ACTIVE</span>
                   </div>
                   
                   {/* Grid Table for Heatmap */}
@@ -770,7 +768,7 @@ const Projects = () => {
                         strokeLinecap="round"
                       />
                       {/* Interactive dot tracking simulation */}
-                      <circle cx="150" cy="27" r="3.5" fill="#ff9f1c" stroke="#ffffff" strokeWidth="1" style={{ filter: 'drop-shadow(0 0 4px #ff9f1c)' }} />
+                      <circle cx="150" cy="27" r="3.5" fill="var(--accent)" stroke="#ffffff" strokeWidth="1" style={{ filter: 'drop-shadow(0 0 4px var(--accent))' }} />
                     </svg>
                   </div>
 
@@ -826,7 +824,7 @@ const Projects = () => {
             {/* Tech & CTA */}
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '32px' }}>
               {['Réseaux', 'SysAdmin', 'OSPF / RIP', 'Virtualisation', 'DHCP & DNS'].map(tech => (
-                <span key={tech} className="organic-badge" style={{ fontSize: '0.75rem', padding: '4px 12px', background: 'rgba(255, 159, 28, 0.06)' }}>
+                <span key={tech} className="organic-badge" style={{ fontSize: '0.75rem', padding: '4px 12px', background: 'rgba(227, 93, 59, 0.06)' }}>
                   {tech}
                 </span>
               ))}
@@ -885,11 +883,11 @@ const Projects = () => {
                     <text x="50" y="58" fontSize="8" fill="#ffffff" fontWeight="bold" textAnchor="middle">SW-1</text>
 
                     {/* Core Router 1 */}
-                    <circle cx="110" cy="25" r="14" fill="var(--accent)" stroke="rgba(255,159,28,0.3)" strokeWidth="1.5" />
+                    <circle cx="110" cy="25" r="14" fill="var(--accent)" stroke="rgba(227, 93, 59, 0.3)" strokeWidth="1.5" />
                     <text x="110" y="28" fontSize="8" fill="#ffffff" fontWeight="bold" textAnchor="middle">R-1</text>
 
                     {/* Core Router 2 */}
-                    <circle cx="110" cy="85" r="14" fill="var(--accent)" stroke="rgba(255,159,28,0.3)" strokeWidth="1.5" />
+                    <circle cx="110" cy="85" r="14" fill="var(--accent)" stroke="rgba(227, 93, 59, 0.3)" strokeWidth="1.5" />
                     <text x="110" y="88" fontSize="8" fill="#ffffff" fontWeight="bold" textAnchor="middle">R-2</text>
 
                     {/* Firewall */}
@@ -966,7 +964,7 @@ const Projects = () => {
             {/* Tech & CTA */}
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '32px' }}>
               {['Electron', 'Node.js', 'FFmpeg', 'HTML5 / CSS3', 'Desktop App'].map(tech => (
-                <span key={tech} className="organic-badge" style={{ fontSize: '0.75rem', padding: '4px 12px', background: 'rgba(255, 159, 28, 0.06)' }}>
+                <span key={tech} className="organic-badge" style={{ fontSize: '0.75rem', padding: '4px 12px', background: 'rgba(227, 93, 59, 0.06)' }}>
                   {tech}
                 </span>
               ))}
