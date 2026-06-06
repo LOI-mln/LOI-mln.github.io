@@ -151,7 +151,7 @@ const CustomCursor = () => {
           left: 0;
           width: 8px;
           height: 8px;
-          background-color: #ff9f1c;
+          background-color: var(--accent);
           border-radius: 50%;
           transform: translate3d(-100px, -100px, 0);
           pointer-events: none;
@@ -186,8 +186,8 @@ const CustomCursor = () => {
 
         /* État survolé */
         .custom-cursor-ring.cursor-hovered {
-          border: 1.5px solid #ff9f1c;
-          background-color: rgba(255, 159, 28, 0.05);
+          border: 1.5px solid var(--accent);
+          background-color: var(--accent-light);
         }
 
         /* Coordonnées affichées */
@@ -197,7 +197,7 @@ const CustomCursor = () => {
           font-family: monospace;
           font-size: 8px;
           font-weight: 700;
-          color: #ff9f1c;
+          color: var(--accent);
           white-space: nowrap;
           letter-spacing: 0.05em;
           opacity: 0;

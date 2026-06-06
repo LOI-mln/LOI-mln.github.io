@@ -250,7 +250,7 @@ const AntigravityCanvas = ({
               ? `rgba(255, 255, 255, ${opacity})`
               : (colorScheme === 'neon'
                   ? `rgba(17, 24, 39, ${opacity * 0.45})`
-                  : `rgba(255, 159, 28, ${opacity * 0.8})`);
+                  : `rgba(227, 93, 59, ${opacity * 0.8})`);
             ctx.stroke();
           }
         }

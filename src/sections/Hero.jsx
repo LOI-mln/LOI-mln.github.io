@@ -28,7 +28,7 @@ const Hero = () => {
         justifyContent: 'flex-start',
         padding: '140px 24px 60px 24px',
         overflow: 'hidden',
-        backgroundColor: '#ffffff',
+        backgroundColor: 'transparent',
       }}
     >
 
@@ -151,7 +151,7 @@ const Hero = () => {
             </h2>
           </div>
 
-          {/* Badge de disponibilité pour alternance */}
+          {/* Badge de statut R&D */}
           <div
             className="glass-panel desktop-only"
             style={{
@@ -187,7 +187,7 @@ const Hero = () => {
                 letterSpacing: '0.02em',
               }}
             >
-              Disponible Alternance Sept 2026
+              Stage R&D // Aberdeen, Écosse
             </span>
           </div>
 
@@ -250,7 +250,7 @@ const Hero = () => {
               }}
             />
             <span style={{ fontFamily: 'var(--font-subtitle)', fontSize: '0.75rem', fontWeight: 700 }}>
-              Disponible Alternance Sept 2026
+              Stage R&D // Aberdeen, Écosse
             </span>
           </div>
           <p
@@ -304,8 +304,8 @@ const Hero = () => {
           </a>
         </div>
 
-        {/* Section des statistiques de l'application */}
-        <div className="reveal-on-scroll delay-300" style={{ width: '100%' }}>
+        {/* Section des statistiques (MetricGrid) */}
+        <div className="reveal-on-scroll delay-300" style={{ width: '100%', marginTop: '50px' }}>
           <MetricGrid />
         </div>
       </div>
