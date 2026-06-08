@@ -10,3 +10,5 @@ Portfolio professionnel réécrit en **React 19** & **Vite 8** avec une architec
 
 ## 🚀 Déploiement
 Le projet utilise **GitHub Actions** pour le déploiement continu. À chaque push sur `main`, le code est compilé pour la production et publié en direct sur GitHub Pages.
+
+<!-- noop: modification pour déclencher un commit de déploiement (no-op) -->
