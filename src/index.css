@@ -51,29 +51,6 @@
   --mobile-menu-bg: rgba(255, 255, 255, 0.95);
 }
 
-.dark, [data-theme="dark"] {
-  --bg-primary: #090b11;
-  --bg-secondary: #0f121a;
-  --bg-tertiary: #161a24;
-  
-  --text-primary: #f3f4f6;
-  --text-secondary: #9ca3af;
-  --text-muted: #6b7280;
-  
-  --border-color: rgba(243, 244, 246, 0.08);
-  --border-color-hover: rgba(var(--accent-rgb), 0.5);
-  
-  --bg-inverse: #ffffff;
-  --text-inverse: #111827;
-  --bg-mockup: #0c0e16;
-
-  --glass-bg: rgba(15, 18, 22, 0.45);
-  --glass-border: rgba(243, 244, 246, 0.1);
-  --navbar-bg-scrolled: rgba(9, 11, 17, 0.85);
-  --navbar-bg-idle: rgba(9, 11, 17, 0.65);
-  --navbar-bg-collapsed: rgba(9, 11, 17, 0.95);
-  --mobile-menu-bg: rgba(9, 11, 17, 0.95);
-}
 
 /* Smooth global transitions for theme switching */
 body,
@@ -89,10 +66,7 @@ footer,
               background-image 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.dark .dot-grid-bg, [data-theme="dark"] .dot-grid-bg {
-  background-image: 
-    radial-gradient(circle, rgba(243, 244, 246, 0.015) 1.5px, transparent 1.5px);
-}
+/* Dark theme removed: site uses light-only variables */
 
 /* Réinitialisation des styles */
 *, *::before, *::after {

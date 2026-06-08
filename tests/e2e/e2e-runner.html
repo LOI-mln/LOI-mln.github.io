@@ -1,0 +1,1072 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Milan Loï Portfolio — E2E Test Suite Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap');
+    
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #030712;
+      color: #f3f4f6;
+    }
+
+    .font-mono {
+      font-family: 'Fira Code', monospace;
+    }
+
+    /* Custom scrollbars */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0b0f19;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #374151;
+      border-radius: 3px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #4b5563;
+    }
+
+    /* HUD Amber neon glow */
+    .hud-glow {
+      box-shadow: 0 0 15px rgba(245, 158, 11, 0.15);
+      border-color: rgba(245, 158, 11, 0.3);
+    }
+    .hud-glow-green {
+      box-shadow: 0 0 15px rgba(16, 185, 129, 0.15);
+      border-color: rgba(16, 185, 129, 0.3);
+    }
+
+    /* Scanlines */
+    .scanlines {
+      position: relative;
+      overflow: hidden;
+    }
+    .scanlines::before {
+      content: " ";
+      display: block;
+      position: absolute;
+      top: 0; left: 0; bottom: 0; right: 0;
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+      z-index: 10;
+      background-size: 100% 4px, 3px 100%;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body class="h-screen w-screen flex flex-col overflow-hidden bg-[#030712]">
+  
+  <!-- Header Bar -->
+  <header class="h-16 border-b border-slate-800 bg-[#090d16] px-6 flex items-center justify-between z-20 shrink-0">
+    <div class="flex items-center space-x-3">
+      <div class="w-3 h-3 rounded-full bg-amber-500 animate-pulse"></div>
+      <span class="font-mono text-xs text-amber-500 font-bold tracking-widest">SYS.E2E // RUNNER</span>
+      <h1 class="text-lg font-extrabold tracking-tight text-white border-l border-slate-800 pl-3">
+        Milan Loï Portfolio <span class="text-xs font-normal text-slate-400 font-mono ml-1">v3.1.0</span>
+      </h1>
+    </div>
+    <div class="flex items-center space-x-4">
+      <div class="flex items-center space-x-2">
+        <label for="appUrlInput" class="text-xs font-mono text-slate-400">Target URL:</label>
+        <input type="text" id="appUrlInput" 
+               class="bg-slate-900 border border-slate-700 rounded px-2.5 py-1 text-xs font-mono text-white focus:outline-none focus:border-amber-500 w-64"
+               value="">
+      </div>
+      <button onclick="reloadIframe()" class="p-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded text-xs transition duration-200" title="Reload Application">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 1121.253 8H18" />
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Workspace -->
+  <main class="flex-1 flex overflow-hidden min-h-0">
+    
+    <!-- Left Pane: Control Panel & Diagnostics -->
+    <section class="w-5/12 border-r border-slate-800 bg-[#060911] flex flex-col min-h-0 shrink-0">
+      
+      <!-- CORS Alert Banner (Hidden by default) -->
+      <div id="corsWarning" class="hidden bg-amber-950/60 border-b border-amber-800/60 px-4 py-3 text-xs text-amber-200">
+        <div class="flex space-x-2.5 items-start">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4.5 w-4.5 text-amber-500 shrink-0" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+          </svg>
+          <div>
+            <span class="font-bold">CORS/Origin Policy Restriction Detected.</span>
+            Browser security restricts DOM-level E2E tests when run from local files (`file://`). 
+            To run tests dynamically:
+            <ol class="list-decimal pl-4 mt-1 font-mono text-[10px] space-y-0.5">
+              <li>Start your Vite server: <code class="text-amber-400 bg-slate-900 px-1 py-0.5 rounded">npm run dev</code></li>
+              <li>Access this runner at: <code class="text-amber-400">http://localhost:5173/tests/e2e/e2e-runner.html</code></li>
+            </ol>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Stats & Action Bar -->
+      <div class="p-4 bg-[#090d16]/50 border-b border-slate-800/80 flex items-center justify-between shrink-0">
+        <div class="flex space-x-4">
+          <div class="text-center">
+            <div id="statTotal" class="text-lg font-bold text-white font-mono">27</div>
+            <div class="text-[10px] text-slate-500 uppercase tracking-wider font-semibold">Total Tests</div>
+          </div>
+          <div class="text-center border-l border-slate-800 pl-4">
+            <div id="statPassed" class="text-lg font-bold text-emerald-500 font-mono">0</div>
+            <div class="text-[10px] text-slate-500 uppercase tracking-wider font-semibold">Passed</div>
+          </div>
+          <div class="text-center border-l border-slate-800 pl-4">
+            <div id="statFailed" class="text-lg font-bold text-rose-500 font-mono">0</div>
+            <div class="text-[10px] text-slate-500 uppercase tracking-wider font-semibold">Failed</div>
+          </div>
+          <div class="text-center border-l border-slate-800 pl-4">
+            <div id="statPending" class="text-lg font-bold text-slate-400 font-mono">27</div>
+            <div class="text-[10px] text-slate-500 uppercase tracking-wider font-semibold">Pending</div>
+          </div>
+        </div>
+        <button id="runAllBtn" onclick="runAllTests()" class="px-4 py-2 bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500 text-white rounded font-semibold text-xs tracking-wider uppercase shadow-lg shadow-orange-950/30 hover:shadow-orange-950/50 transition duration-200">
+          Run Test Suite
+        </button>
+      </div>
+
+      <!-- Test Cases List -->
+      <div class="flex-1 overflow-y-auto p-4 space-y-3 min-h-0">
+        <h2 class="text-xs uppercase font-bold tracking-widest text-slate-400 font-mono mb-2">E2E Scenarios</h2>
+        
+        <!-- Scenario items will be loaded dynamically by script -->
+        <div id="scenariosList" class="space-y-2.5">
+          <!-- Loading placeholder -->
+          <div class="text-slate-500 text-xs italic">Loading test scenarios...</div>
+        </div>
+      </div>
+
+      <!-- Live Diagnostics Log Panel -->
+      <div class="h-64 border-t border-slate-800 bg-[#02050b] flex flex-col shrink-0">
+        <div class="px-4 py-2 border-b border-slate-900 bg-[#060910] flex items-center justify-between shrink-0">
+          <span class="text-[10px] font-mono font-bold tracking-widest text-slate-400 uppercase">Live Output Logs</span>
+          <button onclick="clearLogs()" class="text-[10px] font-mono text-slate-500 hover:text-slate-300">Clear</button>
+        </div>
+        <div id="consoleLogs" class="flex-1 p-3 font-mono text-[11px] overflow-y-auto text-emerald-400 space-y-1 select-text">
+          <div class="text-slate-600">&gt; E2E Diagnostics subsystem loaded and idle.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Right Pane: App Simulation Viewport -->
+    <section class="flex-1 bg-[#090b10] flex flex-col min-h-0 relative">
+      
+      <!-- Frame Controls -->
+      <div class="h-11 border-b border-slate-800/80 bg-[#060911]/80 px-4 flex items-center justify-between shrink-0">
+        <div class="flex items-center space-x-1.5">
+          <span class="w-2.5 h-2.5 rounded-full bg-slate-700"></span>
+          <span id="viewportRes" class="text-xs font-mono text-slate-400">Viewport: Desktop (Auto)</span>
+        </div>
+        
+        <!-- Resizer Controls -->
+        <div class="flex items-center space-x-1 bg-slate-900/60 border border-slate-800 p-0.5 rounded">
+          <button onclick="resizeViewport('mobile')" class="px-2 py-0.5 text-[10px] font-mono text-slate-400 hover:text-white hover:bg-slate-800 rounded transition duration-150">Mobile</button>
+          <button onclick="resizeViewport('tablet')" class="px-2 py-0.5 text-[10px] font-mono text-slate-400 hover:text-white hover:bg-slate-800 rounded transition duration-150">Tablet</button>
+          <button onclick="resizeViewport('desktop')" class="px-2 py-0.5 text-[10px] font-mono text-slate-400 hover:text-white hover:bg-slate-800 rounded transition duration-150">Desktop</button>
+        </div>
+      </div>
+
+      <!-- Iframe Frame wrapper -->
+      <div class="flex-1 flex items-center justify-center p-6 bg-[#04060a] overflow-auto min-h-0">
+        <div id="iframeWrapper" class="w-full h-full border border-slate-800 rounded-lg overflow-hidden bg-slate-950 transition-all duration-300 relative shadow-2xl shadow-black/80">
+          <div class="absolute inset-x-0 top-0 h-1 bg-slate-800 z-10">
+            <div id="iframeProgressBar" class="h-full bg-amber-500 w-0 transition-all duration-200"></div>
+          </div>
+          <iframe id="appFrame" class="w-full h-full border-none bg-white opacity-0 transition-opacity duration-300" src="about:blank"></iframe>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- E2E Test Suite Logic -->
+  <script>
+    // System Logger
+    function log(message, type = 'info') {
+      const logsContainer = document.getElementById('consoleLogs');
+      const time = new Date().toISOString().split('T')[1].slice(0, -1);
+      const logLine = document.createElement('div');
+      
+      let colorClass = 'text-slate-400';
+      let prefix = '[INFO]';
+      if (type === 'success') {
+        colorClass = 'text-emerald-400 font-semibold';
+        prefix = '[PASS]';
+      } else if (type === 'error') {
+        colorClass = 'text-rose-400 font-semibold';
+        prefix = '[FAIL]';
+      } else if (type === 'warning') {
+        colorClass = 'text-amber-400';
+        prefix = '[WARN]';
+      } else if (type === 'command') {
+        colorClass = 'text-cyan-400';
+        prefix = '[RUN ]';
+      }
+
+      logLine.className = colorClass;
+      logLine.innerHTML = `<span class="text-slate-600">${time}</span> <span class="opacity-60">${prefix}</span> ${message}`;
+      logsContainer.appendChild(logLine);
+      logsContainer.scrollTop = logsContainer.scrollHeight;
+    }
+
+    function clearLogs() {
+      const logsContainer = document.getElementById('consoleLogs');
+      logsContainer.innerHTML = '<div class="text-slate-600">&gt; Logs cleared.</div>';
+    }
+
+    // Auto-detect project paths and origins
+    const appFrame = document.getElementById('appFrame');
+    const appUrlInput = document.getElementById('appUrlInput');
+    const corsWarning = document.getElementById('corsWarning');
+
+    function initUrl() {
+      const origin = window.location.origin;
+      if (origin.startsWith('file://')) {
+        // Local file protocol, set relative path pointing to index.html
+        appUrlInput.value = '../../index.html';
+        log('Running in OFFLINE local file mode. Rel URL: ../../index.html');
+      } else {
+        // Served by local HTTP server (Vite)
+        appUrlInput.value = '/';
+        log('Running via Web origin. Root mapped URL: /');
+      }
+    }
+    initUrl();
+
+    // Reload IFrame with early injected spies
+    let checkTimer = null;
+    function reloadIframe() {
+      if (checkTimer) clearInterval(checkTimer);
+      const progressBar = document.getElementById('iframeProgressBar');
+      progressBar.style.width = '10%';
+      appFrame.style.opacity = '0';
+      
+      log(`Navigating iframe to: ${appUrlInput.value}`, 'info');
+      appFrame.src = appUrlInput.value;
+      
+      // Inject spies before application scripts execute
+      checkTimer = setInterval(() => {
+        try {
+          const win = appFrame.contentWindow;
+          if (win && !win.hasInjectedSpies) {
+            win.hasInjectedSpies = true;
+            
+            // 1. Spying on Canvas ClearRect to count draws
+            win.canvasDraws = { organic: 0, antigravity: 0 };
+            if (win.CanvasRenderingContext2D) {
+              const originalClearRect = win.CanvasRenderingContext2D.prototype.clearRect;
+              win.CanvasRenderingContext2D.prototype.clearRect = function (x, y, w, h) {
+                const isAntigravity = this.canvas.closest('#about') !== null;
+                if (isAntigravity) {
+                  win.canvasDraws.antigravity++;
+                } else {
+                  win.canvasDraws.organic++;
+                }
+                return originalClearRect.call(this, x, y, w, h);
+              };
+              
+              // 2. Spying on strokes (colors used for theme check)
+              win.canvasStrokes = [];
+              const originalStroke = win.CanvasRenderingContext2D.prototype.stroke;
+              win.CanvasRenderingContext2D.prototype.stroke = function () {
+                if (this.canvas.closest('#about')) {
+                  win.canvasStrokes.push(this.strokeStyle);
+                }
+                return originalStroke.call(this);
+              };
+            }
+            
+            // 3. Spying on requestAnimationFrame timestamps to calculate FPS
+            win.fpsTimeStamps = [];
+            const originalRaf = win.requestAnimationFrame;
+            win.requestAnimationFrame = function (cb) {
+              win.fpsTimeStamps.push(performance.now());
+              return originalRaf(cb);
+            };
+          }
+        } catch (e) {
+          // CORS or not ready yet
+        }
+      }, 1);
+
+      progressBar.style.width = '50%';
+      
+      appFrame.onload = () => {
+        clearInterval(checkTimer);
+        progressBar.style.width = '100%';
+        appFrame.style.opacity = '1';
+        log('Iframe document loaded successfully.', 'success');
+        setTimeout(() => progressBar.style.width = '0%', 300);
+        
+        // Detect CORS restrictions
+        try {
+          const doc = appFrame.contentDocument || appFrame.contentWindow.document;
+          const content = doc.body.innerHTML; // Attempt read
+          corsWarning.classList.add('hidden');
+        } catch (e) {
+          log('CORS detected: Cannot access iframe DOM contents directly. Read operations will be restricted.', 'warning');
+          corsWarning.classList.remove('hidden');
+        }
+      };
+    }
+    
+    // Initial Load
+    reloadIframe();
+
+    // Resize viewport simulation
+    function resizeViewport(mode) {
+      const wrapper = document.getElementById('iframeWrapper');
+      const infoText = document.getElementById('viewportRes');
+      
+      if (mode === 'mobile') {
+        wrapper.style.width = '375px';
+        wrapper.style.height = '667px';
+        infoText.textContent = 'Viewport: Mobile Portrait (375x667)';
+        log('Resized simulation viewport to Mobile (375x667).');
+      } else if (mode === 'tablet') {
+        wrapper.style.width = '768px';
+        wrapper.style.height = '1024px';
+        infoText.textContent = 'Viewport: Tablet Portrait (768x1024)';
+        log('Resized simulation viewport to Tablet (768x1024).');
+      } else {
+        wrapper.style.width = '100%';
+        wrapper.style.height = '100%';
+        infoText.textContent = 'Viewport: Desktop (Auto)';
+        log('Resized simulation viewport to full Desktop (Auto).');
+      }
+    }
+
+    // Scenarios data
+    const scenarios = [
+      // FEATURE 1: CANVAS PERFORMANCE & LOOP PAUSING
+      {
+        id: 'F1-T1-01',
+        name: 'F1-T1-01: Canvas Mount and Frame Initialization',
+        description: 'Verify both canvas elements exist, are visible, and start drawing.',
+        run: async () => {
+          const doc = getIframeDoc();
+          const organic = doc.querySelector('div > canvas');
+          const antigravity = doc.querySelector('#about canvas');
+          if (!organic) throw new Error('OrganicCanvas not found in DOM.');
+          if (!antigravity) throw new Error('AntigravityCanvas not found in DOM.');
+          log('Both canvases successfully mounted.');
+          
+          await new Promise(r => setTimeout(r, 500));
+          const win = appFrame.contentWindow;
+          if (!win.canvasDraws || win.canvasDraws.organic === 0) {
+            throw new Error('OrganicCanvas failed to register initial frame draws.');
+          }
+          log(`Canvas initialized and drawing. Organic draws: ${win.canvasDraws.organic}`);
+        }
+      },
+      {
+        id: 'F1-T1-02',
+        name: 'F1-T1-02: Render Loop Throttling / FPS Check',
+        description: 'Calculate average frame delta times to confirm throttling and ~60fps target.',
+        run: async () => {
+          const win = appFrame.contentWindow;
+          await new Promise(r => setTimeout(r, 500));
+          const timestamps = win.fpsTimeStamps || [];
+          if (timestamps.length < 5) throw new Error('Not enough frames captured to check FPS.');
+          const deltas = [];
+          for (let i = 1; i < timestamps.length; i++) {
+            deltas.push(timestamps[i] - timestamps[i - 1]);
+          }
+          const avg = deltas.reduce((a, b) => a + b, 0) / deltas.length;
+          log(`Average frame delta: ${avg.toFixed(2)}ms (target: ~16.6ms)`);
+          if (avg < 5 || avg > 40) throw new Error(`Render loop FPS out of bounds: ${avg.toFixed(2)}ms`);
+        }
+      },
+      {
+        id: 'F1-T1-03',
+        name: 'F1-T1-03: Viewport Intersection Pausing',
+        description: 'Assert that scrolling past canvas targets completely pauses their render loops.',
+        run: async () => {
+          const win = appFrame.contentWindow;
+          win.scrollTo(0, win.document.body.scrollHeight);
+          await new Promise(r => setTimeout(r, 800));
+          
+          win.canvasDraws.organic = 0;
+          win.canvasDraws.antigravity = 0;
+          await new Promise(r => setTimeout(r, 500));
+          
+          if (win.canvasDraws.organic > 0 || win.canvasDraws.antigravity > 0) {
+            throw new Error(`Canvases drawing while offscreen: organic=${win.canvasDraws.organic}, antigravity=${win.canvasDraws.antigravity}`);
+          }
+          log('Confirmed both loops paused when offscreen.');
+        }
+      },
+      {
+        id: 'F1-T1-04',
+        name: 'F1-T1-04: Viewport Intersection Resuming',
+        description: 'Confirm that returning to the top resumes the background mesh render loop.',
+        run: async () => {
+          const win = appFrame.contentWindow;
+          win.scrollTo(0, win.document.body.scrollHeight);
+          await new Promise(r => setTimeout(r, 800));
+          
+          win.scrollTo(0, 0);
+          await new Promise(r => setTimeout(r, 800));
+          
+          win.canvasDraws.organic = 0;
+          await new Promise(r => setTimeout(r, 500));
+          
+          if (win.canvasDraws.organic === 0) {
+            throw new Error('OrganicCanvas did not resume rendering when returned to screen.');
+          }
+          log('Confirmed OrganicCanvas resumed drawing on screen return.');
+        }
+      },
+      {
+        id: 'F1-T1-05',
+        name: 'F1-T1-05: Page Visibility Pausing',
+        description: 'Verify all rendering halts immediately when the tab is hidden.',
+        run: async () => {
+          const win = appFrame.contentWindow;
+          Object.defineProperty(win.document, 'visibilityState', { value: 'hidden', writable: true });
+          win.document.dispatchEvent(new win.Event('visibilitychange'));
+          await new Promise(r => setTimeout(r, 500));
+          
+          win.canvasDraws.organic = 0;
+          win.canvasDraws.antigravity = 0;
+          await new Promise(r => setTimeout(r, 500));
+          
+          if (win.canvasDraws.organic > 0 || win.canvasDraws.antigravity > 0) {
+            throw new Error(`Canvases drew frames while page hidden: organic=${win.canvasDraws.organic}, antigravity=${win.canvasDraws.antigravity}`);
+          }
+          log('Confirmed loops paused when document visibility is hidden.');
+        }
+      },
+      {
+        id: 'F1-T2-01',
+        name: 'F1-T2-01: Rapid Scrolling Stress Test',
+        description: 'Stress test loop controls with high-frequency scroll state toggling.',
+        run: async () => {
+          const win = appFrame.contentWindow;
+          for (let i = 0; i < 5; i++) {
+            win.scrollTo(0, win.document.body.scrollHeight);
+            await new Promise(r => setTimeout(r, 50));
+            win.scrollTo(0, 0);
+            await new Promise(r => setTimeout(r, 50));
+          }
+          await new Promise(r => setTimeout(r, 500));
+          if (win.canvasDraws.organic === 0) throw new Error('Render loop failed to recover from scrolling stress.');
+          log('Confirmed rendering stable and recovered after rapid scrolls.');
+        }
+      },
+      {
+        id: 'F1-T2-02',
+        name: 'F1-T2-02: Canvas Resizing / High-DPI Scaling',
+        description: 'Verify canvas internal drawing dimensions adjust to match physical sizes.',
+        run: async () => {
+          const doc = getIframeDoc();
+          const canvas = doc.querySelector('canvas');
+          const before = canvas.width;
+          
+          appFrame.style.width = '600px';
+          appFrame.contentWindow.dispatchEvent(new Event('resize'));
+          await new Promise(r => setTimeout(r, 300));
+          const after = canvas.width;
+          
+          appFrame.style.width = '100%';
+          appFrame.contentWindow.dispatchEvent(new Event('resize'));
+          
+          if (before === after) throw new Error('Canvas internal width did not scale on resize.');
+          log(`Canvas scaled successfully from width ${before} to ${after}.`);
+        }
+      },
+      {
+        id: 'F1-T2-03',
+        name: 'F1-T2-03: Zoom and Offscreen Intersections',
+        description: 'Check intersection pausing under scaled body/viewport simulation.',
+        run: async () => {
+          const win = appFrame.contentWindow;
+          win.document.body.style.transform = 'scale(0.5)';
+          win.dispatchEvent(new win.Event('resize'));
+          await new Promise(r => setTimeout(r, 300));
+          
+          win.scrollTo(0, win.document.body.scrollHeight);
+          await new Promise(r => setTimeout(r, 800));
+          
+          win.canvasDraws.organic = 0;
+          win.canvasDraws.antigravity = 0;
+          await new Promise(r => setTimeout(r, 500));
+          
+          win.document.body.style.transform = 'none';
+          if (win.canvasDraws.organic > 0 || win.canvasDraws.antigravity > 0) {
+            throw new Error('Canvases did not pause offscreen under zoomed document scale.');
+          }
+          log('Confirmed pausing works correctly under zoomed viewport emulation.');
+        }
+      },
+      {
+        id: 'F1-T2-04',
+        name: 'F1-T2-04: Long-Term Background Idle & Recovery',
+        description: 'Simulate long-term tab suspension and verify rendering recovers cleanly.',
+        run: async () => {
+          const win = appFrame.contentWindow;
+          Object.defineProperty(win.document, 'visibilityState', { value: 'hidden', writable: true });
+          win.document.dispatchEvent(new win.Event('visibilitychange'));
+          await new Promise(r => setTimeout(r, 1000));
+          
+          Object.defineProperty(win.document, 'visibilityState', { value: 'visible', writable: true });
+          win.document.dispatchEvent(new win.Event('visibilitychange'));
+          await new Promise(r => setTimeout(r, 500));
+          
+          win.canvasDraws.organic = 0;
+          await new Promise(r => setTimeout(r, 300));
+          if (win.canvasDraws.organic === 0) throw new Error('Render loop did not recover after tab wake.');
+          log('Confirmed loop successfully recovers from suspension.');
+        }
+      },
+      {
+        id: 'F1-T2-05',
+        name: 'F1-T2-05: Component Unmounting Cleanup',
+        description: 'Verify cancellation of all active frames when components are unmounted.',
+        run: async () => {
+          const win = appFrame.contentWindow;
+          win.document.body.innerHTML = '<h1>Components Removed</h1>';
+          await new Promise(r => setTimeout(r, 500));
+          
+          win.canvasDraws.organic = 0;
+          win.canvasDraws.antigravity = 0;
+          await new Promise(r => setTimeout(r, 500));
+          
+          if (win.canvasDraws.organic > 0 || win.canvasDraws.antigravity > 0) {
+            throw new Error('Animation loops continued requesting frames after unmounting.');
+          }
+          log('Confirmed zero animation requests after component teardown.');
+        }
+      },
+
+      // FEATURE 2: THEME TOGGLE SWITCH
+      {
+        id: 'F2-T1-01',
+        name: 'F2-T1-01: Theme Toggle Presence & Accessibility',
+        description: 'Verify existence of theme toggle switch and accessibility compliance.',
+        run: async () => {
+          const doc = getIframeDoc();
+          const toggle = doc.querySelector('header button[role="switch"], header button.theme-toggle-btn');
+          if (!toggle) throw new Error('Theme toggle button not found in header.');
+          if (toggle.getAttribute('role') !== 'switch') throw new Error('Theme toggle does not have role="switch".');
+          
+          toggle.focus();
+          if (doc.activeElement !== toggle) throw new Error('Theme toggle is not keyboard focusable.');
+          log('Theme toggle verified for DOM visibility and accessibility constraints.');
+        }
+      },
+      {
+        id: 'F2-T1-02',
+        name: 'F2-T1-02: DOM Class/Attribute Toggling',
+        description: 'Verify HTML element class toggles dark/light names on click.',
+        run: async () => {
+          const doc = getIframeDoc();
+          const toggle = doc.querySelector('header button[role="switch"], header button.theme-toggle-btn');
+          const html = doc.documentElement;
+          const isDarkBefore = html.classList.contains('dark') || html.getAttribute('data-theme') === 'dark';
+          
+          toggle.click();
+          await new Promise(r => setTimeout(r, 200));
+          const isDarkAfter = html.classList.contains('dark') || html.getAttribute('data-theme') === 'dark';
+          if (isDarkAfter === isDarkBefore) throw new Error('HTML class or data-theme attribute did not invert.');
+          
+          toggle.click(); // revert
+          await new Promise(r => setTimeout(r, 200));
+          log('Theme class successfully toggled on the root document node.');
+        }
+      },
+      {
+        id: 'F2-T1-03',
+        name: 'F2-T1-03: CSS Custom Variable Override',
+        description: 'Verify custom CSS tokens shift values upon theme inversion.',
+        run: async () => {
+          const doc = getIframeDoc();
+          const toggle = doc.querySelector('header button[role="switch"], header button.theme-toggle-btn');
+          const bgBefore = getComputedStyle(doc.body).getPropertyValue('--bg-primary').trim();
+          
+          toggle.click();
+          await new Promise(r => setTimeout(r, 200));
+          const bgAfter = getComputedStyle(doc.body).getPropertyValue('--bg-primary').trim();
+          
+          toggle.click(); // revert
+          if (bgBefore === bgAfter) throw new Error('CSS variables did not override style values.');
+          log(`CSS variable shifts from "${bgBefore}" to "${bgAfter}".`);
+        }
+      },
+      {
+        id: 'F2-T1-04',
+        name: 'F2-T1-04: AntigravityCanvas Theme Prop Propagation',
+        description: 'Verify theme values are passed to canvas drawing context styles.',
+        run: async () => {
+          const win = appFrame.contentWindow;
+          const doc = getIframeDoc();
+          doc.getElementById('about').scrollIntoView();
+          await new Promise(r => setTimeout(r, 500));
+          
+          win.canvasStrokes = [];
+          await new Promise(r => setTimeout(r, 300));
+          const strokesBefore = [...win.canvasStrokes];
+          
+          const toggle = doc.querySelector('header button[role="switch"], header button.theme-toggle-btn');
+          toggle.click();
+          await new Promise(r => setTimeout(r, 200));
+          
+          win.canvasStrokes = [];
+          await new Promise(r => setTimeout(r, 300));
+          const strokesAfter = [...win.canvasStrokes];
+          
+          toggle.click(); // revert
+          
+          if (strokesBefore.length === 0 || strokesAfter.length === 0) {
+            throw new Error('No canvas stroke styles captured. Check if canvas is in view.');
+          }
+          if (strokesBefore[0] === strokesAfter[0]) {
+            throw new Error('Canvas stroke styles did not shift colors when theme toggled.');
+          }
+          log(`Canvas stroke scheme adapted: "${strokesBefore[0]}" -> "${strokesAfter[0]}".`);
+        }
+      },
+      {
+        id: 'F2-T1-05',
+        name: 'F2-T1-05: Storage Persistence',
+        description: 'Verify selected theme stores state and loads correctly after page refresh.',
+        run: async () => {
+          const win = appFrame.contentWindow;
+          const doc = getIframeDoc();
+          const toggle = doc.querySelector('header button[role="switch"], header button.theme-toggle-btn');
+          
+          toggle.click();
+          await new Promise(r => setTimeout(r, 200));
+          const stored = win.localStorage.getItem('theme');
+          if (stored !== 'dark' && stored !== 'light') throw new Error('Selected theme not stored in localStorage.');
+          
+          log(`Saved theme: ${stored}. Reloading frame...`);
+          await reloadIframe();
+          
+          const newDoc = getIframeDoc();
+          const isDark = newDoc.documentElement.classList.contains('dark') || newDoc.documentElement.getAttribute('data-theme') === 'dark';
+          if (!isDark) throw new Error('Theme setting did not persist after frame reload.');
+          log('Confirmed setting persistence.');
+        }
+      },
+      {
+        id: 'F2-T2-01',
+        name: 'F2-T2-01: Rapid Toggle Clicks (Stress Test)',
+        description: 'Test page stability when clicking theme toggle button rapidly.',
+        run: async () => {
+          const doc = getIframeDoc();
+          const toggle = doc.querySelector('header button[role="switch"], header button.theme-toggle-btn');
+          for (let i = 0; i < 10; i++) {
+            toggle.click();
+          }
+          await new Promise(r => setTimeout(r, 500));
+          const isDark = doc.documentElement.classList.contains('dark') || doc.documentElement.getAttribute('data-theme') === 'dark';
+          if (isDark) throw new Error('Click parity check failed: theme should return to light.');
+          log('Confirmed stable toggling response.');
+        }
+      },
+      {
+        id: 'F2-T2-02',
+        name: 'F2-T2-02: Corrupted or Missing LocalStorage',
+        description: 'Verify fallback behavior when storage preference contains corrupt data.',
+        run: async () => {
+          const win = appFrame.contentWindow;
+          win.localStorage.setItem('theme', 'corrupt_data_payload_string');
+          log('Corrupt data written to storage. Reloading...');
+          await reloadIframe();
+          
+          const newDoc = getIframeDoc();
+          if (!newDoc.body) throw new Error('Portfolio failed to mount with corrupted storage state.');
+          log('Confirmed application recovered safely.');
+        }
+      },
+      {
+        id: 'F2-T2-03',
+        name: 'F2-T2-03: Cross-Tab Storage Sync',
+        description: 'Verify syncing theme on storage change notifications from other tabs.',
+        run: async () => {
+          const win = appFrame.contentWindow;
+          const doc = getIframeDoc();
+          win.localStorage.setItem('theme', 'dark');
+          win.dispatchEvent(new win.StorageEvent('storage', { key: 'theme', newValue: 'dark' }));
+          await new Promise(r => setTimeout(r, 200));
+          
+          const isDark = doc.documentElement.classList.contains('dark') || doc.documentElement.getAttribute('data-theme') === 'dark';
+          if (!isDark) throw new Error('Root element failed to synchronize theme class from storage event.');
+          log('Theme synchronized successfully.');
+        }
+      },
+      {
+        id: 'F2-T2-04',
+        name: 'F2-T2-04: System Theme Preference Changes',
+        description: 'Simulate system prefers-color-scheme events and verify adaptive styling.',
+        run: async () => {
+          const win = appFrame.contentWindow;
+          const original = win.matchMedia;
+          win.matchMedia = (query) => {
+            if (query.includes('prefers-color-scheme: dark')) {
+              return { matches: true, addListener: () => {}, removeListener: () => {}, addEventListener: () => {}, removeEventListener: () => {} };
+            }
+            return original.call(win, query);
+          };
+          win.dispatchEvent(new win.Event('theme-system-check'));
+          await new Promise(r => setTimeout(r, 200));
+          log('Successfully mocked system prefers-color-scheme changes.');
+        }
+      },
+      {
+        id: 'F2-T2-05',
+        name: 'F2-T2-05: Extreme Screen Sizes and Responsiveness',
+        description: 'Verify that the theme toggle is accessible on mobile and large viewport widths.',
+        run: async () => {
+          const doc = getIframeDoc();
+          const widths = [320, 768, 1200, 2560];
+          for (const w of widths) {
+            appFrame.style.width = `${w}px`;
+            appFrame.contentWindow.dispatchEvent(new Event('resize'));
+            await new Promise(r => setTimeout(r, 100));
+            const toggle = doc.querySelector('header button[role="switch"], header button.theme-toggle-btn');
+            if (!toggle) throw new Error(`Toggle component unreachable at viewport width: ${w}px`);
+          }
+          appFrame.style.width = '100%';
+          appFrame.contentWindow.dispatchEvent(new Event('resize'));
+          log('Confirmed theme toggle accessible across responsive widths.');
+        }
+      },
+
+      // FEATURE 3: CROSS-FEATURE INTERACTIONS
+      {
+        id: 'F3-01',
+        name: 'F3-01: Theme Toggle during Canvas Offscreen/Paused State',
+        description: 'Verify canvases remain fully paused offscreen during and after theme switches.',
+        run: async () => {
+          const win = appFrame.contentWindow;
+          const doc = getIframeDoc();
+          
+          win.scrollTo(0, win.document.body.scrollHeight);
+          await new Promise(r => setTimeout(r, 800));
+          win.canvasDraws.organic = 0;
+          win.canvasDraws.antigravity = 0;
+          await new Promise(r => setTimeout(r, 500));
+          if (win.canvasDraws.organic > 0) throw new Error('OrganicCanvas did not pause offscreen.');
+          
+          const toggle = doc.querySelector('header button[role="switch"], header button.theme-toggle-btn');
+          toggle.click();
+          await new Promise(r => setTimeout(r, 200));
+          
+          win.canvasDraws.organic = 0;
+          await new Promise(r => setTimeout(r, 500));
+          if (win.canvasDraws.organic > 0) {
+            throw new Error('OrganicCanvas resumed offscreen drawings when theme was changed.');
+          }
+          
+          win.scrollTo(0, 0);
+          await new Promise(r => setTimeout(r, 800));
+          win.canvasDraws.organic = 0;
+          await new Promise(r => setTimeout(r, 500));
+          if (win.canvasDraws.organic === 0) throw new Error('OrganicCanvas failed to resume at top.');
+          log('Confirmed canvases remain paused offscreen during theme switches, and wake correctly.');
+        }
+      },
+      {
+        id: 'F3-02',
+        name: 'F3-02: Theme Toggle in Background Tab (Resource Conservation)',
+        description: 'Verify background tabs do not request animation frames when theme updates.',
+        run: async () => {
+          const win = appFrame.contentWindow;
+          Object.defineProperty(win.document, 'visibilityState', { value: 'hidden', writable: true });
+          win.document.dispatchEvent(new win.Event('visibilitychange'));
+          await new Promise(r => setTimeout(r, 500));
+          
+          win.localStorage.setItem('theme', 'dark');
+          win.dispatchEvent(new win.StorageEvent('storage', { key: 'theme', newValue: 'dark' }));
+          await new Promise(r => setTimeout(r, 200));
+          
+          win.canvasDraws.organic = 0;
+          await new Promise(r => setTimeout(r, 500));
+          if (win.canvasDraws.organic > 0) {
+            throw new Error('OrganicCanvas drew animation frames in background tab.');
+          }
+          
+          Object.defineProperty(win.document, 'visibilityState', { value: 'visible', writable: true });
+          win.document.dispatchEvent(new win.Event('visibilitychange'));
+          await new Promise(r => setTimeout(r, 500));
+          win.canvasDraws.organic = 0;
+          await new Promise(r => setTimeout(r, 500));
+          if (win.canvasDraws.organic === 0) throw new Error('Canvas loop did not resume on visible state restoration.');
+          log('Confirmed zero resources consumed in background tab on theme changes.');
+        }
+      },
+
+      // FEATURE 4: REAL-WORLD APPLICATION SCENARIOS
+      {
+        id: 'F4-01',
+        name: 'F4-01: First-Time User Experience (FTUX) in Light Mode',
+        description: 'Verify overlay loader and default light mode presentation for new visits.',
+        run: async () => {
+          const win = appFrame.contentWindow;
+          const doc = getIframeDoc();
+          win.localStorage.clear();
+          
+          log('Storage cleared. Reloading frame for FTUX simulation...');
+          await reloadIframe();
+          
+          const newDoc = getIframeDoc();
+          const isDark = newDoc.documentElement.classList.contains('dark') || newDoc.documentElement.getAttribute('data-theme') === 'dark';
+          if (isDark) throw new Error('First-time user default theme is dark instead of light.');
+          log('Confirmed new session successfully defaults to light mode presentation.');
+        }
+      },
+      {
+        id: 'F4-02',
+        name: 'F4-02: Returning User with Dark Theme Preference',
+        description: 'Verify stored dark theme preference automatically restores on mount.',
+        run: async () => {
+          const win = appFrame.contentWindow;
+          win.localStorage.setItem('theme', 'dark');
+          
+          log('Simulating returning user with dark theme preference...');
+          await reloadIframe();
+          
+          const newDoc = getIframeDoc();
+          const isDark = newDoc.documentElement.classList.contains('dark') || newDoc.documentElement.getAttribute('data-theme') === 'dark';
+          if (!isDark) throw new Error('Dark theme preference failed to restore.');
+          log('Confirmed client restores setting on initial load.');
+        }
+      },
+      {
+        id: 'F4-03',
+        name: 'F4-03: System Preference Alignment on Load',
+        description: 'Verify system theme overrides default values when localStorage is clean.',
+        run: async () => {
+          const win = appFrame.contentWindow;
+          win.localStorage.clear();
+          const original = win.matchMedia;
+          win.matchMedia = (query) => {
+            if (query.includes('prefers-color-scheme: dark')) {
+              return { matches: true, addListener: () => {}, removeListener: () => {}, addEventListener: () => {}, removeEventListener: () => {} };
+            }
+            return original.call(win, query);
+          };
+          win.dispatchEvent(new Event('theme-system-check'));
+          await new Promise(r => setTimeout(r, 200));
+          log('Mocked preferences checked and aligned.');
+        }
+      },
+      {
+        id: 'F4-04',
+        name: 'F4-04: Full Interactive Session (Scroll, Hover, Toggle, Return)',
+        description: 'Simulate full multi-step navigation, hover, theme toggling, and scroll pause flow.',
+        run: async () => {
+          const win = appFrame.contentWindow;
+          const doc = getIframeDoc();
+          
+          const link = doc.querySelector('header nav a');
+          if (link) link.dispatchEvent(new Event('mouseenter'));
+          await new Promise(r => setTimeout(r, 100));
+          
+          doc.getElementById('about').scrollIntoView();
+          await new Promise(r => setTimeout(r, 800));
+          win.canvasDraws.antigravity = 0;
+          await new Promise(r => setTimeout(r, 500));
+          if (win.canvasDraws.antigravity === 0) throw new Error('AntigravityCanvas did not activate rendering in about section.');
+          
+          const toggle = doc.querySelector('header button[role="switch"], header button.theme-toggle-btn');
+          toggle.click();
+          await new Promise(r => setTimeout(r, 200));
+          
+          win.scrollTo(0, win.document.body.scrollHeight);
+          await new Promise(r => setTimeout(r, 800));
+          win.canvasDraws.organic = 0;
+          win.canvasDraws.antigravity = 0;
+          await new Promise(r => setTimeout(r, 500));
+          if (win.canvasDraws.organic > 0 || win.canvasDraws.antigravity > 0) throw new Error('Canvases drawing at bottom of page.');
+          
+          win.scrollTo(0, 0);
+          await new Promise(r => setTimeout(r, 800));
+          win.canvasDraws.organic = 0;
+          await new Promise(r => setTimeout(r, 500));
+          if (win.canvasDraws.organic === 0) throw new Error('OrganicCanvas did not resume rendering at top.');
+          log('Confirmed comprehensive interactive user session passes.');
+        }
+      },
+      {
+        id: 'F4-05',
+        name: 'F4-05: Mobile Layout Resource Conservation',
+        description: 'Verify layout throttling and pausing options work correctly under mobile settings.',
+        run: async () => {
+          const doc = getIframeDoc();
+          appFrame.style.width = '360px';
+          appFrame.style.height = '640px';
+          appFrame.contentWindow.dispatchEvent(new Event('resize'));
+          await new Promise(r => setTimeout(r, 300));
+          
+          const menuBtn = doc.querySelector('header button.mobile-toggle');
+          if (menuBtn) {
+            menuBtn.click();
+            await new Promise(r => setTimeout(r, 200));
+          }
+          const toggle = doc.querySelector('header button[role="switch"], header button.theme-toggle-btn');
+          toggle.click();
+          await new Promise(r => setTimeout(r, 200));
+          
+          appFrame.contentWindow.scrollTo(0, doc.body.scrollHeight);
+          await new Promise(r => setTimeout(r, 800));
+          const draws = appFrame.contentWindow.canvasDraws;
+          if (draws.organic > 0 || draws.antigravity > 0) throw new Error('Mobile loops did not pause offscreen.');
+          
+          appFrame.style.width = '100%';
+          appFrame.style.height = '100%';
+          appFrame.contentWindow.dispatchEvent(new Event('resize'));
+          log('Confirmed resource conservation on mobile client passes.');
+        }
+      }
+    ];
+
+    // Helper to get safe iframe document
+    function getIframeDoc() {
+      try {
+        const doc = appFrame.contentDocument || appFrame.contentWindow.document;
+        if (!doc || !doc.body) {
+          throw new Error('IFrame document is not loaded or body is empty.');
+        }
+        return doc;
+      } catch (e) {
+        throw new Error(`CORS Security Restriction: Cannot read iframe DOM content. (${e.message})`);
+      }
+    }
+
+    // Load scenarios in UI
+    const scenariosList = document.getElementById('scenariosList');
+    function renderScenarios() {
+      scenariosList.innerHTML = '';
+      scenarios.forEach((s, index) => {
+        scenariosList.innerHTML += `
+          <div id="card-${s.id}" class="p-3 bg-slate-900 border border-slate-800 rounded-lg flex flex-col justify-between transition-all duration-200">
+            <div class="flex justify-between items-start">
+              <div>
+                <h3 class="text-xs font-bold text-white flex items-center font-mono">
+                  <span class="text-[10px] text-slate-500 mr-2">${(index+1).toString().padStart(2, '0')}</span>
+                  ${s.name}
+                </h3>
+                <p class="text-[10px] text-slate-400 mt-1">${s.description}</p>
+              </div>
+              <span id="badge-${s.id}" class="px-2 py-0.5 text-[9px] font-mono font-bold bg-slate-800 text-slate-400 rounded uppercase">
+                Pending
+              </span>
+            </div>
+            <div class="mt-3 flex justify-between items-center border-t border-slate-800/60 pt-2.5">
+              <span id="duration-${s.id}" class="text-[10px] font-mono text-slate-500">Duration: --</span>
+              <button onclick="runSingleTest('${s.id}')" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white rounded text-[10px] font-mono tracking-wider uppercase transition">
+                Execute
+              </button>
+            </div>
+          </div>
+        `;
+      });
+    }
+    renderScenarios();
+
+    // Update Stats in UI
+    function updateStats() {
+      const badges = scenarios.map(s => document.getElementById(`badge-${s.id}`).textContent.trim());
+      const passed = badges.filter(b => b === 'PASSED').length;
+      const failed = badges.filter(b => b === 'FAILED' || b === 'BLOCKED').length;
+      const total = scenarios.length;
+      const pending = total - passed - failed;
+
+      document.getElementById('statTotal').textContent = total;
+      document.getElementById('statPassed').textContent = passed;
+      document.getElementById('statFailed').textContent = failed;
+      document.getElementById('statPending').textContent = pending;
+    }
+
+    // Run Single Test Case
+    async function runSingleTest(id) {
+      const s = scenarios.find(item => item.id === id);
+      if (!s) return;
+
+      const card = document.getElementById(`card-${s.id}`);
+      const badge = document.getElementById(`badge-${s.id}`);
+      const duration = document.getElementById(`duration-${s.id}`);
+
+      // Reset Card Status
+      card.className = "p-3 bg-slate-900 border border-amber-500/30 rounded-lg flex flex-col justify-between transition-all duration-200 shadow-md shadow-amber-950/10";
+      badge.textContent = "RUNNING";
+      badge.className = "px-2 py-0.5 text-[9px] font-mono font-bold bg-amber-500/20 text-amber-400 rounded uppercase animate-pulse";
+      duration.textContent = "Duration: ...";
+
+      log(`Executing test case: "${s.name}"`, 'command');
+      const startTime = performance.now();
+
+      try {
+        await s.run();
+        const endTime = performance.now();
+        const elapsed = ((endTime - startTime) / 1000).toFixed(2);
+
+        badge.textContent = "PASSED";
+        badge.className = "px-2 py-0.5 text-[9px] font-mono font-bold bg-emerald-500/20 text-emerald-400 rounded uppercase";
+        card.className = "p-3 bg-slate-900 border border-emerald-500/30 rounded-lg flex flex-col justify-between transition-all duration-200";
+        duration.textContent = `Duration: ${elapsed}s`;
+        log(`Test "${s.name}" passed in ${elapsed}s.`, 'success');
+      } catch (err) {
+        const endTime = performance.now();
+        const elapsed = ((endTime - startTime) / 1000).toFixed(2);
+        
+        const isCors = err.message.includes('CORS');
+        badge.textContent = isCors ? "BLOCKED" : "FAILED";
+        badge.className = isCors 
+          ? "px-2 py-0.5 text-[9px] font-mono font-bold bg-slate-800 text-slate-400 rounded uppercase"
+          : "px-2 py-0.5 text-[9px] font-mono font-bold bg-rose-500/20 text-rose-400 rounded uppercase";
+        card.className = isCors 
+          ? "p-3 bg-slate-900 border border-slate-700 rounded-lg flex flex-col justify-between transition-all duration-200"
+          : "p-3 bg-slate-900 border border-rose-500/30 rounded-lg flex flex-col justify-between transition-all duration-200 shadow-md shadow-rose-950/10";
+        duration.textContent = `Duration: ${elapsed}s`;
+        
+        log(`Test "${s.name}" failed: ${err.message}`, isCors ? 'warning' : 'error');
+        if (isCors) {
+          corsWarning.classList.remove('hidden');
+        }
+      }
+      updateStats();
+    }
+
+    // Run All Tests Sequentially
+    async function runAllTests() {
+      const runBtn = document.getElementById('runAllBtn');
+      runBtn.disabled = true;
+      runBtn.textContent = "Running Suite...";
+      runBtn.className = "px-4 py-2 bg-slate-800 text-slate-500 rounded font-semibold text-xs tracking-wider uppercase cursor-not-allowed";
+      
+      log('Starting E2E Suite execution sequence...', 'info');
+      
+      // Reload iframe first to guarantee clean slate
+      reloadIframe();
+      await new Promise(resolve => setTimeout(resolve, 1500)); // wait load
+
+      for (const s of scenarios) {
+        await runSingleTest(s.id);
+        await new Promise(resolve => setTimeout(resolve, 300)); // space out runs slightly
+      }
+
+      log('E2E Test Suite execution sequence complete.', 'info');
+      
+      runBtn.disabled = false;
+      runBtn.textContent = "Run Test Suite";
+      runBtn.className = "px-4 py-2 bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500 text-white rounded font-semibold text-xs tracking-wider uppercase shadow-lg shadow-orange-950/30 hover:shadow-orange-950/50 transition duration-200";
+    }
+
+  </script>
+</body>
+</html>

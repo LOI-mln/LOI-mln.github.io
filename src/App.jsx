@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import Navbar from './components/Navbar';
 import AntigravityCanvas from './components/AntigravityCanvas';
 import CustomCursor from './components/CustomCursor';
@@ -18,61 +18,8 @@ function App() {
   const [progress, setProgress] = useState(0);
   const [loaderLog, setLoaderLog] = useState('SYS.INIT // Initializing...');
 
-  const [theme, setTheme] = useState(() => {
-    try {
-      const stored = localStorage.getItem('theme');
-      if (stored === 'dark' || stored === 'light') {
-        return stored;
-      }
-    } catch (e) {
-      // ignore
-    }
-    // Toujours démarrer en light par défaut
-    return 'light';
-  });
-
-  const [hasUserPref, setHasUserPref] = useState(() => {
-    try {
-      return localStorage.getItem('theme') !== null;
-    } catch (e) {
-      return false;
-    }
-  });
-
-  const toggleTheme = () => {
-    setTheme(prev => (prev === 'light' ? 'dark' : 'light'));
-    setHasUserPref(true);
-  };
-
-  // Sync theme to DOM and LocalStorage
-  useEffect(() => {
-    const html = document.documentElement;
-    if (theme === 'dark') {
-      html.classList.add('dark');
-      html.setAttribute('data-theme', 'dark');
-    } else {
-      html.classList.remove('dark');
-      html.setAttribute('data-theme', 'light');
-    }
-    try {
-      localStorage.setItem('theme', theme);
-    } catch (e) {
-      // ignore
-    }
-  }, [theme]);
-
-  // Sync theme from storage (other tabs)
-  useEffect(() => {
-    const handleStorageChange = (e) => {
-      if (e.key === 'theme' && (e.newValue === 'dark' || e.newValue === 'light')) {
-        setTheme(e.newValue);
-      }
-    };
-    window.addEventListener('storage', handleStorageChange);
-    return () => window.removeEventListener('storage', handleStorageChange);
-  }, []);
-
-  // Pas de synchronisation automatique avec le système — light par défaut
+  // Theme: force en 'light' et supprimer toute logique de dark-mode
+  const theme = 'light';
 
 
   // Activer l'animation au défilement
@@ -241,7 +188,7 @@ function App() {
       {/* Contenu principal de l'application */}
       <div className="app-container">
         {/* Canvas de fond organique */}
-        <OrganicCanvas mode={theme} />
+        <OrganicCanvas mode="light" />
 
         {/* Grille de points en surimpression */}
         <div className="dot-grid-bg" />
@@ -249,8 +196,8 @@ function App() {
         {/* Curseur coordonné sur mesure */}
         <CustomCursor />
 
-        {/* Barre de navigation */}
-        <Navbar theme={theme} toggleTheme={toggleTheme} />
+        {/* Barre de navigation (toggle supprimé) */}
+        <Navbar />
 
         {/* Sections principales */}
         <main>
@@ -258,7 +205,7 @@ function App() {
           <Hero />
 
           {/* Matrice de compétences */}
-          <Skills theme={theme} />
+          <Skills />
 
           {/* Showcase des projets */}
           <Projects />
@@ -273,7 +220,7 @@ function App() {
           >
             {/* Constellation interactive subtile ambrée */}
             <AntigravityCanvas
-              mode={theme}
+              mode="light"
               colorScheme="amber"
               density="low"
               clusterRight={false}
