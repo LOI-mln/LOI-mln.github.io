@@ -142,7 +142,7 @@ const Timeline = () => {
                       width: '64px',
                       height: '64px',
                       borderRadius: '50%',
-                      backgroundColor: '#ffffff',
+                      backgroundColor: 'var(--bg-primary)',
                       border: isCurrent || isHovered ? '3px solid var(--accent)' : '2px solid var(--accent)',
                       boxShadow: isCurrent || isHovered
                         ? '0 0 25px rgba(227, 93, 59, 0.4)'
@@ -168,7 +168,7 @@ const Timeline = () => {
                     onMouseLeave={() => setHoveredIdx(null)}
                     style={{
                       padding: '28px',
-                      background: '#ffffff',
+                      background: 'var(--bg-primary)',
                       borderWidth: '1px',
                       borderColor: isCurrent || isHovered ? 'rgba(227, 93, 59, 0.35)' : 'var(--border-color)',
                       borderRadius: '24px',

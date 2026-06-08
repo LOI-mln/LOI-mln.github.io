@@ -3,10 +3,10 @@ import { Code, Cpu, Server, Database, Users, ShieldAlert, Sparkles, Monitor } fr
 import AntigravityCanvas from '../components/AntigravityCanvas';
 
 // Canvas de fond ondulé
-const SkillsMesh = () => {
+const SkillsMesh = ({ mode }) => {
   return (
     <AntigravityCanvas
-      mode="light"
+      mode={mode}
       colorScheme="amber"
       density="low"
       clusterRight={false}
@@ -16,7 +16,7 @@ const SkillsMesh = () => {
 };
 
 // Section des compétences
-const Skills = () => {
+const Skills = ({ theme }) => {
   const [active, setActive] = useState(null);
 
   const skills = [
@@ -68,7 +68,7 @@ const Skills = () => {
 
   return (
     <section id="skills" className="sk-section">
-      <SkillsMesh />
+      <SkillsMesh mode={theme} />
 
       <div className="sk-inner">
         {/* En-tête de la section */}
@@ -217,7 +217,7 @@ const Skills = () => {
           margin-bottom: 48px;
           padding: 14px 28px;
           border-radius: 80px;
-          background: rgba(255,255,255,0.65);
+          background: var(--glass-bg);
           border: 1px solid var(--border-color);
           backdrop-filter: blur(12px);
           -webkit-backdrop-filter: blur(12px);
@@ -247,7 +247,7 @@ const Skills = () => {
           font-weight: 700;
           font-size: 0.7rem;
           color: var(--text-primary);
-          background: #ffffff;
+          background: var(--bg-primary);
           border: 1px solid var(--border-color);
           padding: 4px 14px;
           border-radius: 50px;
@@ -280,7 +280,7 @@ const Skills = () => {
           padding: 14px 26px 14px 16px;
           border-radius: 80px;
           border: 1px solid var(--border-color);
-          background: rgba(255,255,255,0.65);
+          background: var(--glass-bg);
           backdrop-filter: blur(16px);
           -webkit-backdrop-filter: blur(16px);
           cursor: pointer;
@@ -290,13 +290,14 @@ const Skills = () => {
           box-shadow: 0 4px 12px rgba(0,0,0,0.02);
         }
         .sk-node:hover {
-          background: rgba(255,255,255,0.9);
+          background: var(--bg-primary);
+          opacity: 0.95;
           border-color: rgba(var(--accent-rgb), 0.4);
           transform: translateY(-4px);
           box-shadow: 0 16px 36px rgba(0,0,0,0.06);
         }
         .sk-node--on {
-          background: #ffffff !important;
+          background: var(--bg-primary) !important;
           border-color: var(--accent) !important;
           box-shadow: 0 0 0 4px var(--accent-light), 0 16px 36px rgba(0,0,0,0.06) !important;
           transform: translateY(-4px) !important;
@@ -395,7 +396,7 @@ const Skills = () => {
           gap: 36px;
           padding: 32px 36px;
           border-radius: 24px;
-          background: rgba(255,255,255,0.7);
+          background: var(--glass-bg);
           border: 1px solid var(--border-color);
           backdrop-filter: blur(16px);
           -webkit-backdrop-filter: blur(16px);

@@ -9,10 +9,16 @@ const AntigravityCanvas = ({
 }) => {
   const canvasRef = useRef(null);
   const mouseRef = useRef({ x: -1000, y: -1000 });
+  const modeRef = useRef(mode);
+
+  // Synchro du mode dans une référence pour éviter de recréer la boucle canvas
+  useEffect(() => {
+    modeRef.current = mode;
+    console.log(`[AntigravityCanvas] MODE UPDATED - New Mode: ${mode}`);
+  }, [mode]);
 
   useEffect(() => {
-    // Log du montage et des propriétés reçues
-    console.log(`[AntigravityCanvas] MOUNTED - Mode: ${mode}, Scheme: ${colorScheme}, Density: ${density}, ClusterRight: ${clusterRight}`);
+    console.log(`[AntigravityCanvas] MOUNTED/RECONSTRUCTED - Scheme: ${colorScheme}, Density: ${density}, ClusterRight: ${clusterRight}`);
     
     const canvas = canvasRef.current;
     if (!canvas) {
@@ -27,8 +33,10 @@ const AntigravityCanvas = ({
     }
 
     let particles = [];
-    let animationFrameId;
-    let isAnimating = true;
+    let animationFrameId = null;
+    let isIntersecting = false;
+    let isPageVisible = document.visibilityState === 'visible';
+    let isAnimating = false;
     
     // Mesurer les dimensions physiques du DOM et logguer les valeurs initiales
     let width = canvas.width = canvas.offsetWidth || window.innerWidth;
@@ -47,25 +55,18 @@ const AntigravityCanvas = ({
     const connectionDistance = 110;
     const repulsionRadius = 180;
 
-    // Configurer des opacités robustes pour assurer une excellente visibilité (contraste accru en thème clair)
-    const particleAlpha = mode === 'dark' ? 0.85 : 0.38;
-    const haloAlpha = mode === 'dark' ? 0.22 : 0.10;
-    const lineBaseOpacity = mode === 'dark' ? 0.28 : 0.22;
-
-    // Déclarer les nuances néons vibrantes
-    const neonColors = [
-      `hsla(200, 100%, 60%, ${particleAlpha})`, // Bleu néon
-      `hsla(140, 100%, 55%, ${particleAlpha})`, // Vert électrique
-      `hsla(360, 100%, 60%, ${particleAlpha})`, // Rouge corail
-      `hsla(36, 100%, 55%, ${particleAlpha})`,  // Jaune ambre
-      `hsla(270, 100%, 65%, ${particleAlpha})`  // Violet éclatant
+    const neonPalette = [
+      { h: 200, s: 100, l: 60 },
+      { h: 140, s: 100, l: 55 },
+      { h: 360, s: 100, l: 60 },
+      { h: 36,  s: 100, l: 55 },
+      { h: 270, s: 100, l: 65 }
     ];
 
-    // Déclarer la palette ambrée chaude
-    const amberColors = [
-      `hsla(36, 100%, 55%, ${particleAlpha})`,  // Ambre chaleureux
-      `hsla(24, 100%, 50%, ${particleAlpha})`,  // Orange profond
-      `hsla(45, 100%, 58%, ${particleAlpha})`   // Lueur d'or
+    const amberPalette = [
+      { h: 36, s: 100, l: 55 },
+      { h: 24, s: 100, l: 50 },
+      { h: 45, s: 100, l: 58 }
     ];
 
     // Recalculer les limites et réinitialiser les points lors d'un redimensionnement
@@ -100,14 +101,13 @@ const AntigravityCanvas = ({
         this.prevX = this.x;
         this.prevY = this.y;
 
-        // Diamètre accru pour assurer une visibilité parfaite sur fond blanc
-        this.radius = mode === 'dark' 
-          ? (Math.random() * 1.5 + 1.2)   // diamètre 2.4 à 5.4 px
-          : (Math.random() * 2.2 + 1.8);  // diamètre 3.6 à 8.0 px
+        this.sizeFactor = Math.random();
 
-        // Assigner la couleur selon le profil sélectionné
-        const palette = colorScheme === 'neon' ? neonColors : amberColors;
-        this.color = palette[Math.floor(Math.random() * palette.length)];
+        const palette = colorScheme === 'neon' ? neonPalette : amberPalette;
+        const colorConfig = palette[Math.floor(Math.random() * palette.length)];
+        this.h = colorConfig.h;
+        this.s = colorConfig.s;
+        this.l = colorConfig.l;
 
         // Variables du flottement orbital autonome (wobble)
         this.angle = Math.random() * Math.PI * 2;
@@ -151,31 +151,40 @@ const AntigravityCanvas = ({
       }
 
       // Rendre le dessin de la particule
-      draw() {
+      draw(themeTransition) {
         const vx = this.x - this.prevX;
         const vy = this.y - this.prevY;
         const velocity = Math.hypot(vx, vy);
+
+        const currentAlpha = 0.38 + (0.85 - 0.38) * themeTransition;
+        const currentHaloAlpha = 0.10 + (0.22 - 0.10) * themeTransition;
+
+        const radiusMin = 1.8 + (1.2 - 1.8) * themeTransition;
+        const radiusMax = 4.0 + (2.7 - 4.0) * themeTransition;
+        const radius = radiusMin + (radiusMax - radiusMin) * this.sizeFactor;
+
+        const colorStr = `hsla(${this.h}, ${this.s}%, ${this.l}%, ${currentAlpha})`;
 
         if (velocityStretch && velocity > 0.8) {
           // Dessiner un faisceau étiré lors des pics de vitesse
           ctx.beginPath();
           ctx.moveTo(this.x - vx * 1.5, this.y - vy * 1.5);
           ctx.lineTo(this.x, this.y);
-          ctx.strokeStyle = this.color;
-          ctx.lineWidth = this.radius * 2;
+          ctx.strokeStyle = colorStr;
+          ctx.lineWidth = radius * 2;
           ctx.lineCap = 'round';
           ctx.stroke();
         } else {
           // Rendu sphérique classique
           ctx.beginPath();
-          ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-          ctx.fillStyle = this.color;
+          ctx.arc(this.x, this.y, radius, 0, Math.PI * 2);
+          ctx.fillStyle = colorStr;
           ctx.fill();
 
           // Subtil halo lumineux sous la forme d'un second disque large et transparent
           ctx.beginPath();
-          ctx.arc(this.x, this.y, this.radius * 2.8, 0, Math.PI * 2);
-          ctx.fillStyle = this.color.replace(`${particleAlpha}`, `${haloAlpha}`);
+          ctx.arc(this.x, this.y, radius * 2.8, 0, Math.PI * 2);
+          ctx.fillStyle = `hsla(${this.h}, ${this.s}%, ${this.l}%, ${currentHaloAlpha})`;
           ctx.fill();
         }
       }
@@ -191,7 +200,6 @@ const AntigravityCanvas = ({
     };
 
     window.addEventListener('resize', resize);
-    resize();
 
     // Suivi du curseur relativement aux coordonnées réelles du canvas
     const handleMouseMove = (e) => {
@@ -210,6 +218,7 @@ const AntigravityCanvas = ({
 
     // Mettre en place un compteur de frames pour le debuggage de la boucle
     let frameDebugCount = 0;
+    let themeTransition = modeRef.current === 'dark' ? 1 : 0;
 
     // Boucle d'animation principale par requestAnimationFrame
     const render = () => {
@@ -221,12 +230,15 @@ const AntigravityCanvas = ({
         frameDebugCount++;
       }
 
+      const targetTheme = modeRef.current === 'dark' ? 1 : 0;
+      themeTransition += (targetTheme - themeTransition) * 0.08;
+
       ctx.clearRect(0, 0, width, height);
 
       // Mettre à jour et dessiner les poussières
       for (let i = 0; i < particles.length; i++) {
         particles[i].update();
-        particles[i].draw();
+        particles[i].draw(themeTransition);
       }
 
       // Dessiner le filet constellation d'interconnexions
@@ -240,39 +252,98 @@ const AntigravityCanvas = ({
           const dist = Math.hypot(dx, dy);
 
           if (dist < connectionDistance) {
-            const opacity = (1 - dist / connectionDistance) * lineBaseOpacity;
+            const currentLineBaseOpacity = 0.22 + (0.28 - 0.22) * themeTransition;
+            const opacity = (1 - dist / connectionDistance) * currentLineBaseOpacity;
             ctx.beginPath();
             ctx.moveTo(p1.x, p1.y);
             ctx.lineTo(p2.x, p2.y);
             
-            // Couleur de trait : Blanche en sombre, Gris charbon en clair/néon (blueprint), Ambrée en clair/ambre
-            ctx.strokeStyle = mode === 'dark' 
-              ? `rgba(255, 255, 255, ${opacity})`
-              : (colorScheme === 'neon'
-                  ? `rgba(17, 24, 39, ${opacity * 0.45})`
-                  : `rgba(227, 93, 59, ${opacity * 0.8})`);
+            const darkR = 255, darkG = 255, darkB = 255, darkA = opacity;
+            let lightR, lightG, lightB, lightA;
+            if (colorScheme === 'neon') {
+              lightR = 17; lightG = 24; lightB = 39; lightA = opacity * 0.45;
+            } else {
+              lightR = 227; lightG = 93; lightB = 59; lightA = opacity * 0.8;
+            }
+
+            const r = lightR + (darkR - lightR) * themeTransition;
+            const g = lightG + (darkG - lightG) * themeTransition;
+            const b = lightB + (darkB - lightB) * themeTransition;
+            const a = lightA + (darkA - lightA) * themeTransition;
+
+            ctx.strokeStyle = `rgba(${Math.round(r)}, ${Math.round(g)}, ${Math.round(b)}, ${a})`;
             ctx.stroke();
           }
         }
       }
 
+      if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
+      }
       animationFrameId = requestAnimationFrame(render);
     };
 
-    // Lancer immédiatement la boucle d'animation
-    console.log('[AntigravityCanvas] STARTING RENDER LOOP');
-    render();
+    const updateAnimationState = (newIntersecting, newPageVisible, newMobileMenuOpen) => {
+      if (newIntersecting !== undefined) isIntersecting = newIntersecting;
+      if (newPageVisible !== undefined) isPageVisible = newPageVisible;
+      if (newMobileMenuOpen !== undefined) isMobileMenuOpen = newMobileMenuOpen;
+
+      const shouldAnimate = isIntersecting && isPageVisible && !isMobileMenuOpen;
+
+      if (shouldAnimate && !isAnimating) {
+        console.log('[AntigravityCanvas] STARTING/RESUMING RENDER LOOP');
+        isAnimating = true;
+        if (animationFrameId) {
+          cancelAnimationFrame(animationFrameId);
+          animationFrameId = null;
+        }
+        render();
+      } else if (!shouldAnimate && isAnimating) {
+        console.log('[AntigravityCanvas] PAUSING RENDER LOOP');
+        isAnimating = false;
+        if (animationFrameId) {
+          cancelAnimationFrame(animationFrameId);
+          animationFrameId = null;
+        }
+      }
+    };
+
+    const handleVisibilityChange = () => {
+      updateAnimationState(undefined, document.visibilityState === 'visible', undefined);
+    };
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    const handleMobileMenuToggle = (e) => {
+      updateAnimationState(undefined, undefined, e.detail ? e.detail.open : false);
+    };
+    window.addEventListener('mobile-menu-toggle', handleMobileMenuToggle);
+
+    const observer = new IntersectionObserver(([entry]) => {
+      const intersecting = entry.isIntersecting;
+      if (intersecting) {
+        console.log('[AntigravityCanvas] Visible - Recalculating dimensions');
+        resize();
+      }
+      updateAnimationState(intersecting, undefined, undefined);
+    }, { threshold: 0 });
+
+    observer.observe(canvas);
 
     // Couper et détruire les références au démontage et logguer la fermeture
     return () => {
-      console.log(`[AntigravityCanvas] UNMOUNTED - Mode: ${mode}`);
+      console.log(`[AntigravityCanvas] UNMOUNTED - Last Mode: ${modeRef.current}`);
       isAnimating = false;
+      observer.disconnect();
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('mobile-menu-toggle', handleMobileMenuToggle);
       window.removeEventListener('resize', resize);
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('mouseleave', handleMouseLeave);
-      cancelAnimationFrame(animationFrameId);
+      if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
+      }
     };
-  }, [mode, colorScheme, density, clusterRight, velocityStretch]);
+  }, [colorScheme, density, clusterRight, velocityStretch]);
 
   return (
     <canvas

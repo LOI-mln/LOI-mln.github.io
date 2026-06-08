@@ -37,7 +37,16 @@ const Navbar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const toggleMobileMenu = () => setMobileMenuOpen(!mobileMenuOpen);
+  const closeMobileMenu = () => {
+    setMobileMenuOpen(false);
+    window.dispatchEvent(new CustomEvent('mobile-menu-toggle', { detail: { open: false } }));
+  };
+
+  const toggleMobileMenu = () => {
+    const nextState = !mobileMenuOpen;
+    setMobileMenuOpen(nextState);
+    window.dispatchEvent(new CustomEvent('mobile-menu-toggle', { detail: { open: nextState } }));
+  };
 
   // La barre ne se replie plus automatiquement sur les titres
   const isCollapsed = false;
@@ -77,7 +86,7 @@ const Navbar = () => {
           borderRadius: isCollapsed ? '50%' : (scrolled ? '50px' : '24px'),
           transition: 'all 0.5s cubic-bezier(0.16, 1, 0.3, 1)',
           boxShadow: isCollapsed ? '0 8px 24px rgba(255, 159, 28, 0.18)' : (scrolled ? '0 12px 30px rgba(0, 0, 0, 0.05)' : '0 4px 15px rgba(0, 0, 0, 0.01)'),
-          background: isCollapsed ? 'rgba(255, 255, 255, 0.95)' : (scrolled ? 'rgba(255, 255, 255, 0.85)' : 'rgba(255, 255, 255, 0.65)'),
+          background: isCollapsed ? 'var(--navbar-bg-collapsed)' : (scrolled ? 'var(--navbar-bg-scrolled)' : 'var(--navbar-bg-idle)'),
           border: isCollapsed ? '1.5px solid var(--accent)' : '1px solid var(--border-color)',
           cursor: isCollapsed ? 'pointer' : 'default',
         }}
@@ -252,6 +261,8 @@ const Navbar = () => {
           </div>
         </div>
 
+        {/* Theme toggle removed */}
+
         {/* Bouton menu mobile (Masqué quand replié) */}
         <button
           onClick={toggleMobileMenu}
@@ -269,7 +280,7 @@ const Navbar = () => {
             alignItems: 'center',
             justifyContent: 'center',
           }}
-          className="mobile-toggle"
+          className="mobile-toggle mobile-menu-btn"
         >
           {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
@@ -285,7 +296,7 @@ const Navbar = () => {
             top: '80px',
             left: '24px',
             right: '24px',
-            background: 'rgba(255, 255, 255, 0.95)',
+            background: 'var(--mobile-menu-bg)',
             border: '1px solid var(--border-color)',
             boxShadow: '0 20px 40px rgba(0, 0, 0, 0.08)',
             padding: '24px',
@@ -305,7 +316,7 @@ const Navbar = () => {
             <a
               key={link.label}
               href={link.href}
-              onClick={() => setMobileMenuOpen(false)}
+              onClick={closeMobileMenu}
               style={{
                 textDecoration: 'none',
                 fontFamily: 'var(--font-subtitle)',
@@ -390,6 +401,60 @@ const Navbar = () => {
           .mobile-toggle {
             display: flex !important;
           }
+        }
+        /* SVG Elements Transitions */
+        .theme-toggle-svg {
+          transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .sun-center {
+          transition: r 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .moon-mask-circle {
+          transition: cx 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+                      cy 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+                      r 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .sun-ray {
+          transform-origin: center;
+          transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1),
+                      opacity 0.4s ease;
+        }
+
+        /* Light Mode Specific Positions */
+        [data-theme="light"] .theme-toggle-svg {
+          transform: rotate(0deg);
+        }
+        [data-theme="light"] .moon-mask-circle {
+          cx: 25;
+          cy: 5;
+          r: 0;
+        }
+        [data-theme="light"] .sun-center {
+          r: 5;
+        }
+        [data-theme="light"] .sun-ray {
+          opacity: 1;
+          transform: scale(1);
+        }
+
+        /* Dark Mode Specific Positions */
+        [data-theme="dark"] .theme-toggle-svg {
+          transform: rotate(90deg);
+        }
+        [data-theme="dark"] .moon-mask-circle {
+          cx: 16;
+          cy: 8;
+          r: 7.5;
+        }
+        [data-theme="dark"] .sun-center {
+          r: 8.5;
+        }
+        [data-theme="dark"] .sun-ray {
+          opacity: 0;
+          transform: scale(0);
         }
       `}} />
     </header>
