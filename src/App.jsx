@@ -27,13 +27,7 @@ function App() {
     } catch (e) {
       // ignore
     }
-    try {
-      if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        return 'dark';
-      }
-    } catch (e) {
-      // ignore
-    }
+    // Toujours démarrer en light par défaut
     return 'light';
   });
 
@@ -78,39 +72,7 @@ function App() {
     return () => window.removeEventListener('storage', handleStorageChange);
   }, []);
 
-  // System prefers-color-scheme synchronization and custom check event
-  useEffect(() => {
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    
-    const handleMediaQueryChange = (e) => {
-      if (!hasUserPref) {
-        setTheme(e.matches ? 'dark' : 'light');
-      }
-    };
-
-    const handleSystemCheck = () => {
-      if (!hasUserPref) {
-        setTheme(mediaQuery.matches ? 'dark' : 'light');
-      }
-    };
-
-    if (mediaQuery.addEventListener) {
-      mediaQuery.addEventListener('change', handleMediaQueryChange);
-    } else if (mediaQuery.addListener) {
-      mediaQuery.addListener(handleMediaQueryChange);
-    }
-
-    window.addEventListener('theme-system-check', handleSystemCheck);
-
-    return () => {
-      if (mediaQuery.removeEventListener) {
-        mediaQuery.removeEventListener('change', handleMediaQueryChange);
-      } else if (mediaQuery.removeListener) {
-        mediaQuery.removeListener(handleMediaQueryChange);
-      }
-      window.removeEventListener('theme-system-check', handleSystemCheck);
-    };
-  }, [hasUserPref]);
+  // Pas de synchronisation automatique avec le système — light par défaut
 
 
   // Activer l'animation au défilement
