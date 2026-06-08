@@ -1,4 +1,6 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+// Build stamp for debugging deployed bundle cache
+console.log('App build: ' + new Date().toISOString());
 import Navbar from './components/Navbar';
 import AntigravityCanvas from './components/AntigravityCanvas';
 import CustomCursor from './components/CustomCursor';
