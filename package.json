@@ -7,6 +7,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "deploy": "npm run build && git add -A && git commit --allow-empty -m \"chore(deploy): trigger GitHub Pages\" && git push origin main",
     "lint": "eslint .",
     "preview": "vite preview"
   },
