@@ -18,6 +18,101 @@ function App() {
   const [progress, setProgress] = useState(0);
   const [loaderLog, setLoaderLog] = useState('SYS.INIT // Initializing...');
 
+  const [theme, setTheme] = useState(() => {
+    try {
+      const stored = localStorage.getItem('theme');
+      if (stored === 'dark' || stored === 'light') {
+        return stored;
+      }
+    } catch (e) {
+      // ignore
+    }
+    try {
+      if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        return 'dark';
+      }
+    } catch (e) {
+      // ignore
+    }
+    return 'light';
+  });
+
+  const [hasUserPref, setHasUserPref] = useState(() => {
+    try {
+      return localStorage.getItem('theme') !== null;
+    } catch (e) {
+      return false;
+    }
+  });
+
+  const toggleTheme = () => {
+    setTheme(prev => (prev === 'light' ? 'dark' : 'light'));
+    setHasUserPref(true);
+  };
+
+  // Sync theme to DOM and LocalStorage
+  useEffect(() => {
+    const html = document.documentElement;
+    if (theme === 'dark') {
+      html.classList.add('dark');
+      html.setAttribute('data-theme', 'dark');
+    } else {
+      html.classList.remove('dark');
+      html.setAttribute('data-theme', 'light');
+    }
+    try {
+      localStorage.setItem('theme', theme);
+    } catch (e) {
+      // ignore
+    }
+  }, [theme]);
+
+  // Sync theme from storage (other tabs)
+  useEffect(() => {
+    const handleStorageChange = (e) => {
+      if (e.key === 'theme' && (e.newValue === 'dark' || e.newValue === 'light')) {
+        setTheme(e.newValue);
+      }
+    };
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, []);
+
+  // System prefers-color-scheme synchronization and custom check event
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    
+    const handleMediaQueryChange = (e) => {
+      if (!hasUserPref) {
+        setTheme(e.matches ? 'dark' : 'light');
+      }
+    };
+
+    const handleSystemCheck = () => {
+      if (!hasUserPref) {
+        setTheme(mediaQuery.matches ? 'dark' : 'light');
+      }
+    };
+
+    if (mediaQuery.addEventListener) {
+      mediaQuery.addEventListener('change', handleMediaQueryChange);
+    } else if (mediaQuery.addListener) {
+      mediaQuery.addListener(handleMediaQueryChange);
+    }
+
+    window.addEventListener('theme-system-check', handleSystemCheck);
+
+    return () => {
+      if (mediaQuery.removeEventListener) {
+        mediaQuery.removeEventListener('change', handleMediaQueryChange);
+      } else if (mediaQuery.removeListener) {
+        mediaQuery.removeListener(handleMediaQueryChange);
+      }
+      window.removeEventListener('theme-system-check', handleSystemCheck);
+    };
+  }, [hasUserPref]);
+
+
   // Activer l'animation au défilement
   useScrollReveal();
 
@@ -147,12 +242,25 @@ function App() {
             <span className="loader-status">SYS.LOC // ABERDEEN, SCOTLAND</span>
           </div>
 
-          {/* Chiffres géants centrés en arrière-plan */}
+          {/* Animation pl — grille de points orbitaux */}
           <div className="loader-center-giant">
-            <span className="loader-percentage-giant">
-              {progress.toString().padStart(3, '0')}
-              <span className="loader-percentage-symbol">%</span>
-            </span>
+            <div className="loader-pl-wrapper">
+              <div className="pl">
+                <div className="pl__dot"></div>
+                <div className="pl__dot"></div>
+                <div className="pl__dot pl__dot--red pl__dot--sm"></div>
+                <div className="pl__dot"></div>
+                <div className="pl__dot pl__dot--yellow pl__dot--lg"></div>
+                <div className="pl__dot"></div>
+                <div className="pl__dot pl__dot--blue pl__dot--sm"></div>
+                <div className="pl__dot"></div>
+                <div className="pl__dot pl__dot--green pl__dot--sm"></div>
+              </div>
+              <div className="loader-pl-label">
+                <span className="loader-pl-percent">{progress}<span className="loader-pl-sym">%</span></span>
+                <span className="loader-pl-name">MILAN LOÏ</span>
+              </div>
+            </div>
           </div>
 
           {/* Pied de page technique inférieur */}
@@ -171,7 +279,7 @@ function App() {
       {/* Contenu principal de l'application */}
       <div className="app-container">
         {/* Canvas de fond organique */}
-        <OrganicCanvas />
+        <OrganicCanvas mode={theme} />
 
         {/* Grille de points en surimpression */}
         <div className="dot-grid-bg" />
@@ -180,7 +288,7 @@ function App() {
         <CustomCursor />
 
         {/* Barre de navigation */}
-        <Navbar />
+        <Navbar theme={theme} toggleTheme={toggleTheme} />
 
         {/* Sections principales */}
         <main>
@@ -188,7 +296,7 @@ function App() {
           <Hero />
 
           {/* Matrice de compétences */}
-          <Skills />
+          <Skills theme={theme} />
 
           {/* Showcase des projets */}
           <Projects />
@@ -203,7 +311,7 @@ function App() {
           >
             {/* Constellation interactive subtile ambrée */}
             <AntigravityCanvas
-              mode="light"
+              mode={theme}
               colorScheme="amber"
               density="low"
               clusterRight={false}

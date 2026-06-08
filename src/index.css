@@ -41,6 +41,57 @@
   --cursor-follower-size: 32px;
   --transition-smooth: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
   --transition-fast: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Theme-specific panel variables */
+  --glass-bg: rgba(255, 255, 255, 0.45);
+  --glass-border: rgba(255, 255, 255, 0.5);
+  --navbar-bg-scrolled: rgba(255, 255, 255, 0.85);
+  --navbar-bg-idle: rgba(255, 255, 255, 0.65);
+  --navbar-bg-collapsed: rgba(255, 255, 255, 0.95);
+  --mobile-menu-bg: rgba(255, 255, 255, 0.95);
+}
+
+.dark, [data-theme="dark"] {
+  --bg-primary: #090b11;
+  --bg-secondary: #0f121a;
+  --bg-tertiary: #161a24;
+  
+  --text-primary: #f3f4f6;
+  --text-secondary: #9ca3af;
+  --text-muted: #6b7280;
+  
+  --border-color: rgba(243, 244, 246, 0.08);
+  --border-color-hover: rgba(var(--accent-rgb), 0.5);
+  
+  --bg-inverse: #ffffff;
+  --text-inverse: #111827;
+  --bg-mockup: #0c0e16;
+
+  --glass-bg: rgba(15, 18, 22, 0.45);
+  --glass-border: rgba(243, 244, 246, 0.1);
+  --navbar-bg-scrolled: rgba(9, 11, 17, 0.85);
+  --navbar-bg-idle: rgba(9, 11, 17, 0.65);
+  --navbar-bg-collapsed: rgba(9, 11, 17, 0.95);
+  --mobile-menu-bg: rgba(9, 11, 17, 0.95);
+}
+
+/* Smooth global transitions for theme switching */
+body,
+.glass-panel,
+.dot-grid-bg,
+header,
+footer,
+.theme-toggle-btn {
+  transition: background-color 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+              color 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+              background-image 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.dark .dot-grid-bg, [data-theme="dark"] .dot-grid-bg {
+  background-image: 
+    radial-gradient(circle, rgba(243, 244, 246, 0.015) 1.5px, transparent 1.5px);
 }
 
 /* Réinitialisation des styles */
@@ -126,7 +177,7 @@ h1, h2, h3, h4 {
 
 /* Panneaux effet verre */
 .glass-panel {
-  background: rgba(255, 255, 255, 0.7);
+  background: var(--glass-bg);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid var(--border-color);
@@ -384,6 +435,7 @@ h1, h2, h3, h4 {
   text-transform: uppercase;
 }
 
+/* Center container (unchanged layout role) */
 .loader-center-giant {
   position: absolute;
   inset: 0;
@@ -394,36 +446,48 @@ h1, h2, h3, h4 {
   pointer-events: none;
 }
 
-.loader-percentage-giant {
-  font-family: var(--font-display);
-  font-size: clamp(6rem, 18vw, 14rem);
-  font-weight: 850;
-  line-height: 1;
-  color: rgba(255, 255, 255, 0.92);
-  text-shadow: 0 0 40px rgba(var(--accent-rgb), 0.25), 0 0 80px rgba(var(--accent-rgb), 0.15);
-  letter-spacing: -0.04em;
-  transition: all 0.1s ease;
-  animation: giantPulse 3s ease-in-out infinite alternate;
+/* === PL dot-grid wrapper & label === */
+.loader-pl-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2.2rem;
+  z-index: 3;
 }
 
-.loader-percentage-symbol {
-  font-size: 0.35em;
-  font-weight: 350;
-  color: var(--accent);
-  margin-left: 6px;
+.loader-pl-label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.loader-pl-percent {
+  font-family: var(--font-display);
+  font-size: clamp(2.4rem, 6vw, 4rem);
+  font-weight: 800;
+  color: rgba(255, 255, 255, 0.92);
+  letter-spacing: -0.03em;
+  line-height: 1;
   text-shadow: 0 0 30px rgba(var(--accent-rgb), 0.4);
 }
 
-@keyframes giantPulse {
-  0% {
-    transform: scale(0.98);
-    opacity: 0.95;
-  }
-  100% {
-    transform: scale(1.02);
-    opacity: 1;
-  }
+.loader-pl-sym {
+  font-size: 0.45em;
+  font-weight: 400;
+  color: var(--accent);
+  margin-left: 3px;
 }
+
+.loader-pl-name {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  color: rgba(255, 255, 255, 0.3);
+  text-transform: uppercase;
+}
+
 
 .loader-bottom-bar {
   position: absolute;
@@ -484,56 +548,157 @@ h1, h2, h3, h4 {
   .loader-corner-br { bottom: 18px; right: 18px; }
 }
 
-.loader-pulse-dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background-color: var(--accent);
-  animation: pulse-glow 1.6s ease-in-out infinite;
+/* === PL dot-grid animation (converted from SCSS) === */
+.pl {
+  aspect-ratio: 1;
+  display: grid;
+  gap: 1em; /* 8em * 0.125 = 1em at font-size base */
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  width: 8em;
+  font-size: clamp(1rem, 4vw, 1.4rem);
+}
+
+.pl__dot {
   position: relative;
-  z-index: 2;
+  animation-duration: 2s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
 }
 
-@keyframes pulse-glow {
-  0%, 100% {
-    transform: scale(1);
-    opacity: 0.4;
-    box-shadow: 0 0 0 0 rgba(var(--accent-rgb), 0);
-  }
-  50% {
-    transform: scale(1.6);
-    opacity: 1;
-    box-shadow: 0 0 20px 6px rgba(var(--accent-rgb), 0.25);
-  }
-}
-
-/* Anneaux ripple qui s'étendent depuis le centre */
-.loader-ripple {
+.pl__dot::before,
+.pl__dot::after {
+  aspect-ratio: 1;
+  background-color: rgba(255, 255, 255, 0.88);
+  border-radius: 50%;
+  content: "";
+  display: block;
   position: absolute;
+  width: 100%;
+  animation-duration: 2s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  transition: background-color 0.3s;
+}
+
+.pl__dot::after {
   top: 50%;
   left: 50%;
-  width: 10px;
-  height: 10px;
-  margin: -5px 0 0 -5px;
-  border-radius: 50%;
-  border: 1px solid rgba(var(--accent-rgb), 0.3);
-  animation: ripple-expand 3s ease-out infinite;
-  z-index: 1;
+  transform: translate(-50%, -50%) scale(0);
 }
 
-.loader-ripple--delayed {
-  animation-delay: 1.5s;
+/* Colour variants — adapted to portfolio palette */
+.pl__dot--red::before,
+.pl__dot--red::after    { background-color: var(--accent); }           /* cuivre --accent */
+.pl__dot--yellow::before,
+.pl__dot--yellow::after { background-color: hsl(38 90% 55%); }          /* ambre chaud */
+.pl__dot--green::before,
+.pl__dot--green::after  { background-color: hsl(28 85% 68%); }           /* cuivre clair / pêche */
+.pl__dot--blue::before,
+.pl__dot--blue::after   { background-color: hsl(12 60% 40%); }            /* cuivre sombre / acajou */
+
+/* Wave sizes */
+.pl__dot--lg::after { width: 500%; }
+.pl__dot--sm::after { width: 167%; }
+
+/* --- Per-dot rotation (even dots orbit) --- */
+.pl__dot:nth-child(2) { animation-name: pl-rotate; transform-origin: 50% 200%; }
+.pl__dot:nth-child(4) { animation-name: pl-rotate; transform-origin: 200% 50%; }
+.pl__dot:nth-child(6) { animation-name: pl-rotate; transform-origin: -100% 50%; }
+.pl__dot:nth-child(8) { animation-name: pl-rotate; transform-origin: 50% -100%; }
+
+/* --- Per-dot ::before scale --- */
+.pl__dot:nth-child(1)::before  { animation-name: pl-scale1; }
+.pl__dot:nth-child(2)::before  { animation-name: pl-scale2; }
+.pl__dot:nth-child(3)::before  { animation-name: pl-scale3; }
+.pl__dot:nth-child(4)::before  { animation-name: pl-scale4; }
+.pl__dot:nth-child(5)::before  { animation-name: pl-scale5; }
+.pl__dot:nth-child(6)::before  { animation-name: pl-scale6; }
+.pl__dot:nth-child(7)::before  { animation-name: pl-scale7; }
+.pl__dot:nth-child(8)::before  { animation-name: pl-scale8; }
+.pl__dot:nth-child(9)::before  { animation-name: pl-scale9; }
+
+/* --- Per-dot ::after wave --- */
+.pl__dot:nth-child(3)::after   { animation-name: pl-wave3; }
+.pl__dot:nth-child(5)::after   { animation-name: pl-wave5a, pl-wave5b; }
+.pl__dot:nth-child(7)::after   { animation-name: pl-wave7; }
+.pl__dot:nth-child(9)::after   { animation-name: pl-wave9; }
+
+/* === Keyframes === */
+@keyframes pl-rotate {
+  from, 22% { animation-timing-function: ease-out; transform: rotate(-45deg); }
+  37%, to    { transform: rotate(0); }
 }
 
-@keyframes ripple-expand {
-  0% {
-    transform: scale(1);
-    opacity: 0.6;
-  }
-  100% {
-    transform: scale(18);
-    opacity: 0;
-  }
+@keyframes pl-scale1 {
+  from, 36% { transform: translate(0,0) scale(0); }
+  50%, 71%   { transform: translate(0,0) scale(1); }
+  87%, to    { transform: translate(75%,75%) scale(0); }
+}
+@keyframes pl-scale2 {
+  from, 25% { animation-timing-function: ease-out; transform: translate(0,0) scale(0); }
+  40%, 71%  { transform: translate(0,0) scale(1); }
+  87%, to   { transform: translate(0,-100%) scale(0); }
+}
+@keyframes pl-scale3 {
+  from, 27% { animation-timing-function: ease-in; transform: translate(0,0) scale(0); }
+  45%, 71%  { transform: translate(0,0) scale(1); }
+  87%, to   { transform: translate(-75%,75%) scale(0); }
+}
+@keyframes pl-scale4 {
+  from, 28% { animation-timing-function: ease-out; transform: translate(0,0) scale(0); }
+  43%, 71%  { transform: translate(0,0) scale(1); }
+  87%, to   { transform: translate(-100%,0) scale(0); }
+}
+@keyframes pl-scale5 {
+  from, 9%, to { transform: scale(0); }
+  26%          { transform: scale(1.17); }
+  41%, 75%     { transform: scale(1); }
+}
+@keyframes pl-scale6 {
+  from, 22% { animation-timing-function: ease-out; transform: translate(0,0) scale(0); }
+  37%, 71%  { transform: translate(0,0) scale(1); }
+  87%, to   { transform: translate(100%,0) scale(0); }
+}
+@keyframes pl-scale7 {
+  from, 36% { animation-timing-function: ease-in; transform: translate(0,0) scale(0); }
+  53%, 71%  { transform: translate(0,0) scale(1); }
+  87%, to   { transform: translate(75%,-75%) scale(0); }
+}
+@keyframes pl-scale8 {
+  from, 24% { animation-timing-function: ease-out; transform: translate(0,0) scale(0); }
+  39%, 71%  { transform: translate(0,0) scale(1); }
+  87%, to   { transform: translate(0,100%) scale(0); }
+}
+@keyframes pl-scale9 {
+  from, 32% { animation-timing-function: ease-in; transform: translate(0,0) scale(0); }
+  49%, 71%  { transform: translate(0,0) scale(1); }
+  87%, to   { transform: translate(-75%,-75%) scale(0); }
+}
+
+@keyframes pl-wave3 {
+  from    { visibility: hidden; }
+  45%     { opacity: 1; transform: translate(-50%,-50%) scale(calc(1 / 1.67)); visibility: hidden; }
+  61%, to { opacity: 0; transform: translate(-50%,-50%) scale(1); }
+}
+@keyframes pl-wave5a {
+  from    { transform: translate(-50%,-50%) scale(0.2); }
+  8%      { transform: translate(-50%,-50%) scale(0.8); }
+  25%, to { transform: translate(-50%,-50%) scale(1); }
+}
+@keyframes pl-wave5b {
+  from, 25%, to { opacity: 0; }
+  8%            { opacity: 0.5; }
+}
+@keyframes pl-wave7 {
+  from    { visibility: hidden; }
+  53%     { opacity: 1; transform: translate(-50%,-50%) scale(calc(1 / 1.67)); visibility: hidden; }
+  69%, to { opacity: 0; transform: translate(-50%,-50%) scale(1); }
+}
+@keyframes pl-wave9 {
+  from    { visibility: hidden; }
+  49%     { opacity: 1; transform: translate(-50%,-50%) scale(calc(1 / 1.67)); visibility: hidden; }
+  65%, to { opacity: 0; transform: translate(-50%,-50%) scale(1); }
 }
 
 /* Particules ambiantes flottantes */

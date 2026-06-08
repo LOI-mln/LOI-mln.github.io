@@ -1,15 +1,26 @@
 import React, { useEffect, useRef } from 'react';
 
-const OrganicCanvas = () => {
+const OrganicCanvas = ({ mode = 'light' }) => {
   const canvasRef = useRef(null);
+  const sentinelRef = useRef(null);
   const mouseRef = useRef({ x: -1000, y: -1000, tx: -1000, ty: -1000 });
+  const modeRef = useRef(mode);
+
+  useEffect(() => {
+    modeRef.current = mode;
+  }, [mode]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas) return;
+    const sentinel = sentinelRef.current;
+    if (!canvas || !sentinel) return;
 
     const ctx = canvas.getContext('2d');
-    let animationFrameId;
+    let animationFrameId = null;
+    let isIntersecting = false;
+    let isPageVisible = document.visibilityState === 'visible';
+    let isMobileMenuOpen = false;
+    let isAnimating = false;
     let width = (canvas.width = window.innerWidth);
     let height = (canvas.height = window.innerHeight);
     let devicePixelRatio = window.devicePixelRatio || 1;
@@ -46,9 +57,15 @@ const OrganicCanvas = () => {
     const rows = 28;
     const cols = 28;
     let time = 0;
+    let themeTransition = modeRef.current === 'dark' ? 1 : 0;
 
     // Rendu de la grille animée
     const drawMesh = () => {
+      if (!isAnimating) return;
+
+      const targetTheme = modeRef.current === 'dark' ? 1 : 0;
+      themeTransition += (targetTheme - themeTransition) * 0.08;
+
       ctx.clearRect(0, 0, width, height);
 
       // Interpolation fluide de la souris
@@ -114,7 +131,15 @@ const OrganicCanvas = () => {
 
       // Rendu des lignes de la grille
       ctx.lineWidth = 0.6;
-      ctx.strokeStyle = 'rgba(17, 24, 39, 0.035)'; // Very subtle dark lines
+      
+      const lightR = 17, lightG = 24, lightB = 39;
+      const darkR = 255, darkG = 255, darkB = 255;
+      
+      const r = lightR + (darkR - lightR) * themeTransition;
+      const g = lightG + (darkG - lightG) * themeTransition;
+      const b = lightB + (darkB - lightB) * themeTransition;
+      
+      ctx.strokeStyle = `rgba(${Math.round(r)}, ${Math.round(g)}, ${Math.round(b)}, 0.035)`;
 
       // Lignes horizontales
       for (let r = 0; r <= rows; r++) {
@@ -156,32 +181,93 @@ const OrganicCanvas = () => {
         }
       }
 
+      if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
+      }
       animationFrameId = requestAnimationFrame(drawMesh);
     };
 
-    drawMesh();
+    const updateAnimationState = (newIntersecting, newPageVisible, newMobileMenuOpen) => {
+      if (newIntersecting !== undefined) isIntersecting = newIntersecting;
+      if (newPageVisible !== undefined) isPageVisible = newPageVisible;
+      if (newMobileMenuOpen !== undefined) isMobileMenuOpen = newMobileMenuOpen;
+      const shouldAnimate = isIntersecting && isPageVisible && !isMobileMenuOpen;
+
+      if (shouldAnimate && !isAnimating) {
+        console.log('[OrganicCanvas] STARTING/RESUMING RENDER LOOP');
+        isAnimating = true;
+        if (animationFrameId) {
+          cancelAnimationFrame(animationFrameId);
+          animationFrameId = null;
+        }
+        drawMesh();
+      } else if (!shouldAnimate && isAnimating) {
+        console.log('[OrganicCanvas] PAUSING RENDER LOOP');
+        isAnimating = false;
+        if (animationFrameId) {
+          cancelAnimationFrame(animationFrameId);
+          animationFrameId = null;
+        }
+      }
+    };
+
+    const handleVisibilityChange = () => {
+      updateAnimationState(undefined, document.visibilityState === 'visible', undefined);
+    };
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    const handleMobileMenuToggle = (e) => {
+      updateAnimationState(undefined, undefined, e.detail ? e.detail.open : false);
+    };
+    window.addEventListener('mobile-menu-toggle', handleMobileMenuToggle);
+
+    const observer = new IntersectionObserver(([entry]) => {
+      updateAnimationState(entry.isIntersecting, undefined, undefined);
+    }, { threshold: 0 });
+
+    observer.observe(sentinel);
 
     return () => {
+      console.log('[OrganicCanvas] UNMOUNTED');
+      isAnimating = false;
+      observer.disconnect();
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('mobile-menu-toggle', handleMobileMenuToggle);
       window.removeEventListener('resize', resize);
       window.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseleave', handleMouseLeave);
-      cancelAnimationFrame(animationFrameId);
+      if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
+      }
     };
   }, []);
 
   return (
-    <canvas
-      ref={canvasRef}
+    <div
+      ref={sentinelRef}
       style={{
-        position: 'fixed',
+        position: 'absolute',
         top: 0,
         left: 0,
         width: '100%',
-        height: '100%',
-        zIndex: 0,
+        height: '250vh',
         pointerEvents: 'none',
+        zIndex: 0,
       }}
-    />
+    >
+      <canvas
+        ref={canvasRef}
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          zIndex: 0,
+          pointerEvents: 'none',
+        }}
+      />
+    </div>
   );
 };
 
