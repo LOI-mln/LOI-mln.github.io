@@ -14,7 +14,8 @@ import {
   CheckCircle, 
   Flame, 
   Server, 
-  AlertTriangle 
+  AlertTriangle,
+  FileText 
 } from 'lucide-react';
 
 const GithubIcon = ({ size = 18 }) => (
@@ -57,7 +58,7 @@ const Projects = () => {
 
       // Positions des maquettes et cibles
       const targets = [];
-      for (let i = 0; i < 4; i++) {
+      for (let i = 0; i < 3; i++) {
         const mockup = mockupRefs.current[i];
         if (!mockup) continue;
 
@@ -194,7 +195,7 @@ const Projects = () => {
         if (!branch) return;
         const length = branch.getTotalLength();
         branch.style.strokeDasharray = length;
-        const thresholds = [0.12, 0.35, 0.58, 0.78]; // Seuils d'apparition
+        const thresholds = [0.15, 0.48, 0.78]; // Seuils d'apparition
         const start = thresholds[idx];
         const branchProgress = Math.max(0, Math.min(1, (progress - start) * 6.0));
         branch.style.strokeDashoffset = length - (length * branchProgress);
@@ -320,16 +321,7 @@ const Projects = () => {
           style={{ transition: 'stroke-dashoffset 0.1s ease-out', willChange: 'stroke-dashoffset' }}
         />
 
-        {/* Staggered Branch 4 (pointing left to project 4 mockup right edge) */}
-        <path
-          ref={el => branchRefs.current[3] = el}
-          d=""
-          fill="none"
-          stroke="url(#branch-grad-left)"
-          strokeWidth="2"
-          strokeLinecap="round"
-          style={{ transition: 'stroke-dashoffset 0.1s ease-out', willChange: 'stroke-dashoffset' }}
-        />
+
 
         {/* Branch 1 Glowing Node */}
         <g
@@ -358,14 +350,7 @@ const Projects = () => {
           <circle cx="0" cy="0" r="3.5" fill="var(--accent)" />
         </g>
 
-        {/* Branch 4 Glowing Node */}
-        <g
-          ref={el => nodeRefs.current[3] = el}
-          style={{ transition: 'opacity 0.2s ease', willChange: 'opacity, transform' }}
-        >
-          <circle cx="0" cy="0" r="8" fill="var(--accent)" opacity="0.35" className="pulse-dot" />
-          <circle cx="0" cy="0" r="3.5" fill="var(--accent)" />
-        </g>
+
       </svg>
 
       {/* Subtle warm background glow */}
@@ -415,171 +400,20 @@ const Projects = () => {
           </p>
         </div>
 
-        {/* 1. Projet "Questionary" (Web / NLP & Full-stack) */}
+        {/* 1. Stage RGU Limoges/Bordeaux (Recherche / Écosse) */}
         <div className="project-row" style={{ display: 'flex', gap: '60px', alignItems: 'center', marginBottom: '120px' }}>
           <div className="project-content reveal-on-scroll" style={{ flex: '1', minWidth: '320px' }}>
             <span style={{ fontFamily: 'var(--font-subtitle)', fontSize: '0.85rem', fontWeight: 700, color: 'var(--text-secondary)', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
-              N° 001 / NLP & FULL-STACK WEB
+              N° 001 / RECHERCHE & R&D IA
             </span>
             <h3 style={{ fontFamily: 'var(--font-title)', fontSize: 'clamp(2.2rem, 5vw, 3.2rem)', fontWeight: 800, color: 'var(--text-primary)', marginTop: '8px', marginBottom: '4px', letterSpacing: '-0.02em' }}>
-              <TextScramble text="Questionary" hover={true} />
+              <TextScramble text="RGU Limoges/Bordeaux" hover={true} />
             </h3>
             <p style={{ fontFamily: 'var(--font-creative)', fontSize: 'clamp(1.25rem, 3vw, 1.6rem)', color: 'var(--accent-hover)', fontStyle: 'italic', fontWeight: 300, margin: '0 0 24px 0' }}>
-              Comprendre les réponses, au-delà des mots.
+              Quantifier la polarisation discursive par une approche multimodale et réseau.
             </p>
             <p style={{ fontFamily: 'var(--font-body)', fontSize: '1rem', color: 'var(--text-secondary)', lineHeight: 1.65, marginBottom: '32px' }}>
-              Application web d'analyse sémantique et de création de formulaires dynamiques. Conçue en équipe, elle intègre un moteur d'analyse de sentiment NLP en temps réel pour traiter les réponses ouvertes et déclencher instantanément des flux d'alertes intelligents par e-mail et Slack en cas de retours critiques.
-            </p>
-
-            {/* 2x2 Specs Grid */}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px 30px', borderTop: '1px solid var(--border-color)', paddingTop: '24px', marginBottom: '32px' }}>
-              <div>
-                <span style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Rôle</span>
-                <span style={{ fontFamily: 'var(--font-subtitle)', fontWeight: 700, fontSize: '0.9rem', color: 'var(--text-primary)' }}>Lead Dev & NLP Integration</span>
-              </div>
-              <div>
-                <span style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Année</span>
-                <span style={{ fontFamily: 'var(--font-subtitle)', fontWeight: 700, fontSize: '0.9rem', color: 'var(--text-primary)' }}>2025</span>
-              </div>
-              <div>
-                <span style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Statut</span>
-                <span style={{ fontFamily: 'var(--font-subtitle)', fontWeight: 700, fontSize: '0.9rem', color: 'var(--text-primary)' }}>MVP validé</span>
-              </div>
-              <div>
-                <span style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Équipe</span>
-                <span style={{ fontFamily: 'var(--font-subtitle)', fontWeight: 700, fontSize: '0.9rem', color: 'var(--text-primary)' }}>6 Développeurs</span>
-              </div>
-            </div>
-
-            {/* Tech & CTA */}
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '32px' }}>
-              {['Vue.js', 'PHP', 'MariaDB', 'NLP / Sentiment', 'SQL', 'Alerting API'].map(tech => (
-                <span key={tech} className="organic-badge" style={{ fontSize: '0.75rem', padding: '4px 12px', background: 'rgba(227, 93, 59, 0.06)' }}>
-                  {tech}
-                </span>
-              ))}
-            </div>
-            
-            <a 
-              href="https://github.com/Mdeterne/Web-app-questionary" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="btn-editorial"
-              aria-label="Explorer le dépôt GitHub de l'application Questionary"
-              style={{ padding: '12px 28px', fontSize: '0.85rem' }}
-            >
-              <span>Explorer le Dépôt</span>
-              <GithubIcon size={16} />
-            </a>
-          </div>
-
-          {/* Questionary HTML Mockup (Clean SaaS Dashboard) */}
-          <div ref={el => mockupRefs.current[0] = el} className="project-mockup" style={{ flex: '1', minWidth: '320px', display: 'flex', justifyContent: 'center' }}>
-            <TiltMockup>
-              <div className="glass-panel" style={{ width: '100%', maxWidth: '520px', backgroundColor: '#f9fafb', borderRadius: '24px', border: '1px solid var(--border-color)', boxShadow: '0 25px 60px rgba(17,24,39,0.06)', padding: '0', display: 'flex', flexDirection: 'column', overflow: 'hidden', height: '320px' }}>
-              {/* Dark Header */}
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', backgroundColor: '#1e1e1e', padding: '8px 14px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                  <ClipboardList size={11} color="#ffffff" />
-                  <span style={{ fontSize: '0.65rem', fontWeight: 900, color: '#ffffff', letterSpacing: '0.05em' }}>QUESTIONARY</span>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                  <span style={{ fontSize: '0.52rem', fontWeight: 700, color: '#ffffff' }}>Université de Limoges</span>
-                  <div style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#ef4444' }} />
-                </div>
-              </div>
-
-              {/* Title Bar */}
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: '#ffffff', padding: '10px 14px', borderBottom: '1px solid rgba(0,0,0,0.05)' }}>
-                <div>
-                  <span style={{ display: 'block', fontSize: '0.45rem', fontWeight: 800, color: '#9ca3af', letterSpacing: '0.02em', textTransform: 'uppercase' }}>Analyse des résultats</span>
-                  <span style={{ fontSize: '0.78rem', fontWeight: 800, color: '#1e293b' }}>Questionnaire de Démonstration</span>
-                </div>
-                <div style={{ display: 'flex', gap: '4px' }}>
-                  <button style={{ border: 'none', backgroundColor: '#22c55e', color: '#ffffff', fontSize: '0.5rem', fontWeight: 700, padding: '3px 8px', borderRadius: '4px', display: 'flex', alignItems: 'center', gap: '3px', cursor: 'pointer' }}>
-                    <span>Exporter</span>
-                  </button>
-                  <button style={{ border: 'none', backgroundColor: '#1e293b', color: '#ffffff', fontSize: '0.5rem', fontWeight: 700, padding: '3px 8px', borderRadius: '4px', cursor: 'pointer' }}>
-                    <span>Retour</span>
-                  </button>
-                </div>
-              </div>
-
-              {/* Body Area */}
-              <div style={{ flex: 1, padding: '10px 14px', display: 'flex', flexDirection: 'column', gap: '8px', overflowY: 'auto' }}>
-                {/* 64 Responses Ovale Badge */}
-                <div style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', backgroundColor: '#fee2e2', color: '#b91c1c', borderRadius: '50px', padding: '3px 10px', width: 'fit-content' }}>
-                  <span style={{ width: '4px', height: '4px', borderRadius: '50%', backgroundColor: '#b91c1c' }} />
-                  <span style={{ fontSize: '0.52rem', fontWeight: 800 }}>64 réponses collectées</span>
-                </div>
-
-                {/* Cards Grid */}
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
-                  {/* Card 1 */}
-                  <div style={{ backgroundColor: '#ffffff', borderRadius: '8px', border: '1px solid rgba(0,0,0,0.06)', padding: '8px', display: 'flex', flexDirection: 'column', gap: '6px', boxShadow: '0 2px 4px rgba(0,0,0,0.02)' }}>
-                    <span style={{ fontSize: '0.58rem', fontWeight: 800, color: '#1e293b' }}>Quel est votre prénom ?</span>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                      {[
-                        { label: 'Je recommande...', val: '95%' },
-                        { label: 'Sympa et très bien', val: '65%' },
-                        { label: 'Excellent projet', val: '60%' }
-                      ].map((item, idx) => (
-                        <div key={idx}>
-                          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.45rem', color: '#71717a' }}>
-                            <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '75%' }}>{item.label}</span>
-                          </div>
-                          <div style={{ width: '100%', height: '4px', backgroundColor: '#f1f5f9', borderRadius: '2px', overflow: 'hidden' }}>
-                            <div style={{ width: `${item.val}`, height: '100%', backgroundColor: '#c25959' }} />
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                    <button style={{ border: 'none', backgroundColor: '#18181b', color: '#ffffff', fontSize: '0.45rem', fontWeight: 800, padding: '3px', borderRadius: '4px', marginTop: '2px', cursor: 'pointer' }}>
-                      Voir toutes les réponses (40)
-                    </button>
-                  </div>
-
-                  {/* Card 2 */}
-                  <div style={{ backgroundColor: '#ffffff', borderRadius: '8px', border: '1px solid rgba(0,0,0,0.06)', padding: '8px', display: 'flex', flexDirection: 'column', gap: '6px', boxShadow: '0 2px 4px rgba(0,0,0,0.02)' }}>
-                    <span style={{ fontSize: '0.58rem', fontWeight: 800, color: '#1e293b' }}>Quelles fonctionnalités préférez-vous ?</span>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                      {[
-                        { label: 'Interface intuitive', val: '85%' },
-                        { label: 'Analyses détaillées', val: '80%' },
-                        { label: 'Rapidité', val: '70%' }
-                      ].map((item, idx) => (
-                        <div key={idx}>
-                          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.45rem', color: '#71717a' }}>
-                            <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '75%' }}>{item.label}</span>
-                          </div>
-                          <div style={{ width: '100%', height: '4px', backgroundColor: '#f1f5f9', borderRadius: '2px', overflow: 'hidden' }}>
-                            <div style={{ width: `${item.val}`, height: '100%', backgroundColor: '#c25959' }} />
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </TiltMockup>
-        </div>
-      </div>
-
-        {/* 2. Stage RGU Aberdeen (Recherche / Écosse) */}
-        <div className="project-row" style={{ display: 'flex', gap: '60px', alignItems: 'center', marginBottom: '120px', flexDirection: 'row-reverse' }}>
-          <div className="project-content reveal-on-scroll" style={{ flex: '1', minWidth: '320px' }}>
-            <span style={{ fontFamily: 'var(--font-subtitle)', fontSize: '0.85rem', fontWeight: 700, color: 'var(--text-secondary)', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
-              N° 002 / RECHERCHE & R&D IA
-            </span>
-            <h3 style={{ fontFamily: 'var(--font-title)', fontSize: 'clamp(2.2rem, 5vw, 3.2rem)', fontWeight: 800, color: 'var(--text-primary)', marginTop: '8px', marginBottom: '4px', letterSpacing: '-0.02em' }}>
-              <TextScramble text="RGU Aberdeen" hover={true} />
-            </h3>
-            <p style={{ fontFamily: 'var(--font-creative)', fontSize: 'clamp(1.25rem, 3vw, 1.6rem)', color: 'var(--accent-hover)', fontStyle: 'italic', fontWeight: 300, margin: '0 0 24px 0' }}>
-              Analyse linguistique de la polarisation sociale ("Nous vs Eux").
-            </p>
-            <p style={{ fontFamily: 'var(--font-body)', fontSize: '1rem', color: 'var(--text-secondary)', lineHeight: 1.65, marginBottom: '32px' }}>
-              Stage de recherche de fin d'études au laboratoire d'IA de la Robert Gordon University (Aberdeen, Écosse). Conception de classifieurs NLP pour détecter les marqueurs sémantiques collectifs (In-group vs Out-group) dans de grands volumes de posts de réseaux sociaux afin de mesurer la polarisation sociale et politique.
+              Stage de recherche au laboratoire d'IA de la Robert Gordon University (Limoges/Bordeaux) sous la supervision du Dr Shahana Bano. Rédaction d'un papier de recherche (publication prochaine) sur la polarisation sociale sur 5 plateformes. Modélisation d'un graphe d'interactions de 20k nœuds (Louvain Q = 0,95), création d'un index de polarisation composite (We/Them & Perspective API) et classification zero-shot de mèmes politiques via OpenAI CLIP.
             </p>
 
             {/* 2x2 Specs Grid */}
@@ -594,7 +428,7 @@ const Projects = () => {
               </div>
               <div>
                 <span style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Statut</span>
-                <span style={{ fontFamily: 'var(--font-subtitle)', fontWeight: 700, fontSize: '0.9rem', color: 'var(--text-primary)' }}>Recherche validée</span>
+                <span style={{ fontFamily: 'var(--font-subtitle)', fontWeight: 700, fontSize: '0.9rem', color: 'var(--text-primary)' }}>Publication prochaine</span>
               </div>
               <div>
                 <span style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Équipe</span>
@@ -604,28 +438,30 @@ const Projects = () => {
 
             {/* Tech & CTA */}
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '32px' }}>
-              {['Python', 'NLP / Langage', 'Social Media Analysis', 'Group Polarization', 'SpaCy & NLTK', 'Erasmus+'].map(tech => (
+              {['Python', 'OpenAI CLIP', 'Perspective API', 'Louvain Modularity', 'Complex Networks', 'PyTorch & NLP'].map(tech => (
                 <span key={tech} className="organic-badge" style={{ fontSize: '0.75rem', padding: '4px 12px', background: 'rgba(227, 93, 59, 0.06)' }}>
                   {tech}
                 </span>
               ))}
             </div>
             
-            <a 
-              href="https://github.com/LOI-mln" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="btn-editorial"
-              aria-label="Explorer mes travaux de recherche au laboratoire RGU Aberdeen"
-              style={{ padding: '12px 28px', fontSize: '0.85rem' }}
-            >
-              <span>Explorer mes travaux</span>
-              <ExternalLink size={16} />
-            </a>
+            <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
+              <a 
+                href="/research_paper.pdf" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="btn-editorial"
+                aria-label="Consulter le papier de recherche (PDF)"
+                style={{ padding: '12px 28px', fontSize: '0.85rem' }}
+              >
+                <span>Lire le Papier</span>
+                <FileText size={16} />
+              </a>
+            </div>
           </div>
 
           {/* RGU Mockup (Scientific Research Terminal) */}
-          <div ref={el => mockupRefs.current[1] = el} className="project-mockup reveal-scale delay-200" style={{ flex: '1', minWidth: '320px', display: 'flex', justifyContent: 'center' }}>
+          <div ref={el => mockupRefs.current[0] = el} className="project-mockup reveal-scale delay-200" style={{ flex: '1', minWidth: '320px', display: 'flex', justifyContent: 'center' }}>
             <TiltMockup>
               <div className="glass-panel" style={{ width: '100%', maxWidth: '520px', backgroundColor: 'rgba(9, 11, 20, 0.95)', borderRadius: '24px', border: '1px solid rgba(255, 255, 255, 0.08)', boxShadow: '0 30px 80px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1)', padding: '0', display: 'flex', height: '340px', overflow: 'hidden', position: 'relative' }}>
               
@@ -783,10 +619,160 @@ const Projects = () => {
           </TiltMockup>
         </div>
       </div>
-        
 
-        {/* 3. Réseau Virtuel (SysAdmin / Réseaux) */}
-        <div className="project-row" style={{ display: 'flex', gap: '60px', alignItems: 'center', marginBottom: '120px' }}>
+{/* 2. Projet "Questionary" (Web / NLP & Full-stack) */}
+        <div className="project-row" style={{ display: 'flex', gap: '60px', alignItems: 'center', marginBottom: '120px', flexDirection: 'row-reverse' }}>
+          <div className="project-content reveal-on-scroll" style={{ flex: '1', minWidth: '320px' }}>
+            <span style={{ fontFamily: 'var(--font-subtitle)', fontSize: '0.85rem', fontWeight: 700, color: 'var(--text-secondary)', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
+              N° 002 / NLP & FULL-STACK WEB
+            </span>
+            <h3 style={{ fontFamily: 'var(--font-title)', fontSize: 'clamp(2.2rem, 5vw, 3.2rem)', fontWeight: 800, color: 'var(--text-primary)', marginTop: '8px', marginBottom: '4px', letterSpacing: '-0.02em' }}>
+              <TextScramble text="Questionary" hover={true} />
+            </h3>
+            <p style={{ fontFamily: 'var(--font-creative)', fontSize: 'clamp(1.25rem, 3vw, 1.6rem)', color: 'var(--accent-hover)', fontStyle: 'italic', fontWeight: 300, margin: '0 0 24px 0' }}>
+              Comprendre les réponses, au-delà des mots.
+            </p>
+            <p style={{ fontFamily: 'var(--font-body)', fontSize: '1rem', color: 'var(--text-secondary)', lineHeight: 1.65, marginBottom: '32px' }}>
+              Application web d'analyse sémantique et de création de formulaires dynamiques. Conçue en équipe, elle intègre un moteur d'analyse de sentiment NLP en temps réel pour traiter les réponses ouvertes et déclencher instantanément des flux d'alertes intelligents par e-mail et Slack en cas de retours critiques.
+            </p>
+
+            {/* 2x2 Specs Grid */}
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px 30px', borderTop: '1px solid var(--border-color)', paddingTop: '24px', marginBottom: '32px' }}>
+              <div>
+                <span style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Rôle</span>
+                <span style={{ fontFamily: 'var(--font-subtitle)', fontWeight: 700, fontSize: '0.9rem', color: 'var(--text-primary)' }}>Lead Dev & NLP Integration</span>
+              </div>
+              <div>
+                <span style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Année</span>
+                <span style={{ fontFamily: 'var(--font-subtitle)', fontWeight: 700, fontSize: '0.9rem', color: 'var(--text-primary)' }}>2025</span>
+              </div>
+              <div>
+                <span style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Statut</span>
+                <span style={{ fontFamily: 'var(--font-subtitle)', fontWeight: 700, fontSize: '0.9rem', color: 'var(--text-primary)' }}>MVP validé</span>
+              </div>
+              <div>
+                <span style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Équipe</span>
+                <span style={{ fontFamily: 'var(--font-subtitle)', fontWeight: 700, fontSize: '0.9rem', color: 'var(--text-primary)' }}>6 Développeurs</span>
+              </div>
+            </div>
+
+            {/* Tech & CTA */}
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '32px' }}>
+              {['Vue.js', 'PHP', 'MariaDB', 'NLP / Sentiment', 'SQL', 'Alerting API'].map(tech => (
+                <span key={tech} className="organic-badge" style={{ fontSize: '0.75rem', padding: '4px 12px', background: 'rgba(227, 93, 59, 0.06)' }}>
+                  {tech}
+                </span>
+              ))}
+            </div>
+            
+            <a 
+              href="https://github.com/Mdeterne/Web-app-questionary" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="btn-editorial"
+              aria-label="Explorer le dépôt GitHub de l'application Questionary"
+              style={{ padding: '12px 28px', fontSize: '0.85rem' }}
+            >
+              <span>Explorer le Dépôt</span>
+              <GithubIcon size={16} />
+            </a>
+          </div>
+
+          {/* Questionary HTML Mockup (Clean SaaS Dashboard) */}
+          <div ref={el => mockupRefs.current[1] = el} className="project-mockup" style={{ flex: '1', minWidth: '320px', display: 'flex', justifyContent: 'center' }}>
+            <TiltMockup>
+              <div className="glass-panel" style={{ width: '100%', maxWidth: '520px', backgroundColor: '#f9fafb', borderRadius: '24px', border: '1px solid var(--border-color)', boxShadow: '0 25px 60px rgba(17,24,39,0.06)', padding: '0', display: 'flex', flexDirection: 'column', overflow: 'hidden', height: '320px' }}>
+              {/* Dark Header */}
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', backgroundColor: '#1e1e1e', padding: '8px 14px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <ClipboardList size={11} color="#ffffff" />
+                  <span style={{ fontSize: '0.65rem', fontWeight: 900, color: '#ffffff', letterSpacing: '0.05em' }}>QUESTIONARY</span>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                  <span style={{ fontSize: '0.52rem', fontWeight: 700, color: '#ffffff' }}>Université de Limoges</span>
+                  <div style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#ef4444' }} />
+                </div>
+              </div>
+
+              {/* Title Bar */}
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: '#ffffff', padding: '10px 14px', borderBottom: '1px solid rgba(0,0,0,0.05)' }}>
+                <div>
+                  <span style={{ display: 'block', fontSize: '0.45rem', fontWeight: 800, color: '#9ca3af', letterSpacing: '0.02em', textTransform: 'uppercase' }}>Analyse des résultats</span>
+                  <span style={{ fontSize: '0.78rem', fontWeight: 800, color: '#1e293b' }}>Questionnaire de Démonstration</span>
+                </div>
+                <div style={{ display: 'flex', gap: '4px' }}>
+                  <button style={{ border: 'none', backgroundColor: '#22c55e', color: '#ffffff', fontSize: '0.5rem', fontWeight: 700, padding: '3px 8px', borderRadius: '4px', display: 'flex', alignItems: 'center', gap: '3px', cursor: 'pointer' }}>
+                    <span>Exporter</span>
+                  </button>
+                  <button style={{ border: 'none', backgroundColor: '#1e293b', color: '#ffffff', fontSize: '0.5rem', fontWeight: 700, padding: '3px 8px', borderRadius: '4px', cursor: 'pointer' }}>
+                    <span>Retour</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Body Area */}
+              <div style={{ flex: 1, padding: '10px 14px', display: 'flex', flexDirection: 'column', gap: '8px', overflowY: 'auto' }}>
+                {/* 64 Responses Ovale Badge */}
+                <div style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', backgroundColor: '#fee2e2', color: '#b91c1c', borderRadius: '50px', padding: '3px 10px', width: 'fit-content' }}>
+                  <span style={{ width: '4px', height: '4px', borderRadius: '50%', backgroundColor: '#b91c1c' }} />
+                  <span style={{ fontSize: '0.52rem', fontWeight: 800 }}>64 réponses collectées</span>
+                </div>
+
+                {/* Cards Grid */}
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
+                  {/* Card 1 */}
+                  <div style={{ backgroundColor: '#ffffff', borderRadius: '8px', border: '1px solid rgba(0,0,0,0.06)', padding: '8px', display: 'flex', flexDirection: 'column', gap: '6px', boxShadow: '0 2px 4px rgba(0,0,0,0.02)' }}>
+                    <span style={{ fontSize: '0.58rem', fontWeight: 800, color: '#1e293b' }}>Quel est votre prénom ?</span>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                      {[
+                        { label: 'Je recommande...', val: '95%' },
+                        { label: 'Sympa et très bien', val: '65%' },
+                        { label: 'Excellent projet', val: '60%' }
+                      ].map((item, idx) => (
+                        <div key={idx}>
+                          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.45rem', color: '#71717a' }}>
+                            <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '75%' }}>{item.label}</span>
+                          </div>
+                          <div style={{ width: '100%', height: '4px', backgroundColor: '#f1f5f9', borderRadius: '2px', overflow: 'hidden' }}>
+                            <div style={{ width: `${item.val}`, height: '100%', backgroundColor: '#c25959' }} />
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                    <button style={{ border: 'none', backgroundColor: '#18181b', color: '#ffffff', fontSize: '0.45rem', fontWeight: 800, padding: '3px', borderRadius: '4px', marginTop: '2px', cursor: 'pointer' }}>
+                      Voir toutes les réponses (40)
+                    </button>
+                  </div>
+
+                  {/* Card 2 */}
+                  <div style={{ backgroundColor: '#ffffff', borderRadius: '8px', border: '1px solid rgba(0,0,0,0.06)', padding: '8px', display: 'flex', flexDirection: 'column', gap: '6px', boxShadow: '0 2px 4px rgba(0,0,0,0.02)' }}>
+                    <span style={{ fontSize: '0.58rem', fontWeight: 800, color: '#1e293b' }}>Quelles fonctionnalités préférez-vous ?</span>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                      {[
+                        { label: 'Interface intuitive', val: '85%' },
+                        { label: 'Analyses détaillées', val: '80%' },
+                        { label: 'Rapidité', val: '70%' }
+                      ].map((item, idx) => (
+                        <div key={idx}>
+                          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.45rem', color: '#71717a' }}>
+                            <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '75%' }}>{item.label}</span>
+                          </div>
+                          <div style={{ width: '100%', height: '4px', backgroundColor: '#f1f5f9', borderRadius: '2px', overflow: 'hidden' }}>
+                            <div style={{ width: `${item.val}`, height: '100%', backgroundColor: '#c25959' }} />
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </TiltMockup>
+        </div>
+      </div>
+
+{/* 3. Réseau Virtuel (SysAdmin / Réseaux) */}
+        <div className="project-row" style={{ display: 'flex', gap: '60px', alignItems: 'center', marginBottom: '40px' }}>
           <div className="project-content reveal-on-scroll" style={{ flex: '1', minWidth: '320px' }}>
             <span style={{ fontFamily: 'var(--font-subtitle)', fontSize: '0.85rem', fontWeight: 700, color: 'var(--text-secondary)', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
               N° 003 / SYSADMIN & INFRASTRUCTURE
@@ -918,155 +904,6 @@ const Projects = () => {
                 <div style={{ flex: 1, backgroundColor: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.04)', borderRadius: '12px', padding: '10px', display: 'flex', flexDirection: 'column', gap: '2px' }}>
                   <span style={{ fontSize: '0.6rem', color: '#9ca3af', fontWeight: 700 }}>LATENCE DNS</span>
                   <span style={{ fontSize: '1.05rem', fontWeight: 800, color: '#10b981' }}>1.1 ms</span>
-                </div>
-              </div>
-            </div>
-          </TiltMockup>
-        </div>
-      </div>
-
-        {/* 4. M-Play (Media Streaming Application) */}
-        <div className="project-row" style={{ display: 'flex', gap: '60px', alignItems: 'center', marginBottom: '40px', flexDirection: 'row-reverse' }}>
-          <div className="project-content reveal-on-scroll" style={{ flex: '1', minWidth: '320px' }}>
-            <span style={{ fontFamily: 'var(--font-subtitle)', fontSize: '0.85rem', fontWeight: 700, color: 'var(--text-secondary)', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
-              N° 004 / MOTEUR DE STREAMING & MULTIMÉDIA
-            </span>
-            <h3 style={{ fontFamily: 'var(--font-title)', fontSize: 'clamp(2.2rem, 5vw, 3.2rem)', fontWeight: 800, color: 'var(--text-primary)', marginTop: '8px', marginBottom: '4px', letterSpacing: '-0.02em' }}>
-              <TextScramble text="M-Play" hover={true} />
-            </h3>
-            <p style={{ fontFamily: 'var(--font-creative)', fontSize: 'clamp(1.25rem, 3vw, 1.6rem)', color: 'var(--accent-hover)', fontStyle: 'italic', fontWeight: 300, margin: '0 0 24px 0' }}>
-              Le cinéma à la maison, sans compromis.
-            </p>
-            <p style={{ fontFamily: 'var(--font-body)', fontSize: '1rem', color: 'var(--text-secondary)', lineHeight: 1.65, marginBottom: '32px' }}>
-              M-Play est une application de bureau de hautes performances dédiée à l'agrégation et au décodage de flux multimédias réseau (HLS, DASH, RTSP). Elle associe une interface utilisateur moderne et réactive à un moteur de lecture hybride customisé (basé sur FFmpeg), optimisant le traitement en temps réel de flux VOD et de diffusions en direct avec reprise intelligente de lecture.
-            </p>
-
-            {/* 2x2 Specs Grid */}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px 30px', borderTop: '1px solid var(--border-color)', paddingTop: '24px', marginBottom: '32px' }}>
-              <div>
-                <span style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Rôle</span>
-                <span style={{ fontFamily: 'var(--font-subtitle)', fontWeight: 700, fontSize: '0.9rem', color: 'var(--text-primary)' }}>Lead Dev & Moteur</span>
-              </div>
-              <div>
-                <span style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Année</span>
-                <span style={{ fontFamily: 'var(--font-subtitle)', fontWeight: 700, fontSize: '0.9rem', color: 'var(--text-primary)' }}>2025 - 2026</span>
-              </div>
-              <div>
-                <span style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Statut</span>
-                <span style={{ fontFamily: 'var(--font-subtitle)', fontWeight: 700, fontSize: '0.9rem', color: 'var(--text-primary)' }}>Production stable</span>
-              </div>
-              <div>
-                <span style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Équipe</span>
-                <span style={{ fontFamily: 'var(--font-subtitle)', fontWeight: 700, fontSize: '0.9rem', color: 'var(--text-primary)' }}>Solo</span>
-              </div>
-            </div>
-
-            {/* Tech & CTA */}
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '32px' }}>
-              {['Electron', 'Node.js', 'FFmpeg', 'HTML5 / CSS3', 'Desktop App'].map(tech => (
-                <span key={tech} className="organic-badge" style={{ fontSize: '0.75rem', padding: '4px 12px', background: 'rgba(227, 93, 59, 0.06)' }}>
-                  {tech}
-                </span>
-              ))}
-            </div>
-            
-            <a 
-              href="https://github.com/LOI-mln/M-Play" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="btn-editorial"
-              aria-label="Explorer le dépôt GitHub de l'application M-Play"
-              style={{ padding: '12px 28px', fontSize: '0.85rem' }}
-            >
-              <span>Explorer le Dépôt</span>
-              <GithubIcon size={16} />
-            </a>
-          </div>
-
-          {/* M-Play HTML Mockup (Dark Apple TV Style UI) */}
-          <div ref={el => mockupRefs.current[3] = el} className="project-mockup reveal-scale delay-200" style={{ flex: '1', minWidth: '320px', display: 'flex', justifyContent: 'center' }}>
-            <TiltMockup>
-              <div className="glass-panel" style={{ width: '100%', maxWidth: '520px', backgroundColor: '#050505', borderRadius: '24px', border: '1px solid rgba(255,255,255,0.06)', boxShadow: '0 30px 70px rgba(0,0,0,0.5)', padding: '0', display: 'flex', height: '320px', overflow: 'hidden' }}>
-              {/* Left Sidebar */}
-              <div style={{ width: '110px', backgroundColor: '#09090b', borderRight: '1px solid rgba(255,255,255,0.05)', display: 'flex', flexDirection: 'column', padding: '12px 8px', justifyContent: 'space-between' }}>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-                  {/* Logo */}
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '3px', paddingLeft: '4px' }}>
-                    <span style={{ fontFamily: 'var(--font-title)', fontSize: '0.85rem', fontWeight: 900, color: '#ffffff', letterSpacing: '-0.02em' }}>M</span>
-                    <span style={{ color: '#ef4444', display: 'inline-flex', alignItems: 'center', fontSize: '0.7rem' }}>▶</span>
-                    <span style={{ fontFamily: 'var(--font-title)', fontSize: '0.85rem', fontWeight: 900, color: '#ffffff', letterSpacing: '-0.02em' }}>PLAY</span>
-                  </div>
-
-                  {/* Nav Links */}
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '6px 8px', borderRadius: '8px', background: 'linear-gradient(90deg, rgba(239, 68, 68, 0.15) 0%, rgba(239, 68, 68, 0) 100%)', borderLeft: '2.5px solid #ef4444', color: '#ffffff', cursor: 'pointer' }}>
-                      <span style={{ fontSize: '0.62rem', fontWeight: 800 }}>Accueil</span>
-                    </div>
-                    {['Flux Live', 'VOD', 'Playlists'].map(tab => (
-                      <div key={tab} style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '6px 8px', borderRadius: '8px', color: '#71717a', cursor: 'pointer' }}>
-                        <span style={{ fontSize: '0.62rem', fontWeight: 700 }}>{tab}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Bottom link */}
-                <div style={{ color: '#71717a', paddingLeft: '8px', fontSize: '0.6rem', fontWeight: 700 }}>
-                  Déconnexion
-                </div>
-              </div>
-
-              {/* Main Content Area */}
-              <div style={{ flex: 1, backgroundColor: '#0c0c0e', display: 'flex', flexDirection: 'column', padding: '12px 16px', gap: '12px', overflowY: 'auto' }}>
-                {/* Search Bar */}
-                <div style={{ backgroundColor: '#18181b', borderRadius: '50px', padding: '5px 10px', display: 'flex', alignItems: 'center', border: '1px solid rgba(255,255,255,0.03)' }}>
-                  <span style={{ color: '#71717a', fontSize: '0.6rem' }}>Search or paste link</span>
-                </div>
-
-                {/* Reprendre la lecture */}
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                  <span style={{ fontSize: '0.68rem', fontWeight: 800, color: '#ffffff', borderLeft: '2px solid #ef4444', paddingLeft: '6px' }}>Reprendre la lecture</span>
-                  <div style={{ display: 'flex', gap: '8px' }}>
-                    {/* Insaisissables 3 */}
-                    <div style={{ flex: 1, height: '90px', borderRadius: '8px', overflow: 'hidden', position: 'relative', border: '1px solid rgba(255,255,255,0.05)', background: 'linear-gradient(180deg, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.9) 100%), linear-gradient(135deg, #1e1b4b 0%, #312e81 100%)', backgroundSize: 'cover' }}>
-                      <div style={{ position: 'absolute', bottom: '6px', left: '6px', right: '6px' }}>
-                        <span style={{ fontSize: '0.52rem', fontWeight: 900, color: '#ffffff', display: 'block', textTransform: 'uppercase', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Insaisissables 3</span>
-                        <div style={{ width: '100%', height: '2.5px', backgroundColor: 'rgba(255,255,255,0.15)', borderRadius: '2px', marginTop: '3px' }}>
-                          <div style={{ width: '90%', height: '100%', backgroundColor: '#ef4444' }} />
-                        </div>
-                      </div>
-                    </div>
-                    {/* Stranger Things */}
-                    <div style={{ flex: 1, height: '90px', borderRadius: '8px', overflow: 'hidden', position: 'relative', border: '1px solid rgba(255,255,255,0.05)', background: 'linear-gradient(180deg, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.9) 100%), linear-gradient(135deg, #7c2d12 0%, #9a3412 100%)', backgroundSize: 'cover' }}>
-                      <span style={{ position: 'absolute', top: '4px', left: '4px', fontSize: '0.45rem', fontWeight: 900, color: '#ffffff', backgroundColor: '#ef4444', padding: '1px 3px', borderRadius: '2px' }}>S01 E02</span>
-                      <div style={{ position: 'absolute', bottom: '6px', left: '6px', right: '6px' }}>
-                        <span style={{ fontSize: '0.52rem', fontWeight: 900, color: '#ffffff', display: 'block', textTransform: 'uppercase', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Stranger Things</span>
-                        <div style={{ width: '100%', height: '2.5px', backgroundColor: 'rgba(255,255,255,0.15)', borderRadius: '2px', marginTop: '3px' }}>
-                          <div style={{ width: '40%', height: '100%', backgroundColor: '#ef4444' }} />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Popular - Movie */}
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                  <span style={{ fontSize: '0.68rem', fontWeight: 800, color: '#ffffff' }}>Popular - Movie</span>
-                  <div style={{ display: 'flex', gap: '6px', overflowX: 'auto', paddingBottom: '4px' }}>
-                    {[
-                      { name: 'Dead Man', color: 'linear-gradient(135deg, #111827, #1f2937)' },
-                      { name: 'Insaisissables 3', color: 'linear-gradient(135deg, #1e1b4b, #312e81)' },
-                      { name: 'SISU', color: 'linear-gradient(135deg, #7c2d12, #9a3412)' },
-                      { name: 'Running Man', color: 'linear-gradient(135deg, #064e3b, #065f46)' },
-                      { name: 'Chainsaw Man', color: 'linear-gradient(135deg, #581c87, #6b21a8)' }
-                    ].map((movie, idx) => (
-                      <div key={idx} style={{ flexShrink: 0, width: '64px', height: '80px', borderRadius: '6px', overflow: 'hidden', position: 'relative', border: '1px solid rgba(255,255,255,0.05)', background: `${movie.color}` }}>
-                        <div style={{ position: 'absolute', bottom: '4px', left: '4px', right: '4px', fontSize: '0.45rem', fontWeight: 900, color: '#ffffff', lineHeight: 1.1, textTransform: 'uppercase', whiteSpace: 'normal' }}>
-                          {movie.name}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
                 </div>
               </div>
             </div>

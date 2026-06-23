@@ -25,12 +25,12 @@ const Timeline = () => {
       location: 'Limoges, France'
     },
     {
-      date: 'Avril - Juin 2026 [ACTUEL]',
+      date: 'Avril - Juin 2026',
       title: 'Stage Erasmus+ de Recherche',
       sub: 'Robert Gordon University (RGU)',
       icon: <Briefcase size={18} />,
-      desc: 'Immersion complète de plusieurs mois dans un laboratoire de recherche d\'élite anglophone en Écosse. Analyse textuelle et traitement de gros volumes de données via des modèles de NLP en Python, en totale autonomie.',
-      location: 'Aberdeen, Écosse (Royaume-Uni)'
+      desc: 'Stage de recherche Erasmus+ sous la supervision du Dr Shahana Bano. Conception de classifieurs NLP et multimodaux (CLIP, Perspective API) pour analyser la polarisation discursive et la propagande cross-plateforme. Papier de recherche rédigé, publication prochaine.',
+      location: 'Limoges/Bordeaux'
     }
   ];
 
