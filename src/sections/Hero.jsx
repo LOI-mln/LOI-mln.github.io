@@ -187,7 +187,7 @@ const Hero = () => {
                 letterSpacing: '0.02em',
               }}
             >
-              Stage R&D // Limoges/Bordeaux
+              BUT 3 // Informatique
             </span>
           </div>
 
@@ -250,7 +250,7 @@ const Hero = () => {
               }}
             />
             <span style={{ fontFamily: 'var(--font-subtitle)', fontSize: '0.75rem', fontWeight: 700 }}>
-              Stage R&D // Limoges/Bordeaux
+              BUT 3 // Informatique
             </span>
           </div>
           <p

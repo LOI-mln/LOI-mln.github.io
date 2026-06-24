@@ -59,7 +59,7 @@ function App() {
     } else if (progress < 70) {
       setLoaderLog('DB.QUERY // Mapping academic index...');
     } else if (progress < 85) {
-      setLoaderLog('NET.EST // Establishing Limoges/Bordeaux R&D link...');
+      setLoaderLog('NET.EST // Establishing Limoges/Aberdeen R&D link...');
     } else if (progress < 100) {
       setLoaderLog('MESH.GEN // Rendering dynamic lighting...');
     } else {
@@ -612,7 +612,7 @@ function App() {
                 letterSpacing: '0.05em',
               }}
             >
-              LOC: 18,742 // LIMOGES/BORDEAUX ERASMUS+ // v3.1.0
+              LOC: 18,742 // LIMOGES/ABERDEEN ERASMUS+ // v3.1.0
             </div>
           </div>
         </footer>

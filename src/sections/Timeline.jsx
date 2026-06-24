@@ -18,7 +18,7 @@ const Timeline = () => {
     },
     {
       date: '2024 - Présent',
-      title: 'BUT Informatique - 2ème Année',
+      title: 'BUT Informatique - 3ème Année',
       sub: 'IUT Limousin',
       icon: <CodeIcon />,
       desc: 'Spécialisation dans le développement logiciel full-stack, l\'intelligence artificielle, la cybersécurité et l\'administration système. Configuration Linux sous NixOS, virtualisation sous Proxmox et conteneurisation Docker.',
@@ -30,7 +30,7 @@ const Timeline = () => {
       sub: 'Robert Gordon University (RGU)',
       icon: <Briefcase size={18} />,
       desc: 'Stage de recherche Erasmus+ sous la supervision du Dr Shahana Bano. Conception de classifieurs NLP et multimodaux (CLIP, Perspective API) pour analyser la polarisation discursive et la propagande cross-plateforme. Papier de recherche rédigé, publication prochaine.',
-      location: 'Limoges/Bordeaux'
+      location: 'Aberdeen, Écosse'
     }
   ];
 
