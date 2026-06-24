@@ -400,20 +400,20 @@ const Projects = () => {
           </p>
         </div>
 
-        {/* 1. Stage RGU Limoges/Bordeaux (Recherche / Écosse) */}
+        {/* 1. Stage RGU Aberdeen (Recherche / Écosse) */}
         <div className="project-row" style={{ display: 'flex', gap: '60px', alignItems: 'center', marginBottom: '120px' }}>
           <div className="project-content reveal-on-scroll" style={{ flex: '1', minWidth: '320px' }}>
             <span style={{ fontFamily: 'var(--font-subtitle)', fontSize: '0.85rem', fontWeight: 700, color: 'var(--text-secondary)', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
               N° 001 / RECHERCHE & R&D IA
             </span>
             <h3 style={{ fontFamily: 'var(--font-title)', fontSize: 'clamp(2.2rem, 5vw, 3.2rem)', fontWeight: 800, color: 'var(--text-primary)', marginTop: '8px', marginBottom: '4px', letterSpacing: '-0.02em' }}>
-              <TextScramble text="RGU Limoges/Bordeaux" hover={true} />
+              <TextScramble text="RGU Aberdeen" hover={true} />
             </h3>
             <p style={{ fontFamily: 'var(--font-creative)', fontSize: 'clamp(1.25rem, 3vw, 1.6rem)', color: 'var(--accent-hover)', fontStyle: 'italic', fontWeight: 300, margin: '0 0 24px 0' }}>
               Quantifier la polarisation discursive par une approche multimodale et réseau.
             </p>
             <p style={{ fontFamily: 'var(--font-body)', fontSize: '1rem', color: 'var(--text-secondary)', lineHeight: 1.65, marginBottom: '32px' }}>
-              Stage de recherche au laboratoire d'IA de la Robert Gordon University (Limoges/Bordeaux) sous la supervision du Dr Shahana Bano. Rédaction d'un papier de recherche (publication prochaine) sur la polarisation sociale sur 5 plateformes. Modélisation d'un graphe d'interactions de 20k nœuds (Louvain Q = 0,95), création d'un index de polarisation composite (We/Them & Perspective API) et classification zero-shot de mèmes politiques via OpenAI CLIP.
+              Stage de recherche au laboratoire d'IA de la Robert Gordon University (Aberdeen) sous la supervision du Dr Shahana Bano. Rédaction d'un papier de recherche (publication prochaine) sur la polarisation sociale sur 5 plateformes. Modélisation d'un graphe d'interactions de 20k nœuds (Louvain Q = 0,95), création d'un index de polarisation composite (We/Them & Perspective API) et classification zero-shot de mèmes politiques via OpenAI CLIP.
             </p>
 
             {/* 2x2 Specs Grid */}
