@@ -115,12 +115,27 @@ const Hero = () => {
                 width: '100%',
                 height: '100%',
                 objectFit: 'cover',
-                filter: 'grayscale(100%) contrast(1.05)',
-                maskImage: 'linear-gradient(to bottom, black 70%, transparent 100%)',
-                WebkitMaskImage: 'linear-gradient(to bottom, black 70%, transparent 100%)',
+                filter: 'grayscale(100%) contrast(1.02) brightness(1.03)',
+                maskImage: 'linear-gradient(to bottom, black 50%, rgba(0,0,0,0.6) 70%, transparent 92%)',
+                WebkitMaskImage: 'linear-gradient(to bottom, black 50%, rgba(0,0,0,0.6) 70%, transparent 92%)',
               }}
             />
           </div>
+
+          {/* Halo lumineux d'arrière-plan pour détacher le texte du costume */}
+          <div
+            style={{
+              position: 'absolute',
+              bottom: '8%',
+              left: '50%',
+              transform: 'translateX(-50%)',
+              width: 'min(90vw, 700px)',
+              height: '180px',
+              background: 'radial-gradient(ellipse 65% 55% at 50% 50%, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.75) 45%, transparent 75%)',
+              pointerEvents: 'none',
+              zIndex: 2,
+            }}
+          />
 
           {/* Titre de premier plan */}
           <div
@@ -145,6 +160,7 @@ const Hero = () => {
                 lineHeight: 1,
                 margin: 0,
                 textTransform: 'none',
+                textShadow: '0 0 20px rgba(255, 255, 255, 0.95), 0 0 35px rgba(255, 255, 255, 0.85), 0 0 8px rgba(255, 255, 255, 0.9)',
               }}
             >
               Concepteur <span className="accent-glow-text" style={{ padding: '0 0.05em' }}>Logiciel</span>

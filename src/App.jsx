@@ -612,7 +612,7 @@ function App() {
                 letterSpacing: '0.05em',
               }}
             >
-              LOC: 18,742 // LIMOGES/ABERDEEN ERASMUS+ // v3.1.0
+              LIMOGES, FRANCE // BUT 3 INFORMATIQUE // v3.1.0
             </div>
           </div>
         </footer>
