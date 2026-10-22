@@ -95,6 +95,7 @@ const PROJECT_INFO = [
       'Services DHCP, FTP (vsftpd) et SSH',
     ],
     tags: ['Kathara', 'Routage', 'DHCP', 'Linux'],
+    demo: { src: '/videos/reseau-kathara-demo.mp4', poster: '/videos/reseau-kathara-demo.jpg', duration: '33 s' },
     link: { href: 'https://github.com/LOI-mln/virtual-network', label: 'Voir le dépôt', kind: 'github' },
   },
 ];
