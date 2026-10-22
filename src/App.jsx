@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 // Build stamp for debugging deployed bundle cache
 console.log('App build: ' + new Date().toISOString());
 import Navbar from './components/Navbar';
@@ -15,10 +15,6 @@ import Lenis from 'lenis';
 import useScrollReveal from './hooks/useScrollReveal';
 
 function App() {
-  const [loading, setLoading] = useState(true);
-  const [loadingFade, setLoadingFade] = useState(false);
-  const [progress, setProgress] = useState(0);
-  const [loaderLog, setLoaderLog] = useState('SYS.INIT // Initializing...');
 
   // Theme: force en 'light' et supprimer toute logique de dark-mode
   const theme = 'light';
@@ -34,39 +30,6 @@ function App() {
     }
     window.scrollTo(0, 0);
   }, []);
-
-  // Animation de progression du chargement
-  useEffect(() => {
-    let start = 0;
-    const interval = setInterval(() => {
-      start += Math.floor(Math.random() * 8) + 4;
-      if (start >= 100) {
-        start = 100;
-        clearInterval(interval);
-      }
-      setProgress(start);
-    }, 50);
-
-    return () => clearInterval(interval);
-  }, []);
-
-  // Textes de logs du chargeur selon la progression
-  useEffect(() => {
-    if (progress < 20) {
-      setLoaderLog('SYS.INIT // Connecting to server...');
-    } else if (progress < 45) {
-      setLoaderLog('LOAD.CORE // Importing system variables...');
-    } else if (progress < 70) {
-      setLoaderLog('DB.QUERY // Mapping academic index...');
-    } else if (progress < 85) {
-      setLoaderLog('NET.EST // Establishing Limoges/Aberdeen R&D link...');
-    } else if (progress < 100) {
-      setLoaderLog('MESH.GEN // Rendering dynamic lighting...');
-    } else {
-      setLoaderLog('SYS.READY // Milan Loï online.');
-    }
-  }, [progress]);
-
 
   // Initialiser le défilement fluide Lenis
   useEffect(() => {
@@ -107,86 +70,8 @@ function App() {
   }, []);
 
 
-  // Masquer le scrollbar pendant le chargement
-  useEffect(() => {
-    if (loading) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
-    return () => { document.body.style.overflow = ''; };
-  }, [loading]);
-
-  // Écran de chargement minimaliste
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setLoadingFade(true);
-      setTimeout(() => setLoading(false), 800);
-    }, 1800);
-    return () => clearTimeout(timer);
-  }, []);
-
   return (
     <>
-      {/* Écran de chargement plein écran technique */}
-      {loading && (
-        <div className={`loader-overlay ${loadingFade ? 'fade-out' : ''}`}>
-          {/* Grille technique en arrière-plan */}
-          <div className="loader-grid-bg" />
-          <div className="loader-scanlines" />
-
-          {/* Brackets de coin HUD */}
-          <div className="loader-corner loader-corner-tl" />
-          <div className="loader-corner loader-corner-tr" />
-          <div className="loader-corner loader-corner-bl" />
-          <div className="loader-corner loader-corner-br" />
-
-          {/* Particules ambiantes flottantes */}
-          <div className="loader-ambient-particle" style={{ top: '15%', left: '10%', animationDelay: '0s', animationDuration: '6s' }} />
-          <div className="loader-ambient-particle" style={{ top: '75%', left: '80%', animationDelay: '1.2s', animationDuration: '7s' }} />
-          <div className="loader-ambient-particle" style={{ top: '30%', left: '85%', animationDelay: '2.5s', animationDuration: '5.5s' }} />
-          <div className="loader-ambient-particle" style={{ top: '85%', left: '20%', animationDelay: '0.8s', animationDuration: '8s' }} />
-
-          {/* En-tête technique supérieur */}
-          <div className="loader-top-bar">
-            <span className="loader-title">SYS.INIT // MILAN LOI PORTFOLIO</span>
-            <span className="loader-status">SYS.LOC // LIMOGES/BORDEAUX</span>
-          </div>
-
-          {/* Animation pl — grille de points orbitaux */}
-          <div className="loader-center-giant">
-            <div className="loader-pl-wrapper">
-              <div className="pl">
-                <div className="pl__dot"></div>
-                <div className="pl__dot"></div>
-                <div className="pl__dot pl__dot--red pl__dot--sm"></div>
-                <div className="pl__dot"></div>
-                <div className="pl__dot pl__dot--yellow pl__dot--lg"></div>
-                <div className="pl__dot"></div>
-                <div className="pl__dot pl__dot--blue pl__dot--sm"></div>
-                <div className="pl__dot"></div>
-                <div className="pl__dot pl__dot--green pl__dot--sm"></div>
-              </div>
-              <div className="loader-pl-label">
-                <span className="loader-pl-percent">{progress}<span className="loader-pl-sym">%</span></span>
-                <span className="loader-pl-name">MILAN LOÏ</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Pied de page technique inférieur */}
-          <div className="loader-bottom-bar">
-            <span className="loader-log-stream">{loaderLog}</span>
-            <span className="loader-version">V3.1.0 // PROD</span>
-          </div>
-
-          {/* Ligne de progression pleine largeur tout en bas */}
-          <div className="loader-progress-line-container">
-            <div className="loader-progress-line" style={{ width: `${progress}%` }} />
-          </div>
-        </div>
-      )}
-
       {/* Contenu principal de l'application */}
       <div className="app-container">
         {/* Canvas de fond organique */}
@@ -206,11 +91,11 @@ function App() {
           {/* Section d'accueil */}
           <Hero />
 
-          {/* Matrice de compétences */}
-          <Skills />
-
           {/* Showcase des projets */}
           <Projects />
+
+          {/* Matrice de compétences */}
+          <Skills />
 
           {/* Section Hors-Piste / Passions */}
           <section
@@ -612,7 +497,7 @@ function App() {
                 letterSpacing: '0.05em',
               }}
             >
-              LIMOGES, FRANCE // BUT 3 INFORMATIQUE // v3.1.0
+              LIMOGES, FRANCE · BUT 3 INFORMATIQUE
             </div>
           </div>
         </footer>

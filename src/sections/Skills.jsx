@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Code, Cpu, Server, Database, Users, ShieldAlert, Sparkles, Monitor } from 'lucide-react';
+import { Code, Cpu, Server, Database, Users, ShieldAlert, ShieldCheck, Sparkles, Monitor, Building2, Briefcase } from 'lucide-react';
 import AntigravityCanvas from '../components/AntigravityCanvas';
 
 // Canvas de fond ondulé
@@ -22,45 +22,45 @@ const Skills = ({ theme }) => {
   const skills = [
     {
       id: 'c1', code: 'C1', title: 'Réaliser', icon: <Code size={22} />,
-      level: 'Niveau 3 · Adapter', progress: 95,
+      level: 'Niveau 3 · Adapter',
       desc: 'Développer des applications complexes avec des architectures robustes et réactives.',
-      highlights: ['Questionary (Vue.js + NLP)', 'App distribuée React/Python', 'M-Play (Electron/Node)'],
-      techs: ['React', 'Vue.js', 'Node.js', 'TypeScript', 'Python', 'PHP'],
+      highlights: ['Alternance Ceva Santé Animale (Applications métiers & SI)', 'Unilim EDT (Laravel 11 / Vue 3 / OR-Tools)', 'Questionary (Vue.js + NLP)'],
+      techs: ['React', 'Vue.js', 'Node.js', 'TypeScript', 'Python', 'PHP', 'Docker'],
     },
     {
       id: 'c2', code: 'C2', title: 'Optimiser', icon: <Cpu size={22} />,
-      level: 'Niveau 3 · Adapter', progress: 95,
+      level: 'Niveau 3 · Adapter',
       desc: 'Maximiser les performances algorithmiques et matérielles des applications.',
-      highlights: ['Exploration active de Rust', 'Moteur streaming FFmpeg', 'Simulation Jeu de la Vie (Lua)'],
-      techs: ['Rust', 'Java', 'Lua'],
+      highlights: ['Solveur OR-Tools CP-SAT (Unilim EDT)', 'Moteur streaming FFmpeg', 'Exploration active de Rust'],
+      techs: ['Python', 'Google OR-Tools', 'Rust', 'Java', 'Lua'],
     },
     {
       id: 'c3', code: 'C3', title: 'Administrer', icon: <Server size={22} />,
-      level: 'Niveau 3 · Adapter', progress: 95,
+      level: 'Niveau 3 · Adapter',
       desc: 'Configurer et sécuriser des systèmes, hyperviseurs et services réseau.',
-      highlights: ['NixOS', 'Clusters Proxmox VE', 'Homelab Docker personnel'],
+      highlights: ['NixOS', 'Clusters Proxmox VE', 'Homelab personnel sécurisé'],
       techs: ['Proxmox VE', 'Docker', 'NixOS'],
     },
     {
       id: 'c4', code: 'C4', title: 'Gérer', icon: <Database size={22} />,
-      level: 'Niveau 3 · Adapter', progress: 95,
+      level: 'Niveau 3 · Adapter',
       desc: 'Concevoir et gérer des bases de données relationnelles performantes.',
       highlights: ['Schémas normalisés MariaDB', 'Optimisation indexes SQL', 'Modélisation relationnelle'],
       techs: ['MariaDB', 'MySQL', 'SQL', 'Modélisation BDD'],
     },
     {
       id: 'c5', code: 'C5', title: 'Conduire', icon: <Users size={22} />,
-      level: 'Niveau 3 · Adapter', progress: 95,
+      level: 'Niveau 3 · Adapter',
       desc: 'Coordonner des équipes et appliquer les méthodologies agiles.',
-      highlights: ['Lead équipe 4-6 devs ', 'Coordination Git & PR', 'Stage Erasmus+ Écosse'],
+      highlights: ['Agilité & Scrum en entreprise (Ceva Santé Animale)', 'Lead équipe 4 devs (Unilim EDT)', 'Stage Erasmus+ R&D Écosse'],
       techs: ['Agile', 'Git', 'Gestion de Projet', 'Collaboration'],
     },
     {
       id: 'c6', code: 'C6', title: 'Sécuriser', icon: <ShieldAlert size={22} />,
-      level: 'Niveau 3 · Adapter', progress: 95,
+      level: 'Niveau 3 · Adapter',
       desc: 'Protéger les données et systèmes contre les menaces numériques.',
-      highlights: ['Analyse données cybersécurité', 'Cryptographie Java', 'Chiffrement AES-256 Flask'],
-      techs: ['Cybersécurité', 'Cryptographie', 'AES-256', 'Sécurité Web'],
+      highlights: ['Certification Cisco Ethical Hacker (en préparation)', 'Cours Cisco validé : Introduction à la cybersécurité', 'Architecture réseau multi-zones (Kathara)', 'Cryptographie & Chiffrement AES-256'],
+      techs: ['Cisco CyberSec', 'Cybersécurité', 'Cryptographie', 'AES-256', 'Sécurité Réseau'],
     },
   ];
 
@@ -81,11 +81,11 @@ const Skills = ({ theme }) => {
             <span className="accent-glow-text" style={{ padding: '0 0.05em' }}>Professionnels</span>
           </h2>
           <p className="sk-subtitle">
-            Compétences validées par le BUT Informatique, enrichies par mes projets et mon stage international.
+            Compétences validées par le BUT Informatique et mon alternance chez Ceva Santé Animale, enrichies par mes projets et mon stage international.
           </p>
         </div>
 
-        {/* Ruban des technologies et de l'IA */}
+        {/* Ruban des technologies, de l'IA et des certifications */}
         <div className="sk-ribbon reveal-on-scroll delay-100">
           <div className="sk-ribbon-group">
             <Monitor size={15} style={{ color: 'var(--accent-hover)', flexShrink: 0 }} />
@@ -98,9 +98,28 @@ const Skills = ({ theme }) => {
           <div className="sk-ribbon-group">
             <Sparkles size={15} style={{ color: 'var(--accent)', flexShrink: 0 }} />
             <span className="sk-ribbon-label" style={{ color: 'var(--accent-hover)' }}>IA & Auto.</span>
-            {['NLP', 'Prompt Eng.', 'LLM'].map((a) => (
+            {['NLP', 'CLIP', 'OR-Tools', 'LLM'].map((a) => (
               <span key={a} className="sk-ai-tag">{a}</span>
             ))}
+          </div>
+          <span className="sk-ribbon-sep" />
+          <div className="sk-ribbon-group">
+            <ShieldCheck size={15} style={{ color: '#10b981', flexShrink: 0 }} />
+            <span className="sk-ribbon-label" style={{ color: '#10b981' }}>Certification</span>
+            <span className="sk-env-tag" style={{ border: '1px solid rgba(16, 185, 129, 0.3)', background: 'rgba(16, 185, 129, 0.08)', color: 'var(--text-primary)', fontWeight: 700 }}>
+              Cisco · Introduction à la cybersécurité
+            </span>
+            <span className="sk-env-tag" style={{ border: '1px dashed rgba(16, 185, 129, 0.4)', background: 'transparent', color: 'var(--text-primary)', fontWeight: 700 }}>
+              Cisco · Ethical Hacker (en préparation)
+            </span>
+          </div>
+          <span className="sk-ribbon-sep" />
+          <div className="sk-ribbon-group">
+            <Building2 size={15} style={{ color: 'var(--accent)', flexShrink: 0 }} />
+            <span className="sk-ribbon-label" style={{ color: 'var(--accent)' }}>Entreprise</span>
+            <span className="sk-env-tag" style={{ border: '1px solid rgba(227, 93, 59, 0.3)', background: 'rgba(227, 93, 59, 0.08)', color: 'var(--text-primary)', fontWeight: 700 }}>
+              Alternance · Ceva Santé Animale
+            </span>
           </div>
         </div>
 
@@ -121,19 +140,6 @@ const Skills = ({ theme }) => {
                   <span className="sk-node-code">{skill.code}</span>
                   <span className="sk-node-name">{skill.title}</span>
                 </div>
-                {/* Arc de cercle de progression */}
-                <div className="sk-ring">
-                  <svg viewBox="0 0 36 36">
-                    <circle cx="18" cy="18" r="15" className="sk-ring-bg" />
-                    <circle
-                      cx="18" cy="18" r="15"
-                      className={`sk-ring-fill ${isActive ? 'sk-ring-fill--on' : ''}`}
-                      strokeDasharray={`${skill.progress} ${100 - skill.progress}`}
-                      strokeDashoffset="25"
-                    />
-                  </svg>
-                  <span className={`sk-ring-val ${isActive ? 'sk-ring-val--on' : ''}`}>{skill.progress}</span>
-                </div>
               </button>
             );
           })}
@@ -148,9 +154,6 @@ const Skills = ({ theme }) => {
                 <p className="sk-detail-desc">{activeSkill.desc}</p>
                 <div className="sk-detail-level">
                   <span>{activeSkill.level}</span>
-                  <div className="sk-bar-track">
-                    <div className="sk-bar-fill" style={{ width: `${activeSkill.progress}%` }} />
-                  </div>
                 </div>
               </div>
               {/* Colonne 2: Réalisations marquantes */}
@@ -284,23 +287,35 @@ const Skills = ({ theme }) => {
           backdrop-filter: blur(16px);
           -webkit-backdrop-filter: blur(16px);
           cursor: pointer;
-          transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+          transition: transform var(--duration-fast) var(--ease-out),
+                      background-color var(--duration-normal) var(--ease-out),
+                      border-color var(--duration-normal) var(--ease-out),
+                      box-shadow var(--duration-normal) var(--ease-out);
           outline: none;
           font-family: inherit;
           box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+          touch-action: manipulation;
+          user-select: none;
+          -webkit-user-select: none;
         }
-        .sk-node:hover {
-          background: var(--bg-primary);
-          opacity: 0.95;
-          border-color: rgba(var(--accent-rgb), 0.4);
-          transform: translateY(-4px);
-          box-shadow: 0 16px 36px rgba(0,0,0,0.06);
+        @media (hover: hover) and (pointer: fine) {
+          .sk-node:hover {
+            background: var(--bg-primary);
+            opacity: 0.95;
+            border-color: rgba(var(--accent-rgb), 0.4);
+            transform: translateY(-3px);
+            box-shadow: 0 16px 36px rgba(0,0,0,0.06);
+          }
+        }
+        .sk-node:active {
+          transform: scale(0.97) translateY(0) !important;
+          transition-duration: 80ms !important;
         }
         .sk-node--on {
           background: var(--bg-primary) !important;
           border-color: var(--accent) !important;
           box-shadow: 0 0 0 4px var(--accent-light), 0 16px 36px rgba(0,0,0,0.06) !important;
-          transform: translateY(-4px) !important;
+          transform: translateY(-3px) !important;
         }
 
         .sk-node-icon {
@@ -309,7 +324,9 @@ const Skills = ({ theme }) => {
           background: var(--bg-tertiary);
           color: var(--text-secondary);
           display: flex; align-items: center; justify-content: center;
-          transition: all 0.3s ease;
+          transition: background-color var(--duration-normal) var(--ease-out),
+                      color var(--duration-normal) var(--ease-out),
+                      box-shadow var(--duration-normal) var(--ease-out);
           flex-shrink: 0;
         }
         .sk-node-icon--on {
@@ -341,47 +358,13 @@ const Skills = ({ theme }) => {
           line-height: 1.15;
         }
 
-        /* Styles du cercle de progression */
-        .sk-ring {
-          position: relative;
-          width: 40px; height: 40px;
-          flex-shrink: 0;
-        }
-        .sk-ring svg {
-          width: 100%; height: 100%;
-          transform: rotate(-90deg);
-        }
-        .sk-ring-bg {
-          fill: none;
-          stroke: var(--bg-tertiary);
-          stroke-width: 3.5;
-        }
-        .sk-ring-fill {
-          fill: none;
-          stroke: rgba(var(--accent-rgb), 0.25);
-          stroke-width: 3.5;
-          stroke-linecap: round;
-          transition: stroke 0.3s ease;
-        }
-        .sk-ring-fill--on { stroke: var(--accent); }
-        .sk-ring-val {
-          position: absolute;
-          inset: 0;
-          display: flex; align-items: center; justify-content: center;
-          font-family: var(--font-subtitle);
-          font-size: 0.62rem;
-          font-weight: 800;
-          color: var(--text-muted);
-        }
-        .sk-ring-val--on { color: var(--accent-hover); }
-
         /* Styles du panneau de détail */
         .sk-detail {
           max-height: 0;
           overflow: hidden;
-          transition: max-height 0.5s cubic-bezier(0.16, 1, 0.3, 1),
-                      margin 0.5s cubic-bezier(0.16, 1, 0.3, 1),
-                      opacity 0.35s ease;
+          transition: max-height 0.35s var(--ease-out),
+                      margin 0.35s var(--ease-out),
+                      opacity 0.22s var(--ease-out);
           opacity: 0;
         }
         .sk-detail--open {
@@ -401,11 +384,12 @@ const Skills = ({ theme }) => {
           backdrop-filter: blur(16px);
           -webkit-backdrop-filter: blur(16px);
           box-shadow: 0 12px 36px rgba(0,0,0,0.04);
-          animation: skReveal 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+          animation: skReveal 220ms var(--ease-drawer) forwards;
+          transform-origin: top center;
         }
         @keyframes skReveal {
-          from { opacity: 0; transform: translateY(12px); }
-          to { opacity: 1; transform: translateY(0); }
+          from { opacity: 0; transform: translateY(8px) scale(0.98); }
+          to { opacity: 1; transform: translateY(0) scale(1); }
         }
 
         .sk-detail-col {
@@ -435,20 +419,6 @@ const Skills = ({ theme }) => {
           color: var(--text-primary);
           white-space: nowrap;
         }
-        .sk-bar-track {
-          flex: 1;
-          height: 4px;
-          background: var(--bg-tertiary);
-          border-radius: 2px;
-          overflow: hidden;
-        }
-        .sk-bar-fill {
-          height: 100%;
-          background: var(--accent-gradient);
-          border-radius: 2px;
-          transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
         .sk-detail-label {
           font-family: var(--font-subtitle);
           font-size: 0.68rem;

@@ -158,25 +158,14 @@ const Navbar = () => {
         >
           {[
             { label: 'Accueil', href: '#home' },
-            { label: 'Compétences', href: '#skills' },
             { label: 'Projets', href: '#projects' },
+            { label: 'Compétences', href: '#skills' },
             { label: 'Parcours', href: '#timeline' },
           ].map((link) => (
             <a
               key={link.label}
               href={link.href}
-              style={{
-                textDecoration: 'none',
-                fontFamily: 'var(--font-subtitle)',
-                fontSize: '0.9rem',
-                fontWeight: 600,
-                color: 'var(--text-secondary)',
-                transition: 'var(--transition-fast)',
-                position: 'relative',
-                padding: '4px 0',
-              }}
-              onMouseEnter={(e) => (e.target.style.color = 'var(--text-primary)')}
-              onMouseLeave={(e) => (e.target.style.color = 'var(--text-secondary)')}
+              className="nav-desktop-link"
             >
               {link.label}
             </a>
@@ -188,7 +177,7 @@ const Navbar = () => {
           style={{
             display: isCollapsed ? 'none' : 'flex',
             alignItems: 'center',
-            gap: '12px',
+            gap: '8px',
             opacity: isCollapsed ? 0 : 1,
             pointerEvents: isCollapsed ? 'none' : 'auto',
             transition: 'opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1)',
@@ -200,16 +189,7 @@ const Navbar = () => {
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Profil GitHub de Milan"
-            style={{
-              color: 'var(--text-secondary)',
-              transition: 'var(--transition-fast)',
-              padding: '12px',
-              display: 'inline-flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-            onMouseEnter={(e) => (e.target.style.color = 'var(--accent)')}
-            onMouseLeave={(e) => (e.target.style.color = 'var(--text-secondary)')}
+            className="nav-social-link"
           >
             <GithubIcon size={18} />
           </a>
@@ -218,17 +198,8 @@ const Navbar = () => {
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Profil LinkedIn de Milan"
-            style={{
-              color: 'var(--text-secondary)',
-              transition: 'var(--transition-fast)',
-              padding: '12px',
-              marginRight: '6px',
-              display: 'inline-flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-            onMouseEnter={(e) => (e.target.style.color = 'var(--accent)')}
-            onMouseLeave={(e) => (e.target.style.color = 'var(--text-secondary)')}
+            className="nav-social-link"
+            style={{ marginRight: '6px' }}
           >
             <LinkedinIcon size={18} />
           </a>
@@ -290,7 +261,7 @@ const Navbar = () => {
       {mobileMenuOpen && !isCollapsed && (
         <div
           id="mobile-menu"
-          className="glass-panel"
+          className="glass-panel mobile-menu-drawer"
           style={{
             position: 'absolute',
             top: '80px',
@@ -309,23 +280,15 @@ const Navbar = () => {
         >
           {[
             { label: 'Accueil', href: '#home' },
-            { label: 'Compétences', href: '#skills' },
             { label: 'Projets', href: '#projects' },
+            { label: 'Compétences', href: '#skills' },
             { label: 'Parcours', href: '#timeline' },
           ].map((link) => (
             <a
               key={link.label}
               href={link.href}
               onClick={closeMobileMenu}
-              style={{
-                textDecoration: 'none',
-                fontFamily: 'var(--font-subtitle)',
-                fontSize: '1.1rem',
-                fontWeight: 700,
-                color: 'var(--text-secondary)',
-                padding: '12px 0', /* Touch Target améliorée */
-                borderBottom: '1px solid rgba(0,0,0,0.03)',
-              }}
+              className="mobile-menu-link"
             >
               {link.label}
             </a>
@@ -345,13 +308,7 @@ const Navbar = () => {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Profil GitHub"
-                style={{
-                  color: 'var(--text-secondary)',
-                  padding: '10px',
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
+                className="nav-social-link"
               >
                 <GithubIcon size={20} />
               </a>
@@ -360,13 +317,7 @@ const Navbar = () => {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Profil LinkedIn"
-                style={{
-                  color: 'var(--text-secondary)',
-                  padding: '10px',
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
+                className="nav-social-link"
               >
                 <LinkedinIcon size={20} />
               </a>
@@ -387,12 +338,90 @@ const Navbar = () => {
         </div>
       )}
 
-      {/* Règles CSS pour le comportement adaptatif et animations de fondu */}
+      {/* Règles CSS pour le comportement adaptatif et animations Emil Kowalski */}
       <style dangerouslySetInnerHTML={{
         __html: `
-        @keyframes fadeIn {
-          from { opacity: 0; }
-          to { opacity: 1; }
+        @keyframes menuDrawerEnter {
+          from {
+            opacity: 0;
+            transform: translateY(-8px) scale(0.97);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+          }
+        }
+        .mobile-menu-drawer {
+          animation: menuDrawerEnter 220ms var(--ease-drawer) forwards;
+          transform-origin: top center;
+          will-change: transform, opacity;
+        }
+        .mobile-menu-link {
+          text-decoration: none;
+          font-family: var(--font-subtitle);
+          font-size: 1.1rem;
+          font-weight: 700;
+          color: var(--text-secondary);
+          padding: 12px 10px;
+          border-radius: 12px;
+          border-bottom: 1px solid rgba(0,0,0,0.03);
+          transition: background-color var(--duration-fast) var(--ease-out), color var(--duration-fast) var(--ease-out), transform 100ms var(--ease-out);
+          touch-action: manipulation;
+          user-select: none;
+          -webkit-user-select: none;
+        }
+        .mobile-menu-link:active {
+          background-color: var(--accent-light);
+          color: var(--accent-hover);
+          transform: scale(0.98);
+        }
+        .nav-desktop-link {
+          text-decoration: none;
+          font-family: var(--font-subtitle);
+          font-size: 0.9rem;
+          font-weight: 600;
+          color: var(--text-secondary);
+          position: relative;
+          padding: 6px 4px;
+          transition: color var(--duration-fast) var(--ease-out), transform var(--duration-fast) var(--ease-out);
+          touch-action: manipulation;
+          user-select: none;
+        }
+        @media (hover: hover) and (pointer: fine) {
+          .nav-desktop-link:hover {
+            color: var(--text-primary);
+          }
+          .nav-social-link:hover {
+            color: var(--accent);
+            background-color: var(--accent-light);
+          }
+        }
+        .nav-desktop-link:active {
+          transform: scale(0.96);
+          opacity: 0.8;
+        }
+        .nav-social-link {
+          color: var(--text-secondary);
+          padding: 10px;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 50%;
+          transition: color var(--duration-fast) var(--ease-out), transform var(--duration-fast) var(--ease-out), background-color var(--duration-fast) var(--ease-out);
+          touch-action: manipulation;
+          user-select: none;
+        }
+        .nav-social-link:active {
+          transform: scale(0.92);
+          transition-duration: 80ms;
+        }
+        .mobile-menu-btn {
+          transition: transform 120ms var(--ease-out), background-color var(--duration-fast) var(--ease-out);
+          border-radius: 50%;
+          touch-action: manipulation;
+        }
+        .mobile-menu-btn:active {
+          transform: scale(0.88);
         }
         @media (max-width: 768px) {
           .desktop-only {
@@ -401,60 +430,6 @@ const Navbar = () => {
           .mobile-toggle {
             display: flex !important;
           }
-        }
-        /* SVG Elements Transitions */
-        .theme-toggle-svg {
-          transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-
-        .sun-center {
-          transition: r 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-
-        .moon-mask-circle {
-          transition: cx 0.5s cubic-bezier(0.4, 0, 0.2, 1),
-                      cy 0.5s cubic-bezier(0.4, 0, 0.2, 1),
-                      r 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .sun-ray {
-          transform-origin: center;
-          transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1),
-                      opacity 0.4s ease;
-        }
-
-        /* Light Mode Specific Positions */
-        [data-theme="light"] .theme-toggle-svg {
-          transform: rotate(0deg);
-        }
-        [data-theme="light"] .moon-mask-circle {
-          cx: 25;
-          cy: 5;
-          r: 0;
-        }
-        [data-theme="light"] .sun-center {
-          r: 5;
-        }
-        [data-theme="light"] .sun-ray {
-          opacity: 1;
-          transform: scale(1);
-        }
-
-        /* Dark Mode Specific Positions */
-        [data-theme="dark"] .theme-toggle-svg {
-          transform: rotate(90deg);
-        }
-        [data-theme="dark"] .moon-mask-circle {
-          cx: 16;
-          cy: 8;
-          r: 7.5;
-        }
-        [data-theme="dark"] .sun-center {
-          r: 8.5;
-        }
-        [data-theme="dark"] .sun-ray {
-          opacity: 0;
-          transform: scale(0);
         }
       `}} />
     </header>

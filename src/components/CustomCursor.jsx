@@ -119,7 +119,7 @@ const CustomCursor = () => {
         ringRef.current.style.transform = `translate3d(${mouse.x}px, ${mouse.y}px, 0) scale(${currentScale})`;
       }
       if (hudRef.current && isHoveredRef.current) {
-        hudRef.current.textContent = `SYS.TRK // X:${Math.round(mouse.tx)} Y:${Math.round(mouse.ty)}`;
+        hudRef.current.textContent = `X:${Math.round(mouse.tx)} Y:${Math.round(mouse.ty)}`;
       }
 
       animationFrameId = requestAnimationFrame(renderCursor);

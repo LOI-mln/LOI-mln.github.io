@@ -36,11 +36,19 @@
   --font-body: 'Geist', sans-serif;
   --font-mono: 'Geist Mono', monospace;
   
-  /* Variables personnalisées */
+  /* Variables de mouvement (Emil Kowalski Design Engineering Tokens) */
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+  --duration-fast: 150ms;
+  --duration-normal: 250ms;
+  --duration-moderate: 400ms;
+  --duration-slow: 600ms;
+
   --cursor-size: 8px;
   --cursor-follower-size: 32px;
-  --transition-smooth: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-  --transition-fast: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-smooth: transform 0.28s var(--ease-out), opacity 0.28s var(--ease-out), border-color 0.28s var(--ease-out), box-shadow 0.28s var(--ease-out), background-color 0.28s var(--ease-out);
+  --transition-fast: transform 0.16s var(--ease-out), opacity 0.16s var(--ease-out), border-color 0.16s var(--ease-out), box-shadow 0.16s var(--ease-out), color 0.16s var(--ease-out);
 
   /* Theme-specific panel variables */
   --glass-bg: rgba(255, 255, 255, 0.45);
@@ -68,17 +76,28 @@ footer,
 
 /* Dark theme removed: site uses light-only variables */
 
-/* Réinitialisation des styles */
+/* Réinitialisation des styles (Emil Kowalski Mobile Native Fixes) */
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  -webkit-tap-highlight-color: transparent;
 }
 
 html {
   scroll-behavior: auto !important;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  touch-action: manipulation;
+}
+
+button, a, [role="button"], input, select, textarea {
+  touch-action: manipulation;
+}
+
+button, [role="button"], .sk-node, .btn-editorial, .btn-secondary-editorial {
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 body {
@@ -156,15 +175,19 @@ h1, h2, h3, h4 {
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid var(--border-color);
   border-radius: 24px;
-  transition: var(--transition-smooth);
+  transition: border-color var(--duration-normal) var(--ease-out),
+              box-shadow var(--duration-normal) var(--ease-out),
+              transform var(--duration-normal) var(--ease-out);
 }
 
-.glass-panel:hover {
-  border-color: var(--border-color-hover);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.03);
+@media (hover: hover) and (pointer: fine) {
+  .glass-panel:hover {
+    border-color: var(--border-color-hover);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.03);
+  }
 }
 
-/* Styles des boutons */
+/* Styles des boutons (Philosophie Emil Kowalski) */
 .btn-editorial {
   display: inline-flex;
   align-items: center;
@@ -175,13 +198,19 @@ h1, h2, h3, h4 {
   font-weight: 600;
   font-size: 0.95rem;
   text-decoration: none;
-  transition: var(--transition-smooth);
+  transition: transform var(--duration-fast) var(--ease-out),
+              box-shadow var(--duration-normal) var(--ease-out),
+              border-color var(--duration-normal) var(--ease-out),
+              color var(--duration-fast) var(--ease-out);
   border: 1px solid var(--border-color);
   background: var(--bg-primary);
   color: var(--text-primary);
   position: relative;
   overflow: hidden;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.02);
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .btn-editorial::before {
@@ -193,36 +222,37 @@ h1, h2, h3, h4 {
   height: 100%;
   background: var(--accent-gradient);
   opacity: 0;
-  transition: var(--transition-smooth);
+  transition: opacity var(--duration-normal) var(--ease-out);
   z-index: 0;
 }
 
 .btn-editorial span, .btn-editorial svg {
   position: relative;
   z-index: 1;
-  transition: var(--transition-smooth);
+  transition: color var(--duration-fast) var(--ease-out), transform var(--duration-fast) var(--ease-out);
 }
 
-.btn-editorial:hover {
-  transform: translateY(-2px);
-  border-color: transparent;
-  box-shadow: 0 10px 25px var(--accent-glow);
+@media (hover: hover) and (pointer: fine) {
+  .btn-editorial:hover {
+    transform: translateY(-2px);
+    border-color: transparent;
+    box-shadow: 0 10px 25px var(--accent-glow);
+  }
+  .btn-editorial:hover::before {
+    opacity: 1;
+  }
+  .btn-editorial:hover span {
+    color: #ffffff;
+  }
+  .btn-editorial:hover svg {
+    color: #ffffff;
+    transform: translateX(4px);
+  }
 }
 
 .btn-editorial:active {
-  transform: translateY(0px) scale(0.97);
-}
-
-.btn-editorial:hover::before {
-  opacity: 1;
-}
-
-.btn-editorial:hover span {
-  color: #ffffff;
-}
-.btn-editorial:hover svg {
-  color: #ffffff;
-  transform: translateX(4px);
+  transform: scale(0.97) translateY(0) !important;
+  transition-duration: 80ms !important;
 }
 
 /* Bouton secondaire */
@@ -235,24 +265,30 @@ h1, h2, h3, h4 {
   font-weight: 600;
   font-size: 0.95rem;
   text-decoration: none;
-  transition: var(--transition-smooth);
+  transition: color var(--duration-fast) var(--ease-out), transform var(--duration-fast) var(--ease-out);
   border: none;
   background: transparent;
   color: var(--text-secondary);
   position: relative;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
-.btn-secondary-editorial:hover {
-  color: var(--accent-hover);
-  transform: translateX(4px);
+@media (hover: hover) and (pointer: fine) {
+  .btn-secondary-editorial:hover {
+    color: var(--accent-hover);
+    transform: translateX(4px);
+  }
 }
 
 .btn-secondary-editorial:active {
-  transform: translateX(4px) scale(0.97);
+  transform: translateX(2px) scale(0.97) !important;
+  transition-duration: 80ms !important;
 }
 
 .btn-secondary-editorial svg {
-  transition: var(--transition-smooth);
+  transition: transform var(--duration-fast) var(--ease-out);
 }
 
 /* Formes et badges organiques */
@@ -285,6 +321,7 @@ h1, h2, h3, h4 {
 .accent-glow-text {
   background: var(--accent-gradient-text);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
@@ -331,380 +368,6 @@ h1, h2, h3, h4 {
   background: var(--accent);
 }
 
-/* Styles de l'écran de chargement plein écran */
-/* Écran de chargement minimaliste */
-.loader-overlay {
-  position: fixed;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  background: radial-gradient(circle at center, #101115 0%, #050608 100%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 999999;
-  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-  overflow: hidden;
-}
-
-.loader-overlay.fade-out {
-  opacity: 0;
-  pointer-events: none;
-}
-
-.loader-grid-bg {
-  position: absolute;
-  inset: 0;
-  background-size: 60px 60px;
-  background-image: 
-    linear-gradient(to right, rgba(255, 255, 255, 0.015) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
-  opacity: 0.6;
-  z-index: 1;
-  pointer-events: none;
-}
-
-.loader-scanlines {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    rgba(18, 16, 16, 0) 50%, 
-    rgba(0, 0, 0, 0.15) 50%
-  );
-  background-size: 100% 4px;
-  z-index: 1;
-  pointer-events: none;
-  opacity: 0.35;
-}
-
-.loader-corner {
-  position: absolute;
-  width: 20px;
-  height: 20px;
-  border-color: rgba(var(--accent-rgb), 0.35);
-  border-style: solid;
-  z-index: 2;
-  pointer-events: none;
-  transition: border-color 0.3s ease;
-}
-.loader-corner-tl { top: 30px; left: 30px; border-width: 1.5px 0 0 1.5px; }
-.loader-corner-tr { top: 30px; right: 30px; border-width: 1.5px 1.5px 0 0; }
-.loader-corner-bl { bottom: 30px; left: 30px; border-width: 0 0 1.5px 1.5px; }
-.loader-corner-br { bottom: 30px; right: 30px; border-width: 0 1.5px 1.5px 0; }
-
-.loader-top-bar {
-  position: absolute;
-  top: 40px;
-  left: 40px;
-  right: 40px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-family: var(--font-mono);
-  font-size: 0.65rem;
-  font-weight: 600;
-  letter-spacing: 0.05em;
-  color: rgba(255, 255, 255, 0.4);
-  z-index: 2;
-  text-transform: uppercase;
-}
-
-/* Center container (unchanged layout role) */
-.loader-center-giant {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 2;
-  pointer-events: none;
-}
-
-/* === PL dot-grid wrapper & label === */
-.loader-pl-wrapper {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2.2rem;
-  z-index: 3;
-}
-
-.loader-pl-label {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.25rem;
-}
-
-.loader-pl-percent {
-  font-family: var(--font-display);
-  font-size: clamp(2.4rem, 6vw, 4rem);
-  font-weight: 800;
-  color: rgba(255, 255, 255, 0.92);
-  letter-spacing: -0.03em;
-  line-height: 1;
-  text-shadow: 0 0 30px rgba(var(--accent-rgb), 0.4);
-}
-
-.loader-pl-sym {
-  font-size: 0.45em;
-  font-weight: 400;
-  color: var(--accent);
-  margin-left: 3px;
-}
-
-.loader-pl-name {
-  font-family: var(--font-mono);
-  font-size: 0.6rem;
-  font-weight: 600;
-  letter-spacing: 0.18em;
-  color: rgba(255, 255, 255, 0.3);
-  text-transform: uppercase;
-}
-
-
-.loader-bottom-bar {
-  position: absolute;
-  bottom: 40px;
-  left: 40px;
-  right: 40px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-family: var(--font-mono);
-  font-size: 0.65rem;
-  font-weight: 600;
-  letter-spacing: 0.05em;
-  color: rgba(255, 255, 255, 0.4);
-  z-index: 2;
-}
-
-.loader-log-stream {
-  color: var(--accent);
-  text-transform: uppercase;
-}
-
-.loader-progress-line-container {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 3px;
-  background: rgba(255, 255, 255, 0.02);
-  z-index: 3;
-}
-
-.loader-progress-line {
-  height: 100%;
-  background: var(--accent-gradient);
-  transition: width 0.1s ease-out;
-}
-
-@media (max-width: 768px) {
-  .loader-top-bar {
-    top: 24px;
-    left: 24px;
-    right: 24px;
-    font-size: 0.55rem;
-  }
-  .loader-bottom-bar {
-    bottom: 24px;
-    left: 24px;
-    right: 24px;
-    font-size: 0.55rem;
-    flex-direction: column;
-    gap: 8px;
-    align-items: flex-start;
-  }
-  .loader-corner-tl { top: 18px; left: 18px; }
-  .loader-corner-tr { top: 18px; right: 18px; }
-  .loader-corner-bl { bottom: 18px; left: 18px; }
-  .loader-corner-br { bottom: 18px; right: 18px; }
-}
-
-/* === PL dot-grid animation (converted from SCSS) === */
-.pl {
-  aspect-ratio: 1;
-  display: grid;
-  gap: 1em; /* 8em * 0.125 = 1em at font-size base */
-  grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: repeat(3, 1fr);
-  width: 8em;
-  font-size: clamp(1rem, 4vw, 1.4rem);
-}
-
-.pl__dot {
-  position: relative;
-  animation-duration: 2s;
-  animation-timing-function: linear;
-  animation-iteration-count: infinite;
-}
-
-.pl__dot::before,
-.pl__dot::after {
-  aspect-ratio: 1;
-  background-color: rgba(255, 255, 255, 0.88);
-  border-radius: 50%;
-  content: "";
-  display: block;
-  position: absolute;
-  width: 100%;
-  animation-duration: 2s;
-  animation-timing-function: linear;
-  animation-iteration-count: infinite;
-  transition: background-color 0.3s;
-}
-
-.pl__dot::after {
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) scale(0);
-}
-
-/* Colour variants — adapted to portfolio palette */
-.pl__dot--red::before,
-.pl__dot--red::after    { background-color: var(--accent); }           /* cuivre --accent */
-.pl__dot--yellow::before,
-.pl__dot--yellow::after { background-color: hsl(38 90% 55%); }          /* ambre chaud */
-.pl__dot--green::before,
-.pl__dot--green::after  { background-color: hsl(28 85% 68%); }           /* cuivre clair / pêche */
-.pl__dot--blue::before,
-.pl__dot--blue::after   { background-color: hsl(12 60% 40%); }            /* cuivre sombre / acajou */
-
-/* Wave sizes */
-.pl__dot--lg::after { width: 500%; }
-.pl__dot--sm::after { width: 167%; }
-
-/* --- Per-dot rotation (even dots orbit) --- */
-.pl__dot:nth-child(2) { animation-name: pl-rotate; transform-origin: 50% 200%; }
-.pl__dot:nth-child(4) { animation-name: pl-rotate; transform-origin: 200% 50%; }
-.pl__dot:nth-child(6) { animation-name: pl-rotate; transform-origin: -100% 50%; }
-.pl__dot:nth-child(8) { animation-name: pl-rotate; transform-origin: 50% -100%; }
-
-/* --- Per-dot ::before scale --- */
-.pl__dot:nth-child(1)::before  { animation-name: pl-scale1; }
-.pl__dot:nth-child(2)::before  { animation-name: pl-scale2; }
-.pl__dot:nth-child(3)::before  { animation-name: pl-scale3; }
-.pl__dot:nth-child(4)::before  { animation-name: pl-scale4; }
-.pl__dot:nth-child(5)::before  { animation-name: pl-scale5; }
-.pl__dot:nth-child(6)::before  { animation-name: pl-scale6; }
-.pl__dot:nth-child(7)::before  { animation-name: pl-scale7; }
-.pl__dot:nth-child(8)::before  { animation-name: pl-scale8; }
-.pl__dot:nth-child(9)::before  { animation-name: pl-scale9; }
-
-/* --- Per-dot ::after wave --- */
-.pl__dot:nth-child(3)::after   { animation-name: pl-wave3; }
-.pl__dot:nth-child(5)::after   { animation-name: pl-wave5a, pl-wave5b; }
-.pl__dot:nth-child(7)::after   { animation-name: pl-wave7; }
-.pl__dot:nth-child(9)::after   { animation-name: pl-wave9; }
-
-/* === Keyframes === */
-@keyframes pl-rotate {
-  from, 22% { animation-timing-function: ease-out; transform: rotate(-45deg); }
-  37%, to    { transform: rotate(0); }
-}
-
-@keyframes pl-scale1 {
-  from, 36% { transform: translate(0,0) scale(0); }
-  50%, 71%   { transform: translate(0,0) scale(1); }
-  87%, to    { transform: translate(75%,75%) scale(0); }
-}
-@keyframes pl-scale2 {
-  from, 25% { animation-timing-function: ease-out; transform: translate(0,0) scale(0); }
-  40%, 71%  { transform: translate(0,0) scale(1); }
-  87%, to   { transform: translate(0,-100%) scale(0); }
-}
-@keyframes pl-scale3 {
-  from, 27% { animation-timing-function: ease-in; transform: translate(0,0) scale(0); }
-  45%, 71%  { transform: translate(0,0) scale(1); }
-  87%, to   { transform: translate(-75%,75%) scale(0); }
-}
-@keyframes pl-scale4 {
-  from, 28% { animation-timing-function: ease-out; transform: translate(0,0) scale(0); }
-  43%, 71%  { transform: translate(0,0) scale(1); }
-  87%, to   { transform: translate(-100%,0) scale(0); }
-}
-@keyframes pl-scale5 {
-  from, 9%, to { transform: scale(0); }
-  26%          { transform: scale(1.17); }
-  41%, 75%     { transform: scale(1); }
-}
-@keyframes pl-scale6 {
-  from, 22% { animation-timing-function: ease-out; transform: translate(0,0) scale(0); }
-  37%, 71%  { transform: translate(0,0) scale(1); }
-  87%, to   { transform: translate(100%,0) scale(0); }
-}
-@keyframes pl-scale7 {
-  from, 36% { animation-timing-function: ease-in; transform: translate(0,0) scale(0); }
-  53%, 71%  { transform: translate(0,0) scale(1); }
-  87%, to   { transform: translate(75%,-75%) scale(0); }
-}
-@keyframes pl-scale8 {
-  from, 24% { animation-timing-function: ease-out; transform: translate(0,0) scale(0); }
-  39%, 71%  { transform: translate(0,0) scale(1); }
-  87%, to   { transform: translate(0,100%) scale(0); }
-}
-@keyframes pl-scale9 {
-  from, 32% { animation-timing-function: ease-in; transform: translate(0,0) scale(0); }
-  49%, 71%  { transform: translate(0,0) scale(1); }
-  87%, to   { transform: translate(-75%,-75%) scale(0); }
-}
-
-@keyframes pl-wave3 {
-  from    { visibility: hidden; }
-  45%     { opacity: 1; transform: translate(-50%,-50%) scale(calc(1 / 1.67)); visibility: hidden; }
-  61%, to { opacity: 0; transform: translate(-50%,-50%) scale(1); }
-}
-@keyframes pl-wave5a {
-  from    { transform: translate(-50%,-50%) scale(0.2); }
-  8%      { transform: translate(-50%,-50%) scale(0.8); }
-  25%, to { transform: translate(-50%,-50%) scale(1); }
-}
-@keyframes pl-wave5b {
-  from, 25%, to { opacity: 0; }
-  8%            { opacity: 0.5; }
-}
-@keyframes pl-wave7 {
-  from    { visibility: hidden; }
-  53%     { opacity: 1; transform: translate(-50%,-50%) scale(calc(1 / 1.67)); visibility: hidden; }
-  69%, to { opacity: 0; transform: translate(-50%,-50%) scale(1); }
-}
-@keyframes pl-wave9 {
-  from    { visibility: hidden; }
-  49%     { opacity: 1; transform: translate(-50%,-50%) scale(calc(1 / 1.67)); visibility: hidden; }
-  65%, to { opacity: 0; transform: translate(-50%,-50%) scale(1); }
-}
-
-/* Particules ambiantes flottantes */
-.loader-ambient-particle {
-  position: absolute;
-  width: 3px;
-  height: 3px;
-  border-radius: 50%;
-  background-color: rgba(var(--accent-rgb), 0.25);
-  animation: ambient-drift ease-in-out infinite;
-  pointer-events: none;
-}
-
-@keyframes ambient-drift {
-  0%, 100% {
-    transform: translate(0, 0) scale(1);
-    opacity: 0;
-  }
-  15% {
-    opacity: 0.5;
-  }
-  50% {
-    transform: translate(15px, -20px) scale(1.3);
-    opacity: 0.3;
-  }
-  85% {
-    opacity: 0.5;
-  }
-}
-
-
-
 /* Animation de pulsation */
 @keyframes pulse-orange {
   0% {
@@ -749,43 +412,56 @@ html.lenis body {
   pointer-events: none;
 }
 
-/* Animations d'apparition au défilement */
+/* Animations d'apparition au défilement (Snappy Emil Kowalski Ease-Out) */
 .reveal-on-scroll {
   opacity: 0;
-  transform: translateY(35px);
-  filter: blur(4px);
-  transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1),
-              transform 1.2s cubic-bezier(0.16, 1, 0.3, 1),
-              filter 1.2s cubic-bezier(0.16, 1, 0.3, 1);
-  will-change: transform, opacity, filter;
+  transform: translateY(20px);
+  transition: opacity 0.55s var(--ease-out),
+              transform 0.55s var(--ease-out);
+  will-change: transform, opacity;
 }
 
 .reveal-on-scroll.in-view {
   opacity: 1;
   transform: translateY(0);
-  filter: blur(0);
 }
 
-/* Classes utilitaires de délai d'apparition */
-.delay-100 { transition-delay: 100ms !important; }
-.delay-200 { transition-delay: 200ms !important; }
-.delay-300 { transition-delay: 300ms !important; }
-.delay-400 { transition-delay: 400ms !important; }
-.delay-550 { transition-delay: 550ms !important; }
-.delay-700 { transition-delay: 700ms !important; }
+/* Classes utilitaires de délai d'apparition resserrées */
+.delay-100 { transition-delay: 80ms !important; }
+.delay-200 { transition-delay: 160ms !important; }
+.delay-300 { transition-delay: 240ms !important; }
+.delay-400 { transition-delay: 320ms !important; }
+.delay-550 { transition-delay: 400ms !important; }
+.delay-700 { transition-delay: 480ms !important; }
 
-/* Apparition avec zoom organique */
+/* Apparition avec zoom organique (Never scale 0, starts at scale 0.97) */
 .reveal-scale {
   opacity: 0;
-  transform: scale(0.96) translateY(20px);
-  transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1),
-              transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+  transform: scale(0.97) translateY(16px);
+  transition: opacity 0.5s var(--ease-out),
+              transform 0.5s var(--ease-out);
   will-change: transform, opacity;
 }
 
 .reveal-scale.in-view {
   opacity: 1;
   transform: scale(1) translateY(0);
+}
+
+/* Accessibilité : Prise en charge des mouvements réduits */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .reveal-on-scroll,
+  .reveal-scale {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
 }
 
 

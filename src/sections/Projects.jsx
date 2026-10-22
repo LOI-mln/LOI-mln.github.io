@@ -1,7 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import TextScramble from '../components/TextScramble';
-import TiltMockup from '../components/TiltMockup';
 import { 
+  Globe, 
+  Share2, 
+  Router, 
+  Users, 
+  LayoutGrid, 
   Play, 
   Network, 
   ClipboardList, 
@@ -15,7 +20,15 @@ import {
   Flame, 
   Server, 
   AlertTriangle,
-  FileText 
+  FileText,
+  Calendar,
+  Clock,
+  ShieldCheck,
+  Layers,
+  Terminal,
+  Zap,
+  Check,
+  Lock
 } from 'lucide-react';
 
 const GithubIcon = ({ size = 18 }) => (
@@ -24,6 +37,186 @@ const GithubIcon = ({ size = 18 }) => (
     <path d="M9 18c-4.51 2-5-2-7-2" />
   </svg>
 );
+
+// Contenu texte des fiches, dans l'ordre d'affichage
+const PROJECT_INFO = [
+  {
+    number: '01',
+    category: 'Homelab & sécurité',
+    title: 'Homelab Proxmox',
+    meta: 'Projet personnel',
+    summary: "Héberger mes propres services (cloud, média, domotique, DNS) et les cloisonner par VLAN.",
+    points: [
+      'Services virtualisés sous Proxmox VE',
+      'Réseau découpé en VLAN, filtré par le pare-feu Proxmox',
+      'Sauvegardes automatiques et suivi via les logs Proxmox',
+    ],
+    tags: ['Proxmox VE', 'VLAN', 'Pare-feu', 'Sauvegardes'],
+  },
+  {
+    number: '02',
+    category: 'Recherche IA',
+    title: 'RGU Aberdeen',
+    meta: 'Stage Erasmus+ · Écosse · 2026',
+    status: 'Publication prochaine',
+    summary: "Mesurer la polarisation des discours politiques sur 5 réseaux sociaux, sans annotation manuelle.",
+    points: [
+      'Graphe de 20 641 nœuds, communautés détectées par Louvain (Q = 0,954)',
+      'Indice We/Them, toxicité via Perspective API, mèmes classés avec CLIP',
+      'Papier de recherche rédigé sous la direction du Dr Shahana Bano',
+    ],
+    tags: ['Python', 'NLP', 'CLIP', 'Perspective API'],
+    link: { href: '/research_paper.pdf', label: 'Lire le papier', kind: 'pdf' },
+  },
+  {
+    number: '03',
+    category: 'Optimisation & full-stack',
+    title: 'Unilim EDT',
+    meta: "Projet BUT · Lead dev, équipe de 4 · 2025-2026",
+    status: "En production à l'IUT",
+    summary: "Générer automatiquement les emplois du temps de l'IUT, sans conflit de salle, d'enseignant ou de groupe.",
+    points: [
+      'Solveur par contraintes Google OR-Tools (CP-SAT) en Python',
+      'Back-end Laravel 11, interface Vue 3 / Inertia.js, déployé avec Docker',
+      "Utilisé par le département Informatique de l'IUT du Limousin",
+    ],
+    tags: ['OR-Tools', 'Python', 'Laravel', 'Vue 3'],
+    demo: { src: '/videos/unilim-edt-demo.mp4', poster: '/videos/unilim-edt-demo.jpg', duration: '35 s' },
+  },
+  {
+    number: '04',
+    category: 'Réseau & infrastructure',
+    title: 'Réseau Virtuel',
+    meta: 'Projet BUT 1 · 3 étudiants · 2025',
+    summary: "Simuler le réseau d'une entreprise découpé en 3 zones (serveurs, personnel, clients), reliées par un routeur central.",
+    points: [
+      "Lab virtuel de 13 machines sous Kathara, plan d'adressage par zone",
+      "Routage statique entre les zones et NAT vers l'extérieur",
+      'Services DHCP, FTP (vsftpd) et SSH',
+    ],
+    tags: ['Kathara', 'Routage', 'DHCP', 'Linux'],
+    link: { href: 'https://github.com/LOI-mln/virtual-network', label: 'Voir le dépôt', kind: 'github' },
+  },
+];
+
+// Vision de chaque projet en 3 étapes, dans l'ordre d'affichage des fiches
+const PROJECT_VISION = [
+  [
+    { icon: Globe, step: 'Accès', title: 'Internet · box', chips: ['Certains services exposés'] },
+    { icon: Server, step: 'Hôte', title: 'Proxmox VE', chips: ['Pare-feu Proxmox', 'Sauvegardes auto'] },
+    { icon: Layers, step: 'Réseau', title: 'Services cloisonnés par VLAN', chips: ['Cloud', 'Média', 'Domotique · DNS'] },
+  ],
+  [
+    { icon: Share2, step: 'Données', title: '5 réseaux sociaux', chips: ['Discours politiques', 'Mèmes'] },
+    { icon: Network, step: 'Analyse', title: 'Graphe de 20 641 nœuds', chips: ['Louvain Q = 0,954', 'We/Them', 'Perspective API', 'CLIP'] },
+    { icon: FileText, step: 'Résultat', title: 'Papier de recherche', chips: ['Publication prochaine'] },
+  ],
+  [
+    { icon: Users, step: 'Contraintes', title: 'Salles, enseignants, groupes', chips: ['Aucun conflit autorisé'] },
+    { icon: Cpu, step: 'Solveur', title: 'Google OR-Tools CP-SAT', chips: ['Python', 'Docker'] },
+    { icon: Calendar, step: 'Application', title: "Emplois du temps de l'IUT", chips: ['Laravel 11', 'Vue 3', 'En production'] },
+  ],
+  [
+    { icon: LayoutGrid, step: 'Zones', title: 'Serveurs, personnel, clients', chips: ['13 machines', 'Lab Kathara'] },
+    { icon: Router, step: 'Routage', title: 'Routeur central et routes statiques', chips: ['NAT (iptables)'] },
+    { icon: Server, step: 'Services', title: 'DHCP, FTP et SSH', chips: ['isc-dhcp-server', 'vsftpd'] },
+  ],
+];
+
+// Schéma « Vision du projet » : étapes reliées de haut en bas
+const ProjectVision = ({ steps }) => (
+  <div className="pv">
+    <span className="pv-label">Vision du projet</span>
+    <ol className="pv-steps">
+      {steps.map(({ icon: Icon, step, title, chips }) => (
+        <li key={title} className="pv-step">
+          <span className="pv-icon"><Icon size={18} /></span>
+          <div className="pv-body">
+            <span className="pv-step-label">{step}</span>
+            <strong className="pv-title">{title}</strong>
+            <div className="pv-chips">
+              {chips.map((chip) => <span key={chip}>{chip}</span>)}
+            </div>
+          </div>
+        </li>
+      ))}
+    </ol>
+  </div>
+);
+
+// Bloc texte d'une fiche : pastille, titre, contexte, résumé, points clés, pied (technos + lien)
+// Fenêtre vidéo de démonstration (chargée seulement à l'ouverture)
+const DemoModal = ({ demo, title, onClose }) => {
+  useEffect(() => {
+    const onKey = (e) => { if (e.key === 'Escape') onClose(); };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [onClose]);
+
+  // Portail : la carte a une transformation CSS qui piégerait le position: fixed
+  return createPortal(
+    <div className="demo-backdrop" onClick={onClose} role="dialog" aria-modal="true" aria-label={`Démo de ${title}`}>
+      <div className="demo-frame" onClick={(e) => e.stopPropagation()}>
+        <div className="demo-head">
+          <span>Démo réelle · {title}</span>
+          <button type="button" onClick={onClose} aria-label="Fermer la démo">×</button>
+        </div>
+        <video src={demo.src} poster={demo.poster} controls autoPlay muted playsInline />
+      </div>
+    </div>,
+    document.body
+  );
+};
+
+const ProjectSummary = ({ number, category, title, meta, status, summary, points, tags, link, demo }) => {
+  const [demoOpen, setDemoOpen] = useState(false);
+
+  return (
+  <div className="project-content ps">
+    <div className="ps-eyebrow">
+      <span>{number}</span>
+      <span>{category}</span>
+    </div>
+    <h3 className="ps-title">
+      <TextScramble text={title} hover={true} />
+    </h3>
+    <p className="ps-meta">
+      <span>{meta}</span>
+      {status && <span className="ps-status">{status}</span>}
+    </p>
+    <p className="ps-summary">{summary}</p>
+    <ul className="ps-points">
+      {points.map((point) => (
+        <li key={point}>
+          <span className="ps-check"><Check size={12} strokeWidth={3} /></span>
+          <span>{point}</span>
+        </li>
+      ))}
+    </ul>
+    <div className="ps-footer">
+      <div className="ps-tags">
+        {tags.map((tag) => <span key={tag}>{tag}</span>)}
+      </div>
+      <div className="ps-actions">
+        {demo && (
+          <button type="button" className="ps-link ps-link--demo" onClick={() => setDemoOpen(true)}>
+            <Play size={14} fill="currentColor" />
+            <span>Voir la démo · {demo.duration}</span>
+          </button>
+        )}
+        {link && (
+          <a href={link.href} target="_blank" rel="noopener noreferrer" className="ps-link">
+            {link.kind === 'github' ? <GithubIcon size={15} /> : <FileText size={15} />}
+            <span>{link.label}</span>
+            <ArrowUpRight size={15} />
+          </a>
+        )}
+      </div>
+    </div>
+    {demoOpen && <DemoModal demo={demo} title={title} onClose={() => setDemoOpen(false)} />}
+  </div>
+  );
+};
 
 const Projects = () => {
   const sectionRef = useRef(null);
@@ -58,14 +251,14 @@ const Projects = () => {
 
       // Positions des maquettes et cibles
       const targets = [];
-      for (let i = 0; i < 3; i++) {
+      for (let i = 0; i < 4; i++) {
         const mockup = mockupRefs.current[i];
         if (!mockup) continue;
 
         const mockupRect = mockup.getBoundingClientRect();
         
         // Déterminer le point de connexion selon le côté
-        const isRightMockup = (i % 2 === 0);
+        const isRightMockup = (i % 2 === 1);
         
         const targetX = isRightMockup 
           ? mockupRect.left - sectionRect.left - 5 
@@ -195,7 +388,7 @@ const Projects = () => {
         if (!branch) return;
         const length = branch.getTotalLength();
         branch.style.strokeDasharray = length;
-        const thresholds = [0.15, 0.48, 0.78]; // Seuils d'apparition
+        const thresholds = [0.1, 0.34, 0.58, 0.8]; // Seuils d'apparition
         const start = thresholds[idx];
         const branchProgress = Math.max(0, Math.min(1, (progress - start) * 6.0));
         branch.style.strokeDashoffset = length - (length * branchProgress);
@@ -288,9 +481,20 @@ const Projects = () => {
           style={{ transition: 'stroke-dashoffset 0.1s ease-out', willChange: 'stroke-dashoffset' }}
         />
 
-        {/* Staggered Branch 1 (pointing right to project 1 mockup left edge) */}
+        {/* Branch 0 (pointing left to homelab mockup right edge) */}
         <path
           ref={el => branchRefs.current[0] = el}
+          d=""
+          fill="none"
+          stroke="url(#branch-grad-left)"
+          strokeWidth="2"
+          strokeLinecap="round"
+          style={{ transition: 'stroke-dashoffset 0.1s ease-out', willChange: 'stroke-dashoffset' }}
+        />
+
+        {/* Staggered Branch 1 (pointing right to project 1 mockup left edge) */}
+        <path
+          ref={el => branchRefs.current[1] = el}
           d=""
           fill="none"
           stroke="url(#branch-grad-right)"
@@ -301,7 +505,7 @@ const Projects = () => {
 
         {/* Staggered Branch 2 (pointing left to project 2 mockup right edge) */}
         <path
-          ref={el => branchRefs.current[1] = el}
+          ref={el => branchRefs.current[2] = el}
           d=""
           fill="none"
           stroke="url(#branch-grad-left)"
@@ -312,7 +516,7 @@ const Projects = () => {
 
         {/* Staggered Branch 3 (pointing right to project 3 mockup left edge) */}
         <path
-          ref={el => branchRefs.current[2] = el}
+          ref={el => branchRefs.current[3] = el}
           d=""
           fill="none"
           stroke="url(#branch-grad-right)"
@@ -323,7 +527,7 @@ const Projects = () => {
 
 
 
-        {/* Branch 1 Glowing Node */}
+        {/* Branch 0 Glowing Node */}
         <g
           ref={el => nodeRefs.current[0] = el}
           style={{ transition: 'opacity 0.2s ease', willChange: 'opacity, transform' }}
@@ -332,7 +536,7 @@ const Projects = () => {
           <circle cx="0" cy="0" r="3.5" fill="var(--accent)" />
         </g>
 
-        {/* Branch 2 Glowing Node */}
+        {/* Branch 1 Glowing Node */}
         <g
           ref={el => nodeRefs.current[1] = el}
           style={{ transition: 'opacity 0.2s ease', willChange: 'opacity, transform' }}
@@ -341,9 +545,18 @@ const Projects = () => {
           <circle cx="0" cy="0" r="3.5" fill="var(--accent)" />
         </g>
 
-        {/* Branch 3 Glowing Node */}
+        {/* Branch 2 Glowing Node */}
         <g
           ref={el => nodeRefs.current[2] = el}
+          style={{ transition: 'opacity 0.2s ease', willChange: 'opacity, transform' }}
+        >
+          <circle cx="0" cy="0" r="8" fill="var(--accent)" opacity="0.35" className="pulse-dot" />
+          <circle cx="0" cy="0" r="3.5" fill="var(--accent)" />
+        </g>
+
+        {/* Branch 3 Glowing Node */}
+        <g
+          ref={el => nodeRefs.current[3] = el}
           style={{ transition: 'opacity 0.2s ease', willChange: 'opacity, transform' }}
         >
           <circle cx="0" cy="0" r="8" fill="var(--accent)" opacity="0.35" className="pulse-dot" />
@@ -396,554 +609,359 @@ const Projects = () => {
               lineHeight: 1.6,
             }}
           >
-            Sélection exclusive de mes 4 projets les plus marquants, illustrés par des maquettes interactives haute-fidélité codées directement en HTML/CSS.
+            Quatre projets : mon homelab, un stage de recherche en IA, une application en production à l'IUT et une infrastructure réseau conçue en équipe.
           </p>
         </div>
 
-        {/* 1. Stage RGU Aberdeen (Recherche / Écosse) */}
-        <div className="project-row" style={{ display: 'flex', gap: '60px', alignItems: 'center', marginBottom: '120px' }}>
-          <div className="project-content reveal-on-scroll" style={{ flex: '1', minWidth: '320px' }}>
-            <span style={{ fontFamily: 'var(--font-subtitle)', fontSize: '0.85rem', fontWeight: 700, color: 'var(--text-secondary)', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
-              N° 001 / RECHERCHE & R&D IA
-            </span>
-            <h3 style={{ fontFamily: 'var(--font-title)', fontSize: 'clamp(2.2rem, 5vw, 3.2rem)', fontWeight: 800, color: 'var(--text-primary)', marginTop: '8px', marginBottom: '4px', letterSpacing: '-0.02em' }}>
-              <TextScramble text="RGU Aberdeen" hover={true} />
-            </h3>
-            <p style={{ fontFamily: 'var(--font-creative)', fontSize: 'clamp(1.25rem, 3vw, 1.6rem)', color: 'var(--accent-hover)', fontStyle: 'italic', fontWeight: 300, margin: '0 0 24px 0' }}>
-              Quantifier la polarisation discursive par une approche multimodale et réseau.
-            </p>
-            <p style={{ fontFamily: 'var(--font-body)', fontSize: '1rem', color: 'var(--text-secondary)', lineHeight: 1.65, marginBottom: '32px' }}>
-              Stage de recherche au laboratoire d'IA de la Robert Gordon University (Aberdeen) sous la supervision du Dr Shahana Bano. Rédaction d'un papier de recherche (publication prochaine) sur la polarisation sociale sur 5 plateformes. Modélisation d'un graphe d'interactions de 20k nœuds (Louvain Q = 0,95), création d'un index de polarisation composite (We/Them & Perspective API) et classification zero-shot de mèmes politiques via OpenAI CLIP.
-            </p>
+        {/* 1. Homelab Proxmox (Infrastructure personnelle & Sécurité) */}
+        <div className="project-card-showcase reveal-on-scroll">
+          <div className="card-ambient-glow card-glow-violet" />
+          <div className="project-row" style={{ display: 'flex', gap: '56px', alignItems: 'center', flexDirection: 'row-reverse', position: 'relative', zIndex: 1 }}>
+            <ProjectSummary {...PROJECT_INFO[0]} />
 
-            {/* 2x2 Specs Grid */}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px 30px', borderTop: '1px solid var(--border-color)', paddingTop: '24px', marginBottom: '32px' }}>
-              <div>
-                <span style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Rôle</span>
-                <span style={{ fontFamily: 'var(--font-subtitle)', fontWeight: 700, fontSize: '0.9rem', color: 'var(--text-primary)' }}>Chercheur R&D NLP</span>
-              </div>
-              <div>
-                <span style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Année</span>
-                <span style={{ fontFamily: 'var(--font-subtitle)', fontWeight: 700, fontSize: '0.9rem', color: 'var(--text-primary)' }}>2026</span>
-              </div>
-              <div>
-                <span style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Statut</span>
-                <span style={{ fontFamily: 'var(--font-subtitle)', fontWeight: 700, fontSize: '0.9rem', color: 'var(--text-primary)' }}>Publication prochaine</span>
-              </div>
-              <div>
-                <span style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Équipe</span>
-                <span style={{ fontFamily: 'var(--font-subtitle)', fontWeight: 700, fontSize: '0.9rem', color: 'var(--text-primary)' }}>Solo / RGU Lab</span>
-              </div>
-            </div>
-
-            {/* Tech & CTA */}
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '32px' }}>
-              {['Python', 'OpenAI CLIP', 'Perspective API', 'Louvain Modularity', 'Complex Networks', 'PyTorch & NLP'].map(tech => (
-                <span key={tech} className="organic-badge" style={{ fontSize: '0.75rem', padding: '4px 12px', background: 'rgba(227, 93, 59, 0.06)' }}>
-                  {tech}
-                </span>
-              ))}
-            </div>
-            
-            <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
-              <a 
-                href="/research_paper.pdf" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="btn-editorial"
-                aria-label="Consulter le papier de recherche (PDF)"
-                style={{ padding: '12px 28px', fontSize: '0.85rem' }}
-              >
-                <span>Lire le Papier</span>
-                <FileText size={16} />
-              </a>
+            {/* Homelab Mockup (Console Proxmox) */}
+            <div ref={el => mockupRefs.current[0] = el} className="project-mockup reveal-scale delay-200" style={{ flex: '0.95', minWidth: '320px', display: 'flex', justifyContent: 'center' }}>
+              <ProjectVision steps={PROJECT_VISION[0]} />
             </div>
           </div>
+        </div>
 
-          {/* RGU Mockup (Scientific Research Terminal) */}
-          <div ref={el => mockupRefs.current[0] = el} className="project-mockup reveal-scale delay-200" style={{ flex: '1', minWidth: '320px', display: 'flex', justifyContent: 'center' }}>
-            <TiltMockup>
-              <div className="glass-panel" style={{ width: '100%', maxWidth: '520px', backgroundColor: 'rgba(9, 11, 20, 0.95)', borderRadius: '24px', border: '1px solid rgba(255, 255, 255, 0.08)', boxShadow: '0 30px 80px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1)', padding: '0', display: 'flex', height: '340px', overflow: 'hidden', position: 'relative' }}>
-              
-              {/* Subtle background cyber grid */}
-              <div style={{ position: 'absolute', inset: 0, backgroundImage: 'radial-gradient(rgba(59, 130, 246, 0.03) 1px, transparent 1px)', backgroundSize: '16px 16px', pointerEvents: 'none' }} />
+        {/* 2. Stage RGU Aberdeen (Recherche / Écosse) */}
+        <div className="project-card-showcase reveal-on-scroll">
+          <div className="card-ambient-glow card-glow-orange" />
+          <div className="project-row" style={{ display: 'flex', gap: '56px', alignItems: 'center', position: 'relative', zIndex: 1 }}>
+            <ProjectSummary {...PROJECT_INFO[1]} />
 
-              {/* Left Navigation Sidebar */}
-              <div style={{ width: '135px', backgroundColor: 'rgba(6, 8, 14, 0.7)', borderRight: '1px solid rgba(255, 255, 255, 0.06)', display: 'flex', flexDirection: 'column', padding: '16px 10px', gap: '18px', zIndex: 1 }}>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                  <span style={{ fontSize: '0.55rem', fontWeight: 900, color: 'rgba(255, 255, 255, 0.3)', letterSpacing: '0.08em', textTransform: 'uppercase' }}>ANALYSIS TOOLKIT</span>
-                  <div style={{ width: '15px', height: '2px', backgroundColor: 'var(--accent)', borderRadius: '1px' }} />
-                </div>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                  {[
-                    { name: 'Overview & Baselines', active: false },
-                    { name: 'Echo Chambers Network', active: false },
-                    { name: 'Polarization & Toxicity', active: true },
-                    { name: 'Cross-Platform Metrics', active: false },
-                    { name: 'Import Dataset', active: false }
-                  ].map((nav, idx) => (
-                    <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', transition: 'all 0.2s' }}>
-                      <span style={{ 
-                        width: '6px', 
-                        height: '6px', 
-                        borderRadius: '50%', 
-                        backgroundColor: nav.active ? 'var(--accent)' : 'rgba(255, 255, 255, 0.15)',
-                        boxShadow: nav.active ? '0 0 10px var(--accent), 0 0 4px var(--accent)' : 'none',
-                        border: nav.active ? 'none' : '1px solid rgba(255, 255, 255, 0.2)'
-                      }} />
-                      <span style={{ 
-                        fontSize: '0.56rem', 
-                        fontWeight: nav.active ? 800 : 500, 
-                        color: nav.active ? '#ffffff' : 'rgba(255, 255, 255, 0.45)', 
-                        lineHeight: 1.25,
-                        letterSpacing: '0.01em'
-                      }}>{nav.name}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Main Content Area */}
-              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', padding: '16px 18px', gap: '14px', overflowY: 'auto', zIndex: 1 }}>
-                
-                {/* Heatmap Section */}
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <span style={{ fontSize: '0.72rem', fontWeight: 800, color: '#ffffff', letterSpacing: '0.02em', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                      <span style={{ width: '4px', height: '10px', backgroundColor: 'var(--accent)', borderRadius: '2px' }} />
-                      Polarization Heatmap
-                    </span>
-                    <span style={{ fontFamily: 'monospace', fontSize: '0.48rem', color: 'var(--accent)', backgroundColor: 'rgba(227, 93, 59, 0.08)', padding: '2px 6px', borderRadius: '4px', border: '1px solid rgba(227, 93, 59, 0.15)' }}>SYS.ACTIVE</span>
-                  </div>
-                  
-                  {/* Grid Table for Heatmap */}
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '3px', backgroundColor: 'rgba(255,255,255,0.01)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '8px', padding: '4px', overflow: 'hidden' }}>
-                    {/* Header Row */}
-                    <div style={{ display: 'grid', gridTemplateColumns: '1.4fr 0.9fr 0.9fr 0.9fr', backgroundColor: 'rgba(255,255,255,0.02)', padding: '4px 6px', fontSize: '0.45rem', fontWeight: 800, color: 'rgba(255,255,255,0.4)', borderBottom: '1px solid rgba(255,255,255,0.04)', borderRadius: '4px' }}>
-                      <span>Echo Chamber</span>
-                      <span style={{ textAlign: 'center' }}>We_Them</span>
-                      <span style={{ textAlign: 'center' }}>Mean_Tox</span>
-                      <span style={{ textAlign: 'center' }}>Pol_Index</span>
-                    </div>
-
-                    {/* Row 1: Alt-Right */}
-                    <div style={{ display: 'grid', gridTemplateColumns: '1.4fr 0.9fr 0.9fr 0.9fr', padding: '4px 6px', fontSize: '0.45rem', alignItems: 'center', color: '#ffffff', backgroundColor: 'rgba(255,255,255,0.01)', borderRadius: '4px' }}>
-                      <span style={{ fontWeight: 600, color: 'rgba(255,255,255,0.85)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Alt-Right Echo</span>
-                      <span style={{ background: 'linear-gradient(135deg, #ef4444 0%, #b91c1c 100%)', color: '#ffffff', textAlign: 'center', borderRadius: '4px', padding: '1px 0', margin: '0 4px', fontWeight: 800, boxShadow: '0 2px 6px rgba(239, 68, 68, 0.2)' }}>1.07</span>
-                      <span style={{ background: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)', color: '#ffffff', textAlign: 'center', borderRadius: '4px', padding: '1px 0', margin: '0 4px', fontWeight: 800 }}>0.43</span>
-                      <span style={{ background: 'linear-gradient(135deg, #d97706 0%, #b45309 100%)', color: '#ffffff', textAlign: 'center', borderRadius: '4px', padding: '1px 0', margin: '0 4px', fontWeight: 800 }}>0.46</span>
-                    </div>
-
-                    {/* Row 2: Progressive */}
-                    <div style={{ display: 'grid', gridTemplateColumns: '1.4fr 0.9fr 0.9fr 0.9fr', padding: '4px 6px', fontSize: '0.45rem', alignItems: 'center', color: '#ffffff', backgroundColor: 'rgba(255,255,255,0.01)', borderRadius: '4px' }}>
-                      <span style={{ fontWeight: 600, color: 'rgba(255,255,255,0.85)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Progressive Network</span>
-                      <span style={{ background: 'linear-gradient(135deg, #ef4444 0%, #b91c1c 100%)', color: '#ffffff', textAlign: 'center', borderRadius: '4px', padding: '1px 0', margin: '0 4px', fontWeight: 800, boxShadow: '0 2px 6px rgba(239, 68, 68, 0.2)' }}>1.03</span>
-                      <span style={{ background: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)', color: '#ffffff', textAlign: 'center', borderRadius: '4px', padding: '1px 0', margin: '0 4px', fontWeight: 800 }}>0.46</span>
-                      <span style={{ background: 'linear-gradient(135deg, #ef4444 0%, #b91c1c 100%)', color: '#ffffff', textAlign: 'center', borderRadius: '4px', padding: '1px 0', margin: '0 4px', fontWeight: 800 }}>0.47</span>
-                    </div>
-
-                    {/* Row 3: Conspiracy */}
-                    <div style={{ display: 'grid', gridTemplateColumns: '1.4fr 0.9fr 0.9fr 0.9fr', padding: '4px 6px', fontSize: '0.45rem', alignItems: 'center', color: '#ffffff', backgroundColor: 'rgba(255,255,255,0.01)', borderRadius: '4px' }}>
-                      <span style={{ fontWeight: 600, color: 'rgba(255,255,255,0.85)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Conspiracy & Fringe</span>
-                      <span style={{ background: 'linear-gradient(135deg, #10b981 0%, #047857 100%)', color: '#ffffff', textAlign: 'center', borderRadius: '4px', padding: '1px 0', margin: '0 4px', fontWeight: 800, boxShadow: '0 2px 6px rgba(16, 185, 129, 0.2)' }}>0.19</span>
-                      <span style={{ background: 'linear-gradient(135deg, #ef4444 0%, #b91c1c 100%)', color: '#ffffff', textAlign: 'center', borderRadius: '4px', padding: '1px 0', margin: '0 4px', fontWeight: 800 }}>0.52</span>
-                      <span style={{ background: 'linear-gradient(135deg, #10b981 0%, #047857 100%)', color: '#ffffff', textAlign: 'center', borderRadius: '4px', padding: '1px 0', margin: '0 4px', fontWeight: 800 }}>0.10</span>
-                    </div>
-
-                    {/* Row 4: Climate Change */}
-                    <div style={{ display: 'grid', gridTemplateColumns: '1.4fr 0.9fr 0.9fr 0.9fr', padding: '4px 6px', fontSize: '0.45rem', alignItems: 'center', color: '#ffffff', backgroundColor: 'rgba(255,255,255,0.01)', borderRadius: '4px' }}>
-                      <span style={{ fontWeight: 600, color: 'rgba(255,255,255,0.85)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Climate Change</span>
-                      <span style={{ background: 'linear-gradient(135deg, #10b981 0%, #047857 100%)', color: '#ffffff', textAlign: 'center', borderRadius: '4px', padding: '1px 0', margin: '0 4px', fontWeight: 800, boxShadow: '0 2px 6px rgba(16, 185, 129, 0.2)' }}>0.19</span>
-                      <span style={{ background: 'linear-gradient(135deg, #d97706 0%, #b45309 100%)', color: '#ffffff', textAlign: 'center', borderRadius: '4px', padding: '1px 0', margin: '0 4px', fontWeight: 800 }}>0.46</span>
-                      <span style={{ background: 'linear-gradient(135deg, #10b981 0%, #047857 100%)', color: '#ffffff', textAlign: 'center', borderRadius: '4px', padding: '1px 0', margin: '0 4px', fontWeight: 800 }}>0.09</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Temporal Chart Section */}
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                  <span style={{ fontSize: '0.72rem', fontWeight: 800, color: '#ffffff', letterSpacing: '0.02em', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                    <span style={{ width: '4px', height: '10px', backgroundColor: '#3b82f6', borderRadius: '2px' }} />
-                    Temporal 'We vs Them' Prevalence
-                  </span>
-                  
-                  <div style={{ width: '100%', height: '70px', backgroundColor: 'rgba(5, 7, 12, 0.8)', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.05)', display: 'flex', alignItems: 'flex-end', position: 'relative', overflow: 'hidden', padding: '4px' }}>
-                    {/* SVG grid lines background */}
-                    <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: '10px 0', pointerEvents: 'none' }}>
-                      <div style={{ width: '100%', height: '1px', backgroundColor: 'rgba(255,255,255,0.02)' }} />
-                      <div style={{ width: '100%', height: '1px', backgroundColor: 'rgba(255,255,255,0.02)' }} />
-                      <div style={{ width: '100%', height: '1px', backgroundColor: 'rgba(255,255,255,0.02)' }} />
-                    </div>
-
-                    {/* SVG area chart representing we vs them count */}
-                    <svg viewBox="0 0 300 70" style={{ width: '100%', height: '100%', overflow: 'visible', zIndex: 1 }}>
-                      <defs>
-                        <linearGradient id="blueGrad" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.4" />
-                          <stop offset="100%" stopColor="#3b82f6" stopOpacity="0.0" />
-                        </linearGradient>
-                        <linearGradient id="redGrad" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="0%" stopColor="#ef4444" stopOpacity="0.3" />
-                          <stop offset="100%" stopColor="#ef4444" stopOpacity="0.0" />
-                        </linearGradient>
-                      </defs>
-                      {/* we_count (Blue area) */}
-                      <path
-                        d="M 10 55 Q 50 20, 90 45 T 170 35 T 250 50 L 290 15 L 290 70 L 10 70 Z"
-                        fill="url(#blueGrad)"
-                        stroke="#3b82f6"
-                        strokeWidth="1.8"
-                        strokeLinecap="round"
-                      />
-                      {/* them_count (Pink/Red area) */}
-                      <path
-                        d="M 10 60 Q 50 15, 90 40 T 170 20 T 250 30 L 290 8 L 290 70 L 10 70 Z"
-                        fill="url(#redGrad)"
-                        stroke="#ef4444"
-                        strokeWidth="1.2"
-                        strokeLinecap="round"
-                      />
-                      {/* Interactive dot tracking simulation */}
-                      <circle cx="150" cy="27" r="3.5" fill="var(--accent)" stroke="#ffffff" strokeWidth="1" style={{ filter: 'drop-shadow(0 0 4px var(--accent))' }} />
-                    </svg>
-                  </div>
-
-                  <div style={{ display: 'flex', gap: '12px', fontSize: '0.48rem', fontWeight: 700, justifyContent: 'center', color: 'rgba(255,255,255,0.6)' }}>
-                    <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><span style={{ width: '6px', height: '6px', backgroundColor: '#3b82f6', borderRadius: '50%', boxShadow: '0 0 6px #3b82f6' }} /> we_count</span>
-                    <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><span style={{ width: '6px', height: '6px', backgroundColor: '#ef4444', borderRadius: '50%', boxShadow: '0 0 6px #ef4444' }} /> them_count</span>
-                  </div>
-                </div>
-
-              </div>
+            {/* RGU Mockup (Physical AI Research Workstation) */}
+            <div ref={el => mockupRefs.current[1] = el} className="project-mockup reveal-scale delay-200" style={{ flex: '0.95', minWidth: '320px', display: 'flex', justifyContent: 'center' }}>
+              <ProjectVision steps={PROJECT_VISION[1]} />
             </div>
-          </TiltMockup>
+          </div>
+        </div>
+
+        {/* 2. Projet "Unilim EDT" (Recherche Opérationnelle & Full-stack) */}
+        <div className="project-card-showcase reveal-on-scroll">
+          <div className="card-ambient-glow card-glow-emerald" />
+          <div className="project-row" style={{ display: 'flex', gap: '56px', alignItems: 'center', flexDirection: 'row-reverse', position: 'relative', zIndex: 1 }}>
+            <ProjectSummary {...PROJECT_INFO[2]} />
+
+            {/* Unilim EDT Physical Mockup */}
+            <div ref={el => mockupRefs.current[2] = el} className="project-mockup reveal-scale delay-200" style={{ flex: '0.95', minWidth: '320px', display: 'flex', justifyContent: 'center' }}>
+              <ProjectVision steps={PROJECT_VISION[2]} />
+            </div>
+          </div>
+        </div>
+
+        {/* 3. Réseau Virtuel & Cybersécurité Cisco (SysAdmin / Réseaux) */}
+        <div className="project-card-showcase reveal-on-scroll">
+          <div className="card-ambient-glow card-glow-blue" />
+          <div className="project-row" style={{ display: 'flex', gap: '56px', alignItems: 'center', position: 'relative', zIndex: 1 }}>
+            <ProjectSummary {...PROJECT_INFO[3]} />
+
+            {/* Virtual Network Mockup (Physical Cisco NOC Operations Console) */}
+            <div ref={el => mockupRefs.current[3] = el} className="project-mockup reveal-scale delay-200" style={{ flex: '0.95', minWidth: '320px', display: 'flex', justifyContent: 'center' }}>
+              <ProjectVision steps={PROJECT_VISION[3]} />
+            </div>
+          </div>
         </div>
       </div>
 
-{/* 2. Projet "Questionary" (Web / NLP & Full-stack) */}
-        <div className="project-row" style={{ display: 'flex', gap: '60px', alignItems: 'center', marginBottom: '120px', flexDirection: 'row-reverse' }}>
-          <div className="project-content reveal-on-scroll" style={{ flex: '1', minWidth: '320px' }}>
-            <span style={{ fontFamily: 'var(--font-subtitle)', fontSize: '0.85rem', fontWeight: 700, color: 'var(--text-secondary)', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
-              N° 002 / NLP & FULL-STACK WEB
-            </span>
-            <h3 style={{ fontFamily: 'var(--font-title)', fontSize: 'clamp(2.2rem, 5vw, 3.2rem)', fontWeight: 800, color: 'var(--text-primary)', marginTop: '8px', marginBottom: '4px', letterSpacing: '-0.02em' }}>
-              <TextScramble text="Questionary" hover={true} />
-            </h3>
-            <p style={{ fontFamily: 'var(--font-creative)', fontSize: 'clamp(1.25rem, 3vw, 1.6rem)', color: 'var(--accent-hover)', fontStyle: 'italic', fontWeight: 300, margin: '0 0 24px 0' }}>
-              Comprendre les réponses, au-delà des mots.
-            </p>
-            <p style={{ fontFamily: 'var(--font-body)', fontSize: '1rem', color: 'var(--text-secondary)', lineHeight: 1.65, marginBottom: '32px' }}>
-              Application web d'analyse sémantique et de création de formulaires dynamiques. Conçue en équipe, elle intègre un moteur d'analyse de sentiment NLP en temps réel pour traiter les réponses ouvertes et déclencher instantanément des flux d'alertes intelligents par e-mail et Slack en cas de retours critiques.
-            </p>
-
-            {/* 2x2 Specs Grid */}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px 30px', borderTop: '1px solid var(--border-color)', paddingTop: '24px', marginBottom: '32px' }}>
-              <div>
-                <span style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Rôle</span>
-                <span style={{ fontFamily: 'var(--font-subtitle)', fontWeight: 700, fontSize: '0.9rem', color: 'var(--text-primary)' }}>Lead Dev & NLP Integration</span>
-              </div>
-              <div>
-                <span style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Année</span>
-                <span style={{ fontFamily: 'var(--font-subtitle)', fontWeight: 700, fontSize: '0.9rem', color: 'var(--text-primary)' }}>2025</span>
-              </div>
-              <div>
-                <span style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Statut</span>
-                <span style={{ fontFamily: 'var(--font-subtitle)', fontWeight: 700, fontSize: '0.9rem', color: 'var(--text-primary)' }}>MVP validé</span>
-              </div>
-              <div>
-                <span style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Équipe</span>
-                <span style={{ fontFamily: 'var(--font-subtitle)', fontWeight: 700, fontSize: '0.9rem', color: 'var(--text-primary)' }}>6 Développeurs</span>
-              </div>
-            </div>
-
-            {/* Tech & CTA */}
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '32px' }}>
-              {['Vue.js', 'PHP', 'MariaDB', 'NLP / Sentiment', 'SQL', 'Alerting API'].map(tech => (
-                <span key={tech} className="organic-badge" style={{ fontSize: '0.75rem', padding: '4px 12px', background: 'rgba(227, 93, 59, 0.06)' }}>
-                  {tech}
-                </span>
-              ))}
-            </div>
-            
-            <a 
-              href="https://github.com/Mdeterne/Web-app-questionary" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="btn-editorial"
-              aria-label="Explorer le dépôt GitHub de l'application Questionary"
-              style={{ padding: '12px 28px', fontSize: '0.85rem' }}
-            >
-              <span>Explorer le Dépôt</span>
-              <GithubIcon size={16} />
-            </a>
-          </div>
-
-          {/* Questionary HTML Mockup (Clean SaaS Dashboard) */}
-          <div ref={el => mockupRefs.current[1] = el} className="project-mockup" style={{ flex: '1', minWidth: '320px', display: 'flex', justifyContent: 'center' }}>
-            <TiltMockup>
-              <div className="glass-panel" style={{ width: '100%', maxWidth: '520px', backgroundColor: '#f9fafb', borderRadius: '24px', border: '1px solid var(--border-color)', boxShadow: '0 25px 60px rgba(17,24,39,0.06)', padding: '0', display: 'flex', flexDirection: 'column', overflow: 'hidden', height: '320px' }}>
-              {/* Dark Header */}
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', backgroundColor: '#1e1e1e', padding: '8px 14px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                  <ClipboardList size={11} color="#ffffff" />
-                  <span style={{ fontSize: '0.65rem', fontWeight: 900, color: '#ffffff', letterSpacing: '0.05em' }}>QUESTIONARY</span>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                  <span style={{ fontSize: '0.52rem', fontWeight: 700, color: '#ffffff' }}>Université de Limoges</span>
-                  <div style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#ef4444' }} />
-                </div>
-              </div>
-
-              {/* Title Bar */}
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: '#ffffff', padding: '10px 14px', borderBottom: '1px solid rgba(0,0,0,0.05)' }}>
-                <div>
-                  <span style={{ display: 'block', fontSize: '0.45rem', fontWeight: 800, color: '#9ca3af', letterSpacing: '0.02em', textTransform: 'uppercase' }}>Analyse des résultats</span>
-                  <span style={{ fontSize: '0.78rem', fontWeight: 800, color: '#1e293b' }}>Questionnaire de Démonstration</span>
-                </div>
-                <div style={{ display: 'flex', gap: '4px' }}>
-                  <button style={{ border: 'none', backgroundColor: '#22c55e', color: '#ffffff', fontSize: '0.5rem', fontWeight: 700, padding: '3px 8px', borderRadius: '4px', display: 'flex', alignItems: 'center', gap: '3px', cursor: 'pointer' }}>
-                    <span>Exporter</span>
-                  </button>
-                  <button style={{ border: 'none', backgroundColor: '#1e293b', color: '#ffffff', fontSize: '0.5rem', fontWeight: 700, padding: '3px 8px', borderRadius: '4px', cursor: 'pointer' }}>
-                    <span>Retour</span>
-                  </button>
-                </div>
-              </div>
-
-              {/* Body Area */}
-              <div style={{ flex: 1, padding: '10px 14px', display: 'flex', flexDirection: 'column', gap: '8px', overflowY: 'auto' }}>
-                {/* 64 Responses Ovale Badge */}
-                <div style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', backgroundColor: '#fee2e2', color: '#b91c1c', borderRadius: '50px', padding: '3px 10px', width: 'fit-content' }}>
-                  <span style={{ width: '4px', height: '4px', borderRadius: '50%', backgroundColor: '#b91c1c' }} />
-                  <span style={{ fontSize: '0.52rem', fontWeight: 800 }}>64 réponses collectées</span>
-                </div>
-
-                {/* Cards Grid */}
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
-                  {/* Card 1 */}
-                  <div style={{ backgroundColor: '#ffffff', borderRadius: '8px', border: '1px solid rgba(0,0,0,0.06)', padding: '8px', display: 'flex', flexDirection: 'column', gap: '6px', boxShadow: '0 2px 4px rgba(0,0,0,0.02)' }}>
-                    <span style={{ fontSize: '0.58rem', fontWeight: 800, color: '#1e293b' }}>Quel est votre prénom ?</span>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                      {[
-                        { label: 'Je recommande...', val: '95%' },
-                        { label: 'Sympa et très bien', val: '65%' },
-                        { label: 'Excellent projet', val: '60%' }
-                      ].map((item, idx) => (
-                        <div key={idx}>
-                          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.45rem', color: '#71717a' }}>
-                            <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '75%' }}>{item.label}</span>
-                          </div>
-                          <div style={{ width: '100%', height: '4px', backgroundColor: '#f1f5f9', borderRadius: '2px', overflow: 'hidden' }}>
-                            <div style={{ width: `${item.val}`, height: '100%', backgroundColor: '#c25959' }} />
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                    <button style={{ border: 'none', backgroundColor: '#18181b', color: '#ffffff', fontSize: '0.45rem', fontWeight: 800, padding: '3px', borderRadius: '4px', marginTop: '2px', cursor: 'pointer' }}>
-                      Voir toutes les réponses (40)
-                    </button>
-                  </div>
-
-                  {/* Card 2 */}
-                  <div style={{ backgroundColor: '#ffffff', borderRadius: '8px', border: '1px solid rgba(0,0,0,0.06)', padding: '8px', display: 'flex', flexDirection: 'column', gap: '6px', boxShadow: '0 2px 4px rgba(0,0,0,0.02)' }}>
-                    <span style={{ fontSize: '0.58rem', fontWeight: 800, color: '#1e293b' }}>Quelles fonctionnalités préférez-vous ?</span>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                      {[
-                        { label: 'Interface intuitive', val: '85%' },
-                        { label: 'Analyses détaillées', val: '80%' },
-                        { label: 'Rapidité', val: '70%' }
-                      ].map((item, idx) => (
-                        <div key={idx}>
-                          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.45rem', color: '#71717a' }}>
-                            <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '75%' }}>{item.label}</span>
-                          </div>
-                          <div style={{ width: '100%', height: '4px', backgroundColor: '#f1f5f9', borderRadius: '2px', overflow: 'hidden' }}>
-                            <div style={{ width: `${item.val}`, height: '100%', backgroundColor: '#c25959' }} />
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </TiltMockup>
-        </div>
-      </div>
-
-{/* 3. Réseau Virtuel (SysAdmin / Réseaux) */}
-        <div className="project-row" style={{ display: 'flex', gap: '60px', alignItems: 'center', marginBottom: '40px' }}>
-          <div className="project-content reveal-on-scroll" style={{ flex: '1', minWidth: '320px' }}>
-            <span style={{ fontFamily: 'var(--font-subtitle)', fontSize: '0.85rem', fontWeight: 700, color: 'var(--text-secondary)', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
-              N° 003 / SYSADMIN & INFRASTRUCTURE
-            </span>
-            <h3 style={{ fontFamily: 'var(--font-title)', fontSize: 'clamp(2.2rem, 5vw, 3.2rem)', fontWeight: 800, color: 'var(--text-primary)', marginTop: '8px', marginBottom: '4px', letterSpacing: '-0.02em' }}>
-              <TextScramble text="Réseau Virtuel" hover={true} />
-            </h3>
-            <p style={{ fontFamily: 'var(--font-creative)', fontSize: 'clamp(1.25rem, 3vw, 1.6rem)', color: 'var(--accent-hover)', fontStyle: 'italic', fontWeight: 300, margin: '0 0 24px 0' }}>
-              Architecturer la stabilité à grande échelle.
-            </p>
-            <p style={{ fontFamily: 'var(--font-body)', fontSize: '1rem', color: 'var(--text-secondary)', lineHeight: 1.65, marginBottom: '32px' }}>
-              Simulation complète d'une infrastructure réseau d'entreprise à grande échelle connectant plus de 2000 machines virtuelles réparties sur plusieurs sous-réseaux. Configuration complète de l'allocation dynamique (DHCP), de la résolution de noms locale (DNS) et des protocoles de routage dynamique sécurisé (OSPF et RIP).
-            </p>
-
-            {/* 2x2 Specs Grid */}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px 30px', borderTop: '1px solid var(--border-color)', paddingTop: '24px', marginBottom: '32px' }}>
-              <div>
-                <span style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Rôle</span>
-                <span style={{ fontFamily: 'var(--font-subtitle)', fontWeight: 700, fontSize: '0.9rem', color: 'var(--text-primary)' }}>Lead Architecte Réseau</span>
-              </div>
-              <div>
-                <span style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Année</span>
-                <span style={{ fontFamily: 'var(--font-subtitle)', fontWeight: 700, fontSize: '0.9rem', color: 'var(--text-primary)' }}>2025</span>
-              </div>
-              <div>
-                <span style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Statut</span>
-                <span style={{ fontFamily: 'var(--font-subtitle)', fontWeight: 700, fontSize: '0.9rem', color: 'var(--text-primary)' }}>Projet validé</span>
-              </div>
-              <div>
-                <span style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Équipe</span>
-                <span style={{ fontFamily: 'var(--font-subtitle)', fontWeight: 700, fontSize: '0.9rem', color: 'var(--text-primary)' }}>3 Collaborateurs</span>
-              </div>
-            </div>
-
-            {/* Tech & CTA */}
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '32px' }}>
-              {['Réseaux', 'SysAdmin', 'OSPF / RIP', 'Virtualisation', 'DHCP & DNS'].map(tech => (
-                <span key={tech} className="organic-badge" style={{ fontSize: '0.75rem', padding: '4px 12px', background: 'rgba(227, 93, 59, 0.06)' }}>
-                  {tech}
-                </span>
-              ))}
-            </div>
-            
-            <a 
-              href="https://github.com/LOI-mln/virtual-network" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="btn-editorial"
-              aria-label="Explorer le dépôt GitHub du projet Réseau Virtuel"
-              style={{ padding: '12px 28px', fontSize: '0.85rem' }}
-            >
-              <span>Explorer le Dépôt</span>
-              <GithubIcon size={16} />
-            </a>
-          </div>
-
-          {/* Virtual Network Mockup (Infrastructure Node Diagram) */}
-          <div ref={el => mockupRefs.current[2] = el} className="project-mockup reveal-scale delay-200" style={{ flex: '1', minWidth: '320px', display: 'flex', justifyContent: 'center' }}>
-            <TiltMockup>
-              <div className="glass-panel" style={{ width: '100%', maxWidth: '520px', backgroundColor: '#090d16', borderRadius: '24px', border: '1px solid rgba(255,255,255,0.06)', boxShadow: '0 30px 70px rgba(0,0,0,0.35)', padding: '18px', display: 'flex', flexDirection: 'column', gap: '14px', overflow: 'hidden' }}>
-              {/* Header */}
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: '10px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                  <Server size={14} color="#10b981" />
-                  <span style={{ fontFamily: 'var(--font-subtitle)', fontSize: '0.72rem', fontWeight: 800, color: '#9ca3af' }}>NET-MONITOR PRO</span>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                  <span style={{ width: '6px', height: '6px', backgroundColor: '#10b981', borderRadius: '50%', boxShadow: '0 0 8px #10b981' }} />
-                  <span style={{ fontSize: '0.62rem', fontWeight: 700, color: '#10b981' }}>OSPF ACTIVE - 100% ONLINE</span>
-                </div>
-              </div>
-
-              {/* SVG Topology Visualizer with animated pulses */}
-              <div style={{ backgroundColor: 'rgba(0,0,0,0.22)', borderRadius: '12px', padding: '12px', border: '1px solid rgba(255,255,255,0.04)', display: 'flex', flexDirection: 'column', gap: '4px', position: 'relative' }}>
-                <span style={{ fontSize: '0.62rem', fontWeight: 700, color: '#6b7280', textTransform: 'uppercase', marginBottom: '8px' }}>Active Enterprise Topology (Virtual Segment)</span>
-                
-                <div style={{ width: '100%', height: '110px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                  <svg viewBox="0 0 300 110" style={{ width: '100%', height: '100%', overflow: 'visible' }}>
-                    {/* Connection lines */}
-                    <line x1="50" y1="55" x2="110" y2="25" stroke="rgba(255,255,255,0.1)" strokeWidth="1.5" />
-                    <line x1="50" y1="55" x2="110" y2="85" stroke="rgba(255,255,255,0.1)" strokeWidth="1.5" />
-                    <line x1="110" y1="25" x2="190" y2="25" stroke="rgba(255,255,255,0.1)" strokeWidth="1.5" />
-                    <line x1="110" y1="85" x2="190" y2="85" stroke="rgba(255,255,255,0.1)" strokeWidth="1.5" />
-                    <line x1="190" y1="25" x2="250" y2="55" stroke="rgba(255,255,255,0.1)" strokeWidth="1.5" />
-                    <line x1="190" y1="85" x2="250" y2="55" stroke="rgba(255,255,255,0.1)" strokeWidth="1.5" />
-                    
-                    {/* Animated data packet pulses */}
-                    <circle r="3" fill="var(--accent)" style={{ animation: 'movePacket1 3s infinite linear' }} />
-                    <circle r="3" fill="#10b981" style={{ animation: 'movePacket2 4s infinite linear' }} />
-
-                    {/* Nodes (Circles with labels) */}
-                    {/* Edge Switch */}
-                    <circle cx="50" cy="55" r="14" fill="#1e293b" stroke="rgba(255,255,255,0.15)" strokeWidth="1.5" />
-                    <text x="50" y="58" fontSize="8" fill="#ffffff" fontWeight="bold" textAnchor="middle">SW-1</text>
-
-                    {/* Core Router 1 */}
-                    <circle cx="110" cy="25" r="14" fill="var(--accent)" stroke="rgba(227, 93, 59, 0.3)" strokeWidth="1.5" />
-                    <text x="110" y="28" fontSize="8" fill="#ffffff" fontWeight="bold" textAnchor="middle">R-1</text>
-
-                    {/* Core Router 2 */}
-                    <circle cx="110" cy="85" r="14" fill="var(--accent)" stroke="rgba(227, 93, 59, 0.3)" strokeWidth="1.5" />
-                    <text x="110" y="88" fontSize="8" fill="#ffffff" fontWeight="bold" textAnchor="middle">R-2</text>
-
-                    {/* Firewall */}
-                    <circle cx="190" cy="25" r="14" fill="#1e293b" stroke="rgba(255,255,255,0.15)" strokeWidth="1.5" />
-                    <text x="190" y="28" fontSize="8" fill="#ffffff" fontWeight="bold" textAnchor="middle">FW-1</text>
-
-                    {/* Distribution Switch */}
-                    <circle cx="190" cy="85" r="14" fill="#1e293b" stroke="rgba(255,255,255,0.15)" strokeWidth="1.5" />
-                    <text x="190" y="88" fontSize="8" fill="#ffffff" fontWeight="bold" textAnchor="middle">SW-2</text>
-
-                    {/* Server Cluster */}
-                    <circle cx="250" cy="55" r="14" fill="#10b981" stroke="rgba(16,185,129,0.3)" strokeWidth="1.5" />
-                    <text x="250" y="58" fontSize="7" fill="#ffffff" fontWeight="bold" textAnchor="middle">SRV-A</text>
-                  </svg>
-                </div>
-              </div>
-
-              {/* DHCP Leases & active stats */}
-              <div style={{ display: 'flex', gap: '10px' }}>
-                <div style={{ flex: 1, backgroundColor: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.04)', borderRadius: '12px', padding: '10px', display: 'flex', flexDirection: 'column', gap: '2px' }}>
-                  <span style={{ fontSize: '0.6rem', color: '#9ca3af', fontWeight: 700 }}>VMs ACTIVES</span>
-                  <span style={{ fontSize: '1.05rem', fontWeight: 800, color: '#ffffff' }}>2 048</span>
-                </div>
-                <div style={{ flex: 1, backgroundColor: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.04)', borderRadius: '12px', padding: '10px', display: 'flex', flexDirection: 'column', gap: '2px' }}>
-                  <span style={{ fontSize: '0.6rem', color: '#9ca3af', fontWeight: 700 }}>TRAFIC GLOBAL</span>
-                  <span style={{ fontSize: '1.05rem', fontWeight: 800, color: 'var(--accent)' }}>4.8 Gbps</span>
-                </div>
-                <div style={{ flex: 1, backgroundColor: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.04)', borderRadius: '12px', padding: '10px', display: 'flex', flexDirection: 'column', gap: '2px' }}>
-                  <span style={{ fontSize: '0.6rem', color: '#9ca3af', fontWeight: 700 }}>LATENCE DNS</span>
-                  <span style={{ fontSize: '1.05rem', fontWeight: 800, color: '#10b981' }}>1.1 ms</span>
-                </div>
-              </div>
-            </div>
-          </TiltMockup>
-        </div>
-      </div>
-      </div>
-
-      {/* Internal CSS for responsive grid, direction swap on hover and keyframe animations */}
+      {/* Internal CSS for Physical Devices, Responsive Grid, and Live Animations */}
       <style dangerouslySetInnerHTML={{ __html: `
+        /* Premium Showcase Card Frame */
+        .project-card-showcase {
+          position: relative;
+          border-radius: 28px;
+          background: var(--bg-primary);
+          border: 1px solid rgba(17, 24, 39, 0.08);
+          box-shadow: 0 1px 2px rgba(17, 24, 39, 0.04), 0 24px 48px -24px rgba(17, 24, 39, 0.14);
+          padding: 14px;
+          margin-bottom: 96px;
+          overflow: hidden;
+          transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease;
+        }
+        .project-card-showcase:hover {
+          transform: translateY(-4px);
+          box-shadow: 0 1px 2px rgba(17, 24, 39, 0.04), 0 32px 64px -28px rgba(17, 24, 39, 0.22);
+        }
+        .project-card-showcase .card-ambient-glow { display: none; }
+
+        /* Teinte propre à chaque projet (RVB) */
+        .card-glow-violet ~ .project-row { --tint: 124, 58, 237; }
+        .card-glow-orange ~ .project-row { --tint: 227, 93, 59; }
+        .card-glow-emerald ~ .project-row { --tint: 5, 150, 105; }
+        .card-glow-blue ~ .project-row { --tint: 37, 99, 235; }
+
+        .project-row {
+          gap: 0 !important;
+          align-items: stretch !important;
+        }
+
+        /* Panneau teinté qui accueille la vision du projet */
+        .project-mockup {
+          align-self: stretch;
+          align-items: center;
+          border-radius: 20px;
+          padding: 44px 32px;
+          border: 1px solid rgba(var(--tint), 0.12);
+          background:
+            radial-gradient(120% 90% at 50% 0%, rgba(var(--tint), 0.16), transparent 65%),
+            radial-gradient(rgba(var(--tint), 0.16) 1px, transparent 1px) 0 0 / 18px 18px,
+            rgba(var(--tint), 0.04);
+        }
+
+        /* Vision du projet : étapes reliées */
+        .pv { width: 100%; max-width: 420px; }
+        .pv-label {
+          display: block;
+          font-family: var(--font-subtitle);
+          font-size: 0.72rem; font-weight: 700;
+          letter-spacing: 0.1em; text-transform: uppercase;
+          color: rgb(var(--tint));
+          margin-bottom: 16px;
+        }
+        .pv-steps {
+          list-style: none; margin: 0; padding: 0;
+          display: flex; flex-direction: column; gap: 26px;
+        }
+        .pv-step {
+          position: relative;
+          display: flex; gap: 14px; align-items: flex-start;
+          background: var(--bg-primary);
+          border: 1px solid rgba(var(--tint), 0.14);
+          border-radius: 16px;
+          padding: 14px 16px;
+          box-shadow: 0 1px 2px rgba(17, 24, 39, 0.04), 0 8px 20px -12px rgba(var(--tint), 0.35);
+        }
+        /* Liaison verticale entre deux étapes */
+        .pv-step + .pv-step::before {
+          content: '';
+          position: absolute;
+          left: 34px; top: -27px;
+          width: 2px; height: 26px;
+          background: linear-gradient(rgba(var(--tint), 0.15), rgba(var(--tint), 0.6));
+        }
+        .pv-step + .pv-step::after {
+          content: '';
+          position: absolute;
+          left: 31px; top: -6px;
+          border: 4px solid transparent;
+          border-top: 5px solid rgba(var(--tint), 0.6);
+        }
+        .pv-icon {
+          flex-shrink: 0;
+          width: 38px; height: 38px;
+          border-radius: 11px;
+          display: flex; align-items: center; justify-content: center;
+          color: rgb(var(--tint));
+          background: rgba(var(--tint), 0.1);
+        }
+        .pv-body { display: flex; flex-direction: column; min-width: 0; }
+        .pv-step-label {
+          font-family: var(--font-subtitle);
+          font-size: 0.7rem; font-weight: 700;
+          letter-spacing: 0.08em; text-transform: uppercase;
+          color: var(--text-muted);
+        }
+        .pv-title {
+          font-family: var(--font-subtitle);
+          font-size: 1rem; font-weight: 700;
+          color: var(--text-primary);
+          margin: 2px 0 8px 0;
+        }
+        .pv-chips { display: flex; flex-wrap: wrap; gap: 5px; }
+        .pv-chips span {
+          font-family: var(--font-subtitle);
+          font-size: 0.75rem; font-weight: 600;
+          color: rgb(var(--tint));
+          background: rgba(var(--tint), 0.07);
+          padding: 3px 8px;
+          border-radius: 6px;
+        }
+
+        /* Bloc texte des fiches */
+        .ps {
+          flex: 1;
+          min-width: 300px;
+          padding: 36px 40px 28px;
+          display: flex;
+          flex-direction: column;
+        }
+        .ps-eyebrow {
+          align-self: flex-start;
+          display: inline-flex; gap: 8px; align-items: center;
+          font-family: var(--font-subtitle);
+          font-size: 0.72rem; font-weight: 700;
+          letter-spacing: 0.08em; text-transform: uppercase;
+          color: rgb(var(--tint));
+          background: rgba(var(--tint), 0.08);
+          border: 1px solid rgba(var(--tint), 0.16);
+          padding: 5px 12px;
+          border-radius: 999px;
+          margin-bottom: 18px;
+        }
+        .ps-eyebrow span:first-child { font-family: monospace; opacity: 0.7; }
+        .ps-title {
+          font-family: var(--font-title);
+          font-size: clamp(2rem, 3.4vw, 2.6rem);
+          font-weight: 800;
+          letter-spacing: -0.025em;
+          line-height: 1.1;
+          color: var(--text-primary);
+          margin: 0 0 10px 0;
+        }
+        .ps-meta {
+          display: flex; flex-wrap: wrap; align-items: center; gap: 6px 16px;
+          font-family: var(--font-subtitle);
+          font-size: 0.85rem; font-weight: 600;
+          color: var(--text-muted);
+          margin: 0 0 22px 0;
+        }
+        .ps-status {
+          display: inline-flex; align-items: center; gap: 6px;
+          color: rgb(var(--tint));
+          font-weight: 700;
+        }
+        .ps-status::before {
+          content: '';
+          width: 7px; height: 7px; border-radius: 50%;
+          background: rgb(var(--tint));
+          box-shadow: 0 0 0 3px rgba(var(--tint), 0.18);
+        }
+        .ps-summary {
+          font-family: var(--font-body);
+          font-size: 1.12rem; line-height: 1.6;
+          color: var(--text-primary);
+          margin: 0 0 22px 0;
+          max-width: 520px;
+        }
+        .ps-points {
+          list-style: none; padding: 0;
+          margin: 0 0 28px 0;
+          display: flex; flex-direction: column; gap: 12px;
+        }
+        .ps-points li {
+          display: flex; gap: 12px; align-items: flex-start;
+          font-size: 0.95rem; line-height: 1.5;
+          color: var(--text-secondary);
+        }
+        .ps-check {
+          flex-shrink: 0;
+          width: 20px; height: 20px; margin-top: 1px;
+          border-radius: 50%;
+          display: flex; align-items: center; justify-content: center;
+          color: rgb(var(--tint));
+          background: rgba(var(--tint), 0.1);
+        }
+        .ps-footer {
+          margin-top: auto;
+          padding-top: 20px;
+          border-top: 1px solid rgba(17, 24, 39, 0.07);
+          display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+          gap: 14px;
+        }
+        .ps-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+        .ps-tags span {
+          font-family: var(--font-subtitle);
+          font-size: 0.76rem; font-weight: 600;
+          color: var(--text-secondary);
+          background: var(--bg-tertiary);
+          padding: 4px 9px;
+          border-radius: 6px;
+        }
+        .ps-link {
+          display: inline-flex; align-items: center; gap: 7px;
+          font-family: var(--font-subtitle);
+          font-size: 0.88rem; font-weight: 700;
+          color: rgb(var(--tint));
+          background: rgba(var(--tint), 0.08);
+          padding: 9px 16px;
+          border-radius: 999px;
+          text-decoration: none;
+          transition: background-color 0.2s ease;
+        }
+        .ps-link svg:last-child { transition: transform 0.2s ease; }
+        .ps-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+        .ps-link--demo {
+          border: none;
+          cursor: pointer;
+          color: #fff;
+          background: rgb(var(--tint));
+        }
+
+        /* Fenêtre de démo vidéo */
+        .demo-backdrop {
+          position: fixed; inset: 0;
+          z-index: 10000;
+          display: flex; align-items: center; justify-content: center;
+          padding: 24px;
+          background: rgba(17, 24, 39, 0.72);
+          backdrop-filter: blur(6px);
+        }
+        .demo-frame {
+          width: min(1100px, 100%);
+          border-radius: 18px;
+          overflow: hidden;
+          background: #0b0f19;
+          box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.6);
+        }
+        .demo-head {
+          display: flex; align-items: center; justify-content: space-between;
+          padding: 10px 16px;
+          font-family: var(--font-subtitle);
+          font-size: 0.85rem; font-weight: 700;
+          color: rgba(255, 255, 255, 0.85);
+        }
+        .demo-head button {
+          border: none; background: none; cursor: pointer;
+          color: rgba(255, 255, 255, 0.7);
+          font-size: 1.6rem; line-height: 1;
+        }
+        .demo-frame video { display: block; width: 100%; height: auto; background: #000; }
+        @media (hover: hover) and (pointer: fine) {
+          .ps-link:hover { background: rgba(var(--tint), 0.15); }
+          .ps-link--demo:hover { background: rgba(var(--tint), 0.88); }
+          .ps-link:hover svg:last-child { transform: translate(2px, -2px); }
+        }
+
+        /* Mobile : schéma compact sous le texte */
+        @media (max-width: 767px) {
+          .project-mockup {
+            min-width: 0 !important;
+            padding: 22px 14px !important;
+          }
+          .pv { max-width: none; }
+          .pv-step { padding: 12px 14px; }
+        }
+
         @media (max-width: 991px) {
           .organic-tree-svg {
             display: none !important;
           }
+          .project-card-showcase {
+            padding: 10px !important;
+            margin-bottom: 40px !important;
+            border-radius: 22px !important;
+          }
           .project-row {
             flex-direction: column !important;
-            gap: 40px !important;
-            margin-bottom: 80px !important;
+            gap: 10px !important;
+          }
+          .ps {
+            padding: 22px 16px 16px;
+            min-width: 0;
+          }
+          .project-mockup {
+            padding: 32px 16px;
           }
           .project-content {
             width: 100% !important;
+            min-width: 100% !important;
           }
           .project-mockup {
             width: 100% !important;
+            min-width: 100% !important;
           }
-        }
-        
-        /* Interactive data packet SVG animations */
-        @keyframes movePacket1 {
-          0% { cx: 50; cy: 55; opacity: 1; }
-          40% { cx: 110; cy: 25; }
-          75% { cx: 190; cy: 25; }
-          100% { cx: 250; cy: 55; opacity: 0; }
-        }
-        
-        @keyframes movePacket2 {
-          0% { cx: 50; cy: 55; opacity: 1; }
-          40% { cx: 110; cy: 85; }
-          75% { cx: 190; cy: 85; }
-          100% { cx: 250; cy: 55; opacity: 0; }
         }
       `}} />
     </section>
