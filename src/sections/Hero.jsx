@@ -26,7 +26,7 @@ const Hero = () => {
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'flex-start',
-        padding: '140px 24px 60px 24px',
+        padding: '110px 24px 60px 24px',
         overflow: 'hidden',
         backgroundColor: 'transparent',
       }}
@@ -56,7 +56,7 @@ const Hero = () => {
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'flex-end',
-            marginBottom: '40px',
+            marginBottom: '16px',
           }}
           className="hero-center-wrapper"
         >
@@ -74,6 +74,7 @@ const Hero = () => {
             }}
           >
             <h1
+              aria-label="Milan Loï"
               style={{
                 fontFamily: "var(--font-title)", /* Alignement avec la charte Space Grotesk */
                 fontSize: 'clamp(4.5rem, 16vw, 11rem)',
@@ -167,7 +168,7 @@ const Hero = () => {
             </h2>
           </div>
 
-          {/* Badge de statut R&D */}
+          {/* Badge de disponibilité */}
           <div
             className="glass-panel desktop-only"
             style={{
@@ -175,6 +176,7 @@ const Hero = () => {
               left: '0px',
               top: '55%',
               transform: 'translateY(-50%)',
+              maxWidth: 'calc((100% - 400px) / 2 - 16px)', // Ne jamais chevaucher le portrait
               padding: '14px 22px',
               borderRadius: '50px',
               display: 'flex',
@@ -188,6 +190,7 @@ const Hero = () => {
             <span
               className="pulse-dot"
               style={{
+                flexShrink: 0,
                 width: '8px',
                 height: '8px',
                 backgroundColor: 'var(--status-success)', // Point clignotant vert sémantique
@@ -203,33 +206,40 @@ const Hero = () => {
                 letterSpacing: '0.02em',
               }}
             >
-              BUT 3 // Informatique
+              Recherche alternance master cyber · sept. 2027
             </span>
           </div>
 
-          {/* Courte introduction textuelle */}
+          {/* Badge de localisation */}
           <div
-            className="desktop-only"
+            className="glass-panel desktop-only"
             style={{
               position: 'absolute',
               right: '0px',
               top: '55%',
               transform: 'translateY(-50%)',
-              maxWidth: '240px',
-              textAlign: 'left',
+              padding: '14px 22px',
+              borderRadius: '50px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              backgroundColor: 'var(--bg-primary)',
               zIndex: 3,
+              boxShadow: '0 10px 25px rgba(0,0,0,0.03)',
             }}
           >
-            <p
+            <MapPin size={14} style={{ color: 'var(--accent)' }} />
+            <span
               style={{
-                fontFamily: 'var(--font-body)',
-                fontSize: '0.88rem',
-                color: 'var(--text-secondary)',
-                lineHeight: 1.6,
+                fontFamily: 'var(--font-subtitle)',
+                fontSize: '0.8rem',
+                fontWeight: 700,
+                color: 'var(--text-primary)',
+                letterSpacing: '0.02em',
               }}
             >
-              passionné par la conception d'architectures logicielles robustes et la recherche d'optimisation système basse latence.
-            </p>
+              Limoges · Bordeaux
+            </span>
           </div>
         </div>
 
@@ -242,7 +252,7 @@ const Hero = () => {
             alignItems: 'center',
             gap: '16px',
             textAlign: 'center',
-            marginBottom: '40px',
+            marginBottom: '16px',
             width: '100%',
           }}
         >
@@ -266,54 +276,24 @@ const Hero = () => {
               }}
             />
             <span style={{ fontFamily: 'var(--font-subtitle)', fontSize: '0.75rem', fontWeight: 700 }}>
-              BUT 3 // Informatique
+              Recherche alternance master cyber · sept. 2027
             </span>
           </div>
-          <p
-            style={{
-              fontFamily: 'var(--font-body)',
-              fontSize: '0.85rem',
-              color: 'var(--text-secondary)',
-              maxWidth: '320px',
-              lineHeight: 1.5,
-            }}
-          >
-            passionné par la conception d'architectures logicielles robustes et la recherche d'optimisation système basse latence.
-          </p>
         </div>
+
+        {/* Phrase d'accroche : qui je suis en une lecture */}
+        <p className="hero-pitch">
+          Développeur logiciel en alternance chez <strong>Ceva Santé Animale</strong> et en 3<sup>e</sup> année de <strong>BUT Informatique</strong> à Limoges. Je m'oriente vers la <strong>cybersécurité</strong> pour mon master.
+        </p>
 
         {/* Bouton d'action principal */}
         <div
           className={`hero-contact-container hero-footer-row ${scrolled ? 'scrolled' : ''}`}
         >
-          {/* Bouton de contact style pilule */}
+          {/* Bouton de contact style pilule (Emil Kowalski Tactile Button) */}
           <a
             href="mailto:milan.loi@outlook.com"
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '12px',
-              padding: '16px 36px',
-              borderRadius: '50px',
-              backgroundColor: 'var(--bg-inverse)', // Fond sombre sémantique
-              color: 'var(--text-inverse)',
-              textDecoration: 'none',
-              fontFamily: 'var(--font-subtitle)',
-              fontWeight: 600,
-              fontSize: '0.9rem',
-              boxShadow: '0 10px 25px rgba(17, 24, 39, 0.12)',
-              transition: 'var(--transition-smooth)',
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = 'translateY(-2px)';
-              e.currentTarget.style.backgroundColor = 'var(--accent)';
-              e.currentTarget.style.boxShadow = '0 15px 30px var(--accent-glow)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = 'translateY(0)';
-              e.currentTarget.style.backgroundColor = 'var(--bg-inverse)';
-              e.currentTarget.style.boxShadow = '0 10px 25px rgba(17, 24, 39, 0.12)';
-            }}
+            className="hero-cta-btn"
           >
             <span>Parlons-en</span>
             <ArrowRight size={14} />
@@ -321,7 +301,7 @@ const Hero = () => {
         </div>
 
         {/* Section des statistiques (MetricGrid) */}
-        <div className="reveal-on-scroll delay-300" style={{ width: '100%', marginTop: '50px' }}>
+        <div style={{ width: '100%', marginTop: '24px' }}>
           <MetricGrid />
         </div>
       </div>
@@ -403,6 +383,22 @@ const Hero = () => {
           width: 400px !important;
           height: 500px !important;
         }
+
+        .hero-pitch {
+          max-width: 720px;
+          margin: 0 auto 24px auto;
+          text-align: center;
+          font-family: var(--font-body);
+          font-size: clamp(1rem, 1.4vw, 1.2rem);
+          line-height: 1.55;
+          color: var(--text-primary);
+          animation: subTitleEntry 1s cubic-bezier(0.16, 1, 0.3, 1) both;
+          animation-delay: 300ms;
+        }
+        .hero-pitch strong {
+          color: var(--accent-hover);
+          font-weight: 700;
+        }
         .hero-contact-container {
           display: flex;
           justify-content: center;
@@ -412,7 +408,7 @@ const Hero = () => {
           margin-bottom: 10px;
           opacity: 1;
           transform: translate(0, 0) scale(1);
-          transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+          transition: opacity 0.4s var(--ease-out), transform 0.4s var(--ease-out);
           pointer-events: auto;
           z-index: 50;
         }
@@ -420,6 +416,47 @@ const Hero = () => {
           opacity: 0;
           transform: translate(min(32vw, 420px), -360px) scale(0.45);
           pointer-events: none;
+        }
+
+        .hero-cta-btn {
+          display: inline-flex;
+          align-items: center;
+          gap: 12px;
+          padding: 16px 36px;
+          border-radius: 50px;
+          background-color: var(--bg-inverse);
+          color: var(--text-inverse);
+          text-decoration: none;
+          font-family: var(--font-subtitle);
+          font-weight: 600;
+          font-size: 0.9rem;
+          box-shadow: 0 10px 25px rgba(17, 24, 39, 0.12);
+          transition: transform var(--duration-fast) var(--ease-out),
+                      background-color var(--duration-normal) var(--ease-out),
+                      box-shadow var(--duration-normal) var(--ease-out);
+          touch-action: manipulation;
+          user-select: none;
+          -webkit-user-select: none;
+        }
+
+        .hero-cta-btn svg {
+          transition: transform var(--duration-fast) var(--ease-out);
+        }
+
+        @media (hover: hover) and (pointer: fine) {
+          .hero-cta-btn:hover {
+            transform: translateY(-2px);
+            background-color: var(--accent);
+            box-shadow: 0 15px 30px var(--accent-glow);
+          }
+          .hero-cta-btn:hover svg {
+            transform: translateX(4px);
+          }
+        }
+
+        .hero-cta-btn:active {
+          transform: scale(0.97) translateY(0) !important;
+          transition-duration: 80ms !important;
         }
         @media (max-width: 991px) {
           .desktop-only {

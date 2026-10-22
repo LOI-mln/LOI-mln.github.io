@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Calendar, Briefcase, GraduationCap, MapPin } from 'lucide-react';
+import { Calendar, Briefcase, GraduationCap, MapPin, ShieldCheck, Building2 } from 'lucide-react';
 import useSpotlight from '../hooks/useSpotlight';
 import TextScramble from '../components/TextScramble';
 
@@ -21,8 +21,9 @@ const Timeline = () => {
       title: 'BUT Informatique - 3ème Année',
       sub: 'IUT Limousin',
       icon: <CodeIcon />,
-      desc: 'Spécialisation dans le développement logiciel full-stack, l\'intelligence artificielle, la cybersécurité et l\'administration système. Configuration Linux sous NixOS, virtualisation sous Proxmox et conteneurisation Docker.',
-      location: 'Limoges, France'
+      desc: 'Spécialisation dans le développement logiciel full-stack, l\'intelligence artificielle, la cybersécurité et l\'administration système. Configuration Linux sous NixOS, virtualisation sous Proxmox et conteneurisation Docker. Validation de la certification officielle Cisco : Introduction à la cybersécurité.',
+      location: 'Limoges, France',
+      certifBadge: 'Certification Cisco · Introduction to Cybersecurity'
     },
     {
       date: 'Avril - Juin 2026',
@@ -31,6 +32,15 @@ const Timeline = () => {
       icon: <Briefcase size={18} />,
       desc: 'Stage de recherche Erasmus+ sous la supervision du Dr Shahana Bano. Conception de classifieurs NLP et multimodaux (CLIP, Perspective API) pour analyser la polarisation discursive et la propagande cross-plateforme. Papier de recherche rédigé, publication prochaine.',
       location: 'Aberdeen, Écosse'
+    },
+    {
+      date: 'Sept. 2026 - Présent',
+      title: 'Alternance · Développeur & Concepteur Logiciel',
+      sub: 'Ceva Santé Animale',
+      icon: <Building2 size={18} />,
+      desc: 'Alternance au sein du groupe Ceva Santé Animale (5ème laboratoire vétérinaire mondial). Conception et développement d\'applications métiers et d\'outils internes, automatisation des flux de données, fiabilisation des processus et travail collaboratif en méthodologie Agile / DevOps.',
+      location: 'Libourne / Nouvelle-Aquitaine, France',
+      badge: 'Alternance Entreprise · Groupe International'
     }
   ];
 
@@ -154,8 +164,8 @@ const Timeline = () => {
                       flexShrink: 0,
                       zIndex: 2,
                       position: 'relative',
-                      transition: 'all 0.3s ease',
-                      transform: isHovered ? 'scale(1.1)' : 'scale(1)',
+                      transition: 'transform var(--duration-fast) var(--ease-out), box-shadow var(--duration-normal) var(--ease-out), border-color var(--duration-normal) var(--ease-out)',
+                      transform: isHovered ? 'scale(1.08)' : 'scale(1)',
                     }}
                   >
                     {item.icon}
@@ -163,7 +173,7 @@ const Timeline = () => {
 
                   {/* Carte de contenu de l'expérience */}
                   <div
-                    className="glass-panel spotlight-card"
+                    className="glass-panel spotlight-card timeline-card"
                     onMouseEnter={() => setHoveredIdx(i)}
                     onMouseLeave={() => setHoveredIdx(null)}
                     style={{
@@ -179,7 +189,7 @@ const Timeline = () => {
                       boxShadow: isCurrent || isHovered
                         ? '0 20px 40px rgba(227, 93, 59, 0.05)'
                         : '0 10px 30px rgba(0,0,0,0.01)',
-                      transition: 'var(--transition-smooth)',
+                      transition: 'transform var(--duration-fast) var(--ease-out), border-color var(--duration-normal) var(--ease-out), box-shadow var(--duration-normal) var(--ease-out)',
                       position: 'relative',
                       overflow: 'hidden',
                       transform: isHovered ? 'translateY(-3px)' : 'translateY(0)',
@@ -194,7 +204,7 @@ const Timeline = () => {
                         borderRadius: '24px',
                         background: 'radial-gradient(circle 180px at var(--mx, 50%) var(--my, 50%), rgba(227, 93, 59, 0.08), transparent)',
                         opacity: isHovered ? 1 : 0,
-                        transition: 'opacity 0.3s ease',
+                        transition: 'opacity var(--duration-fast) var(--ease-out)',
                         pointerEvents: 'none',
                         zIndex: 1,
                       }}
@@ -252,6 +262,54 @@ const Timeline = () => {
                       {item.sub}
                     </h4>
 
+                    {item.certifBadge && (
+                      <div
+                        style={{
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '6px',
+                          fontSize: '0.72rem',
+                          fontWeight: 700,
+                          fontFamily: 'var(--font-subtitle)',
+                          color: '#10b981',
+                          backgroundColor: 'rgba(16, 185, 129, 0.08)',
+                          border: '1px solid rgba(16, 185, 129, 0.25)',
+                          padding: '3px 10px',
+                          borderRadius: '20px',
+                          marginTop: '8px',
+                          position: 'relative',
+                          zIndex: 2,
+                        }}
+                      >
+                        <ShieldCheck size={13} />
+                        <span>{item.certifBadge}</span>
+                      </div>
+                    )}
+
+                    {item.badge && (
+                      <div
+                        style={{
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '6px',
+                          fontSize: '0.72rem',
+                          fontWeight: 700,
+                          fontFamily: 'var(--font-subtitle)',
+                          color: 'var(--accent-hover)',
+                          backgroundColor: 'var(--accent-light)',
+                          border: '1px solid rgba(227, 93, 59, 0.25)',
+                          padding: '3px 10px',
+                          borderRadius: '20px',
+                          marginTop: '8px',
+                          position: 'relative',
+                          zIndex: 2,
+                        }}
+                      >
+                        <Building2 size={13} />
+                        <span>{item.badge}</span>
+                      </div>
+                    )}
+
                     {/* Description de l'expérience */}
                     <p
                       style={{
@@ -292,6 +350,16 @@ const Timeline = () => {
           </div>
         </div>
       </div>
+
+      <style dangerouslySetInnerHTML={{ __html: `
+        .timeline-card {
+          touch-action: manipulation;
+        }
+        .timeline-card:active {
+          transform: scale(0.98) translateY(0) !important;
+          transition-duration: 80ms !important;
+        }
+      `}} />
     </section>
   );
 };
