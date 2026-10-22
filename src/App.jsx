@@ -72,6 +72,9 @@ function App() {
 
   return (
     <>
+      {/* Curseur sur mesure : hors de .app-container (z-index: 1) pour passer au-dessus des fenêtres de démo */}
+      <CustomCursor />
+
       {/* Contenu principal de l'application */}
       <div className="app-container">
         {/* Canvas de fond organique */}
@@ -79,9 +82,6 @@ function App() {
 
         {/* Grille de points en surimpression */}
         <div className="dot-grid-bg" />
-
-        {/* Curseur coordonné sur mesure */}
-        <CustomCursor />
 
         {/* Barre de navigation (toggle supprimé) */}
         <Navbar />
