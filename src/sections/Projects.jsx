@@ -52,6 +52,14 @@ const PROJECT_INFO = [
       'Sauvegardes automatiques et suivi via les logs Proxmox',
     ],
     tags: ['Proxmox VE', 'VLAN', 'Pare-feu', 'Sauvegardes'],
+    demo: {
+      src: '/videos/homelab-reconstitution.mp4',
+      poster: '/videos/homelab-reconstitution.jpg',
+      duration: '29 s',
+      button: 'Voir la reconstitution',
+      label: 'Reconstitution en lab',
+      note: "Architecture reproduite dans un lab Kathara (VLAN 802.1Q, pare-feu iptables) : ce n'est pas le matériel réel.",
+    },
   },
   {
     number: '02',
@@ -159,10 +167,11 @@ const DemoModal = ({ demo, title, onClose }) => {
     <div className="demo-backdrop" onClick={onClose} role="dialog" aria-modal="true" aria-label={`Démo de ${title}`}>
       <div className="demo-frame" onClick={(e) => e.stopPropagation()}>
         <div className="demo-head">
-          <span>Démo réelle · {title}</span>
+          <span>{demo.label || 'Démo réelle'} · {title}</span>
           <button type="button" onClick={onClose} aria-label="Fermer la démo">×</button>
         </div>
         <video src={demo.src} poster={demo.poster} controls autoPlay muted playsInline />
+        {demo.note && <p className="demo-note">{demo.note}</p>}
       </div>
     </div>,
     document.body
@@ -202,7 +211,7 @@ const ProjectSummary = ({ number, category, title, meta, status, summary, points
         {demo && (
           <button type="button" className="ps-link ps-link--demo" onClick={() => setDemoOpen(true)}>
             <Play size={14} fill="currentColor" />
-            <span>Voir la démo · {demo.duration}</span>
+            <span>{demo.button || 'Voir la démo'} · {demo.duration}</span>
           </button>
         )}
         {link && (
@@ -919,6 +928,13 @@ const Projects = () => {
           font-size: 1.6rem; line-height: 1;
         }
         .demo-frame video { display: block; width: 100%; height: auto; background: #000; }
+        .demo-note {
+          margin: 0;
+          padding: 10px 16px 12px;
+          font-family: var(--font-body);
+          font-size: 0.85rem;
+          color: rgba(255, 255, 255, 0.7);
+        }
         @media (hover: hover) and (pointer: fine) {
           .ps-link:hover { background: rgba(var(--tint), 0.15); }
           .ps-link--demo:hover { background: rgba(var(--tint), 0.88); }
