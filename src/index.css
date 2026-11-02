@@ -161,6 +161,13 @@ h1, h2, h3, h4 {
   letter-spacing: -0.04em !important;
 }
 
+/* Syne est très large : les mots longs doivent tenir sur les petits écrans */
+@media (max-width: 440px) {
+  .section-title {
+    font-size: min(8.4vw, 2rem) !important;
+  }
+}
+
 .hero-creative-title {
   font-family: var(--font-creative) !important;
   font-weight: 300 !important;

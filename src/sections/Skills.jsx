@@ -478,6 +478,10 @@ const Skills = ({ theme }) => {
           }
           .sk-detail--open { max-height: 420px; }
         }
+        /* « Professionnels » est très long en Syne : la taille suit la largeur d'écran */
+        @media (max-width: 560px) {
+          .sk-title { font-size: 5.6vw; }
+        }
         @media (max-width: 600px) {
           .sk-nodes { flex-direction: column; align-items: stretch; }
           .sk-detail-box {
