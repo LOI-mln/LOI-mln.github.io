@@ -1,33 +1,27 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { createPortal } from 'react-dom';
+import { 
+  createPortal } from 'react-dom';
 import TextScramble from '../components/TextScramble';
+import ProjectStage from '../components/ProjectStage';
 import { 
   Globe, 
-  Share2, 
-  Router, 
-  Users, 
-  LayoutGrid, 
   Play, 
   Network, 
   ClipboardList, 
   Briefcase, 
   ExternalLink, 
   ArrowUpRight, 
-  Cpu, 
   Activity, 
   Database, 
   CheckCircle, 
   Flame, 
-  Server, 
-  AlertTriangle,
-  FileText,
-  Calendar,
-  Clock,
-  ShieldCheck,
-  Layers,
-  Terminal,
-  Zap,
-  Check,
+  AlertTriangle, 
+  FileText, 
+  Clock, 
+  ShieldCheck, 
+  Terminal, 
+  Zap, 
+  Check, 
   Lock
 } from 'lucide-react';
 
@@ -42,7 +36,37 @@ const GithubIcon = ({ size = 18 }) => (
 const PROJECT_INFO = [
   {
     number: '01',
-    category: 'Homelab & sécurité',
+    category: 'Optimisation & full-stack',
+    title: 'Unilim EDT',
+    meta: "Projet BUT · Lead dev, équipe de 4 · 2025-2026",
+    status: "En production à l'IUT",
+    summary: "Générer automatiquement les emplois du temps de l'IUT, sans conflit de salle, d'enseignant ou de groupe.",
+    points: [
+      'Solveur par contraintes Google OR-Tools (CP-SAT) en Python',
+      'Back-end Laravel 11, interface Vue 3 / Inertia.js, déployé avec Docker',
+      "Utilisé par le département Informatique de l'IUT du Limousin",
+    ],
+    tags: ['OR-Tools', 'Python', 'Laravel', 'Vue 3'],
+    demo: { src: '/videos/unilim-edt-demo.mp4', poster: '/videos/unilim-edt-demo.jpg', duration: '35 s' },
+  },
+  {
+    number: '02',
+    category: 'Recherche IA',
+    title: 'RGU Aberdeen',
+    meta: 'Stage Erasmus+ · Écosse · 2026',
+    status: 'Publication prochaine',
+    summary: "Mesurer la polarisation des discours politiques sur 5 réseaux sociaux, sans annotation manuelle.",
+    points: [
+      'Graphe de 20 641 nœuds, communautés détectées par Louvain (Q = 0,954)',
+      'Indice We/Them, toxicité via Perspective API, mèmes classés avec CLIP',
+      'Papier de recherche rédigé sous la direction du Dr Shahana Bano',
+    ],
+    tags: ['Python', 'NLP', 'CLIP', 'Perspective API'],
+    link: { href: '/research_paper.pdf', label: 'Lire le papier', kind: 'pdf' },
+  },
+  {
+    number: '03',
+    category: 'Homelab & auto-hébergement',
     title: 'Homelab Proxmox',
     meta: 'Projet personnel',
     summary: "Héberger mes propres services (cloud, média, domotique, DNS) et les cloisonner par VLAN.",
@@ -62,96 +86,86 @@ const PROJECT_INFO = [
     },
   },
   {
-    number: '02',
-    category: 'Recherche IA',
-    title: 'RGU Aberdeen',
-    meta: 'Stage Erasmus+ · Écosse · 2026',
-    status: 'Publication prochaine',
-    summary: "Mesurer la polarisation des discours politiques sur 5 réseaux sociaux, sans annotation manuelle.",
-    points: [
-      'Graphe de 20 641 nœuds, communautés détectées par Louvain (Q = 0,954)',
-      'Indice We/Them, toxicité via Perspective API, mèmes classés avec CLIP',
-      'Papier de recherche rédigé sous la direction du Dr Shahana Bano',
-    ],
-    tags: ['Python', 'NLP', 'CLIP', 'Perspective API'],
-    link: { href: '/research_paper.pdf', label: 'Lire le papier', kind: 'pdf' },
-  },
-  {
-    number: '03',
-    category: 'Optimisation & full-stack',
-    title: 'Unilim EDT',
-    meta: "Projet BUT · Lead dev, équipe de 4 · 2025-2026",
-    status: "En production à l'IUT",
-    summary: "Générer automatiquement les emplois du temps de l'IUT, sans conflit de salle, d'enseignant ou de groupe.",
-    points: [
-      'Solveur par contraintes Google OR-Tools (CP-SAT) en Python',
-      'Back-end Laravel 11, interface Vue 3 / Inertia.js, déployé avec Docker',
-      "Utilisé par le département Informatique de l'IUT du Limousin",
-    ],
-    tags: ['OR-Tools', 'Python', 'Laravel', 'Vue 3'],
-    demo: { src: '/videos/unilim-edt-demo.mp4', poster: '/videos/unilim-edt-demo.jpg', duration: '35 s' },
-  },
-  {
     number: '04',
-    category: 'Réseau & infrastructure',
-    title: 'Réseau Virtuel',
-    meta: 'Projet BUT 1 · 3 étudiants · 2025',
-    summary: "Simuler le réseau d'une entreprise découpé en 3 zones (serveurs, personnel, clients), reliées par un routeur central.",
+    category: 'Site web & full-stack',
+    title: 'Site du BCM',
+    meta: 'Badminton Club Montponnais · depuis 2026',
+    status: 'En ligne',
+    summary: "Donner au club de badminton de Montpon-Ménestérol un site à jour : horaires, calendrier de la saison et inscriptions.",
     points: [
-      "Lab virtuel de 13 machines sous Kathara, plan d'adressage par zone",
-      "Routage statique entre les zones et NAT vers l'extérieur",
-      'Services DHCP, FTP (vsftpd) et SSH',
+      'Site Next.js et React en production, déployé sur Vercel',
+      'Calendrier consultable par mois, avec le détail de chaque événement',
+      "Panneau d'administration : calendrier, newsletter et envoi de mails",
     ],
-    tags: ['Kathara', 'Routage', 'DHCP', 'Linux'],
-    demo: { src: '/videos/reseau-kathara-demo.mp4', poster: '/videos/reseau-kathara-demo.jpg', duration: '33 s' },
-    link: { href: 'https://github.com/LOI-mln/virtual-network', label: 'Voir le dépôt', kind: 'github' },
+    tags: ['Next.js', 'React', 'TypeScript', 'Vercel'],
+    demo: { src: '/videos/bcm-site-demo.mp4', poster: '/videos/bcm-site-demo.jpg', duration: '15 s', label: 'Visite réelle' },
+    link: { href: 'https://www.bcm24.fr', label: 'Voir le site', kind: 'site' },
   },
 ];
 
-// Vision de chaque projet en 3 étapes, dans l'ordre d'affichage des fiches
-const PROJECT_VISION = [
-  [
-    { icon: Globe, step: 'Accès', title: 'Internet · box', chips: ['Certains services exposés'] },
-    { icon: Server, step: 'Hôte', title: 'Proxmox VE', chips: ['Pare-feu Proxmox', 'Sauvegardes auto'] },
-    { icon: Layers, step: 'Réseau', title: 'Services cloisonnés par VLAN', chips: ['Cloud', 'Média', 'Domotique · DNS'] },
-  ],
-  [
-    { icon: Share2, step: 'Données', title: '5 réseaux sociaux', chips: ['Discours politiques', 'Mèmes'] },
-    { icon: Network, step: 'Analyse', title: 'Graphe de 20 641 nœuds', chips: ['Louvain Q = 0,954', 'We/Them', 'Perspective API', 'CLIP'] },
-    { icon: FileText, step: 'Résultat', title: 'Papier de recherche', chips: ['Publication prochaine'] },
-  ],
-  [
-    { icon: Users, step: 'Contraintes', title: 'Salles, enseignants, groupes', chips: ['Aucun conflit autorisé'] },
-    { icon: Cpu, step: 'Solveur', title: 'Google OR-Tools CP-SAT', chips: ['Python', 'Docker'] },
-    { icon: Calendar, step: 'Application', title: "Emplois du temps de l'IUT", chips: ['Laravel 11', 'Vue 3', 'En production'] },
-  ],
-  [
-    { icon: LayoutGrid, step: 'Zones', title: 'Serveurs, personnel, clients', chips: ['13 machines', 'Lab Kathara'] },
-    { icon: Router, step: 'Routage', title: 'Routeur central et routes statiques', chips: ['NAT (iptables)'] },
-    { icon: Server, step: 'Services', title: 'DHCP, FTP et SSH', chips: ['isc-dhcp-server', 'vsftpd'] },
-  ],
-];
+// Fenêtre de chaque projet, dans l'ordre d'affichage des fiches : uniquement du contenu réel
+const c = (comment) => ({ comment });
+const run = (prompt, cmd) => ({ prompt, cmd });
+const out = (text, tone) => ({ out: text, tone });
 
-// Schéma « Vision du projet » : étapes reliées de haut en bas
-const ProjectVision = ({ steps }) => (
-  <div className="pv">
-    <span className="pv-label">Vision du projet</span>
-    <ol className="pv-steps">
-      {steps.map(({ icon: Icon, step, title, chips }) => (
-        <li key={title} className="pv-step">
-          <span className="pv-icon"><Icon size={18} /></span>
-          <div className="pv-body">
-            <span className="pv-step-label">{step}</span>
-            <strong className="pv-title">{title}</strong>
-            <div className="pv-chips">
-              {chips.map((chip) => <span key={chip}>{chip}</span>)}
-            </div>
-          </div>
-        </li>
-      ))}
-    </ol>
-  </div>
-);
+const PROJECT_STAGE = [
+  {
+    kind: 'video',
+    title: 'Unilim EDT · Emploi du temps',
+    footer: "Démo réelle de l'application",
+    src: '/videos/unilim-edt-demo.mp4',
+    poster: '/videos/unilim-edt-demo.jpg',
+  },
+  {
+    kind: 'research',
+    title: 'Polarisation par communauté',
+    footer: 'Tableau 1 du papier · graphe de 20 641 nœuds, Louvain Q = 0,954',
+    label: 'Communauté Louvain',
+    max: 0.5,
+    rows: [
+      { name: 'Progressive Network', index: '0,473', we: 254, them: 247, ratio: '1,03', toxicity: '0,46' },
+      { name: 'Alt-Right Echo Chamber', index: '0,457', we: 274, them: 256, ratio: '1,07', toxicity: '0,43' },
+      { name: 'Far-Left Network', index: '0,417', we: 253, them: 259, ratio: '0,98', toxicity: '0,43' },
+      { name: 'Local Politics', index: '0,342', we: 322, them: 475, ratio: '0,68', toxicity: '0,50' },
+      { name: 'Conservative Hub', index: '0,111', we: 103, them: 402, ratio: '0,26', toxicity: '0,43' },
+      { name: 'Mainstream Media & News', index: '0,088', we: 51, them: 279, ratio: '0,18', toxicity: '0,48' },
+    ],
+  },
+  {
+    kind: 'terminal',
+    title: 'Reconstitution du homelab',
+    footer: "Lab Kathara rejoué, ce n'est pas le matériel réel",
+    label: "Terminal montrant les VLAN de l'hôte, un accès bloqué entre VLAN et les règles du pare-feu",
+    lines: [
+      c('# Hôte : une interface par VLAN sur la liaison trunk 802.1Q'),
+      run('root@pve:~#', 'ip -br addr | grep eth1.'),
+      out('eth1.10@eth1     UP     10.0.10.1/24'),
+      out('eth1.20@eth1     UP     10.0.20.1/24'),
+      out('eth1.30@eth1     UP     10.0.30.1/24'),
+      c("# VLAN média -> VLAN cloud : bloqué par le pare-feu de l'hôte"),
+      run('root@media:~#', "curl -s -m 3 http://10.0.10.10/ || echo 'connexion bloquée'"),
+      out('connexion bloquée', 'bad'),
+      c('# Depuis Internet : seul le service cloud est exposé (port 8080)'),
+      run('root@internet:~#', 'curl -s http://192.0.2.2:8080/'),
+      out('Cloud perso (service HTTP de test, VLAN 10)', 'good'),
+      c("# Depuis Internet : le serveur média n'est pas exposé"),
+      run('root@internet:~#', "curl -s -m 3 http://192.0.2.2:8096/ || echo 'connexion refusée'"),
+      out('connexion refusée', 'bad'),
+      c("# Règles du pare-feu de l'hôte, avec compteurs de paquets"),
+      run('root@pve:~#', 'iptables -S FORWARD -v'),
+      out('-P FORWARD DROP -c 0 0'),
+      out('-A FORWARD -i eth1.+ -o eth0 -m comment --comment "VLAN vers Internet" -c 2 168 -j ACCEPT'),
+      out('-A FORWARD -m comment --comment "tout le reste est bloque" -c 6 360 -j DROP'),
+    ],
+  },
+  {
+    kind: 'video',
+    title: 'bcm24.fr',
+    footer: 'Visite réelle du site en ligne',
+    src: '/videos/bcm-site-demo.mp4',
+    poster: '/videos/bcm-site-demo.jpg',
+  },
+];
 
 // Bloc texte d'une fiche : pastille, titre, contexte, résumé, points clés, pied (technos + lien)
 // Fenêtre vidéo de démonstration (chargée seulement à l'ouverture)
@@ -216,7 +230,9 @@ const ProjectSummary = ({ number, category, title, meta, status, summary, points
         )}
         {link && (
           <a href={link.href} target="_blank" rel="noopener noreferrer" className="ps-link">
-            {link.kind === 'github' ? <GithubIcon size={15} /> : <FileText size={15} />}
+            {link.kind === 'github' && <GithubIcon size={15} />}
+            {link.kind === 'pdf' && <FileText size={15} />}
+            {link.kind === 'site' && <ExternalLink size={15} />}
             <span>{link.label}</span>
             <ArrowUpRight size={15} />
           </a>
@@ -467,7 +483,7 @@ const Projects = () => {
         <defs>
           <linearGradient id="trunk-grad" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stopColor="var(--accent)" stopOpacity="0.8" />
-            <stop offset="50%" stopColor="#ff7a00" stopOpacity="0.6" />
+            <stop offset="50%" stopColor="#1d4ed8" stopOpacity="0.6" />
             <stop offset="100%" stopColor="var(--accent-hover)" stopOpacity="0.45" />
           </linearGradient>
           <linearGradient id="branch-grad-right" x1="0" y1="0" x2="1" y2="0">
@@ -491,7 +507,7 @@ const Projects = () => {
           style={{ transition: 'stroke-dashoffset 0.1s ease-out', willChange: 'stroke-dashoffset' }}
         />
 
-        {/* Branch 0 (pointing left to homelab mockup right edge) */}
+        {/* Branch 0 (pointing left to first mockup right edge) */}
         <path
           ref={el => branchRefs.current[0] = el}
           d=""
@@ -585,7 +601,7 @@ const Projects = () => {
           transform: 'translate(-50%, -50%)',
           width: '80vw',
           height: '80vw',
-          background: 'radial-gradient(circle, rgba(227, 93, 59, 0.03) 0%, rgba(255, 255, 255, 0) 70%)',
+          background: 'radial-gradient(circle, rgba(37, 99, 235, 0.03) 0%, rgba(255, 255, 255, 0) 70%)',
           zIndex: 0,
           pointerEvents: 'none',
         }}
@@ -619,58 +635,58 @@ const Projects = () => {
               lineHeight: 1.6,
             }}
           >
-            Quatre projets : mon homelab, un stage de recherche en IA, une application en production à l'IUT et une infrastructure réseau conçue en équipe.
+            Quatre projets : une application en production à l'IUT, un stage de recherche en IA, mon homelab et le site d'un club de badminton.
           </p>
         </div>
 
-        {/* 1. Homelab Proxmox (Infrastructure personnelle & Sécurité) */}
+        {/* 1. Projet "Unilim EDT" (Recherche Opérationnelle & Full-stack) */}
         <div className="project-card-showcase reveal-on-scroll">
-          <div className="card-ambient-glow card-glow-violet" />
+          <div className="card-ambient-glow card-glow-emerald" />
           <div className="project-row" style={{ display: 'flex', gap: '56px', alignItems: 'center', flexDirection: 'row-reverse', position: 'relative', zIndex: 1 }}>
             <ProjectSummary {...PROJECT_INFO[0]} />
 
-            {/* Homelab Mockup (Console Proxmox) */}
-            <div ref={el => mockupRefs.current[0] = el} className="project-mockup reveal-scale delay-200" style={{ flex: '0.95', minWidth: '320px', display: 'flex', justifyContent: 'center' }}>
-              <ProjectVision steps={PROJECT_VISION[0]} />
+            {/* Unilim EDT Physical Mockup */}
+            <div ref={el => mockupRefs.current[0] = el} className="project-mockup reveal-scale delay-200" style={{ flex: '1.15', minWidth: '320px', display: 'flex', justifyContent: 'center' }}>
+              <ProjectStage {...PROJECT_STAGE[0]} />
             </div>
           </div>
         </div>
 
         {/* 2. Stage RGU Aberdeen (Recherche / Écosse) */}
         <div className="project-card-showcase reveal-on-scroll">
-          <div className="card-ambient-glow card-glow-orange" />
+          <div className="card-ambient-glow card-glow-accent" />
           <div className="project-row" style={{ display: 'flex', gap: '56px', alignItems: 'center', position: 'relative', zIndex: 1 }}>
             <ProjectSummary {...PROJECT_INFO[1]} />
 
             {/* RGU Mockup (Physical AI Research Workstation) */}
-            <div ref={el => mockupRefs.current[1] = el} className="project-mockup reveal-scale delay-200" style={{ flex: '0.95', minWidth: '320px', display: 'flex', justifyContent: 'center' }}>
-              <ProjectVision steps={PROJECT_VISION[1]} />
+            <div ref={el => mockupRefs.current[1] = el} className="project-mockup reveal-scale delay-200" style={{ flex: '1.15', minWidth: '320px', display: 'flex', justifyContent: 'center' }}>
+              <ProjectStage {...PROJECT_STAGE[1]} />
             </div>
           </div>
         </div>
 
-        {/* 2. Projet "Unilim EDT" (Recherche Opérationnelle & Full-stack) */}
+        {/* 3. Homelab Proxmox (Infrastructure personnelle) */}
         <div className="project-card-showcase reveal-on-scroll">
-          <div className="card-ambient-glow card-glow-emerald" />
+          <div className="card-ambient-glow card-glow-violet" />
           <div className="project-row" style={{ display: 'flex', gap: '56px', alignItems: 'center', flexDirection: 'row-reverse', position: 'relative', zIndex: 1 }}>
             <ProjectSummary {...PROJECT_INFO[2]} />
 
-            {/* Unilim EDT Physical Mockup */}
-            <div ref={el => mockupRefs.current[2] = el} className="project-mockup reveal-scale delay-200" style={{ flex: '0.95', minWidth: '320px', display: 'flex', justifyContent: 'center' }}>
-              <ProjectVision steps={PROJECT_VISION[2]} />
+            {/* Homelab Mockup (Console Proxmox) */}
+            <div ref={el => mockupRefs.current[2] = el} className="project-mockup reveal-scale delay-200" style={{ flex: '1.15', minWidth: '320px', display: 'flex', justifyContent: 'center' }}>
+              <ProjectStage {...PROJECT_STAGE[2]} />
             </div>
           </div>
         </div>
 
-        {/* 3. Réseau Virtuel & Cybersécurité Cisco (SysAdmin / Réseaux) */}
+        {/* 4. Site du BCM (Web / Full-stack) */}
         <div className="project-card-showcase reveal-on-scroll">
-          <div className="card-ambient-glow card-glow-blue" />
+          <div className="card-ambient-glow card-glow-cyan" />
           <div className="project-row" style={{ display: 'flex', gap: '56px', alignItems: 'center', position: 'relative', zIndex: 1 }}>
             <ProjectSummary {...PROJECT_INFO[3]} />
 
-            {/* Virtual Network Mockup (Physical Cisco NOC Operations Console) */}
-            <div ref={el => mockupRefs.current[3] = el} className="project-mockup reveal-scale delay-200" style={{ flex: '0.95', minWidth: '320px', display: 'flex', justifyContent: 'center' }}>
-              <ProjectVision steps={PROJECT_VISION[3]} />
+            {/* Visite vidéo du site en ligne */}
+            <div ref={el => mockupRefs.current[3] = el} className="project-mockup reveal-scale delay-200" style={{ flex: '1.15', minWidth: '320px', display: 'flex', justifyContent: 'center' }}>
+              <ProjectStage {...PROJECT_STAGE[3]} />
             </div>
           </div>
         </div>
@@ -698,95 +714,26 @@ const Projects = () => {
 
         /* Teinte propre à chaque projet (RVB) */
         .card-glow-violet ~ .project-row { --tint: 124, 58, 237; }
-        .card-glow-orange ~ .project-row { --tint: 227, 93, 59; }
+        .card-glow-accent ~ .project-row { --tint: 37, 99, 235; }
         .card-glow-emerald ~ .project-row { --tint: 5, 150, 105; }
-        .card-glow-blue ~ .project-row { --tint: 37, 99, 235; }
+        .card-glow-cyan ~ .project-row { --tint: 14, 116, 144; }
 
         .project-row {
           gap: 0 !important;
           align-items: stretch !important;
         }
 
-        /* Panneau teinté qui accueille la vision du projet */
+        /* Panneau teinté qui accueille la fenêtre du projet */
         .project-mockup {
           align-self: stretch;
-          align-items: center;
+          align-items: stretch;
           border-radius: 20px;
-          padding: 44px 32px;
+          padding: 24px;
           border: 1px solid rgba(var(--tint), 0.12);
           background:
             radial-gradient(120% 90% at 50% 0%, rgba(var(--tint), 0.16), transparent 65%),
             radial-gradient(rgba(var(--tint), 0.16) 1px, transparent 1px) 0 0 / 18px 18px,
             rgba(var(--tint), 0.04);
-        }
-
-        /* Vision du projet : étapes reliées */
-        .pv { width: 100%; max-width: 420px; }
-        .pv-label {
-          display: block;
-          font-family: var(--font-subtitle);
-          font-size: 0.72rem; font-weight: 700;
-          letter-spacing: 0.1em; text-transform: uppercase;
-          color: rgb(var(--tint));
-          margin-bottom: 16px;
-        }
-        .pv-steps {
-          list-style: none; margin: 0; padding: 0;
-          display: flex; flex-direction: column; gap: 26px;
-        }
-        .pv-step {
-          position: relative;
-          display: flex; gap: 14px; align-items: flex-start;
-          background: var(--bg-primary);
-          border: 1px solid rgba(var(--tint), 0.14);
-          border-radius: 16px;
-          padding: 14px 16px;
-          box-shadow: 0 1px 2px rgba(17, 24, 39, 0.04), 0 8px 20px -12px rgba(var(--tint), 0.35);
-        }
-        /* Liaison verticale entre deux étapes */
-        .pv-step + .pv-step::before {
-          content: '';
-          position: absolute;
-          left: 34px; top: -27px;
-          width: 2px; height: 26px;
-          background: linear-gradient(rgba(var(--tint), 0.15), rgba(var(--tint), 0.6));
-        }
-        .pv-step + .pv-step::after {
-          content: '';
-          position: absolute;
-          left: 31px; top: -6px;
-          border: 4px solid transparent;
-          border-top: 5px solid rgba(var(--tint), 0.6);
-        }
-        .pv-icon {
-          flex-shrink: 0;
-          width: 38px; height: 38px;
-          border-radius: 11px;
-          display: flex; align-items: center; justify-content: center;
-          color: rgb(var(--tint));
-          background: rgba(var(--tint), 0.1);
-        }
-        .pv-body { display: flex; flex-direction: column; min-width: 0; }
-        .pv-step-label {
-          font-family: var(--font-subtitle);
-          font-size: 0.7rem; font-weight: 700;
-          letter-spacing: 0.08em; text-transform: uppercase;
-          color: var(--text-muted);
-        }
-        .pv-title {
-          font-family: var(--font-subtitle);
-          font-size: 1rem; font-weight: 700;
-          color: var(--text-primary);
-          margin: 2px 0 8px 0;
-        }
-        .pv-chips { display: flex; flex-wrap: wrap; gap: 5px; }
-        .pv-chips span {
-          font-family: var(--font-subtitle);
-          font-size: 0.75rem; font-weight: 600;
-          color: rgb(var(--tint));
-          background: rgba(var(--tint), 0.07);
-          padding: 3px 8px;
-          border-radius: 6px;
         }
 
         /* Bloc texte des fiches */
@@ -941,14 +888,12 @@ const Projects = () => {
           .ps-link:hover svg:last-child { transform: translate(2px, -2px); }
         }
 
-        /* Mobile : schéma compact sous le texte */
+        /* Mobile : fenêtre compacte sous le texte */
         @media (max-width: 767px) {
           .project-mockup {
             min-width: 0 !important;
-            padding: 22px 14px !important;
+            padding: 12px !important;
           }
-          .pv { max-width: none; }
-          .pv-step { padding: 12px 14px; }
         }
 
         @media (max-width: 991px) {
