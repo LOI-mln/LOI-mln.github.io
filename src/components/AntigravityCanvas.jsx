@@ -283,6 +283,8 @@ const AntigravityCanvas = ({
       animationFrameId = requestAnimationFrame(render);
     };
 
+    let isMobileMenuOpen = false;
+
     const updateAnimationState = (newIntersecting, newPageVisible, newMobileMenuOpen) => {
       if (newIntersecting !== undefined) isIntersecting = newIntersecting;
       if (newPageVisible !== undefined) isPageVisible = newPageVisible;
