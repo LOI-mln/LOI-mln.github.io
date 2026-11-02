@@ -58,9 +58,9 @@ const MetricCard = ({ m }) => {
         borderRadius: '24px',
         height: '215px',
         background: 'rgba(255, 255, 255, 0.45)',
-        border: isHovered ? '1px solid rgba(227, 93, 59, 0.35)' : '1px solid var(--border-color)',
+        border: isHovered ? '1px solid rgba(37, 99, 235, 0.35)' : '1px solid var(--border-color)',
         transform: isHovered ? 'translateY(-3px)' : 'translateY(0)',
-        boxShadow: isHovered ? '0 20px 40px rgba(227, 93, 59, 0.06)' : 'none',
+        boxShadow: isHovered ? '0 20px 40px rgba(37, 99, 235, 0.06)' : 'none',
         transition: 'transform var(--duration-fast) var(--ease-out), border-color var(--duration-normal) var(--ease-out), box-shadow var(--duration-normal) var(--ease-out)',
       }}
     >
@@ -71,7 +71,7 @@ const MetricCard = ({ m }) => {
           position: 'absolute',
           inset: 0,
           borderRadius: '24px',
-          background: 'radial-gradient(circle 180px at var(--mx, 50%) var(--my, 50%), rgba(227, 93, 59, 0.08), transparent)',
+          background: 'radial-gradient(circle 180px at var(--mx, 50%) var(--my, 50%), rgba(37, 99, 235, 0.08), transparent)',
           opacity: isHovered ? 1 : 0,
           transition: 'opacity var(--duration-fast) var(--ease-out)',
           pointerEvents: 'none',
@@ -203,7 +203,7 @@ const MetricCard = ({ m }) => {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', width: '100%' }}>
             {m.details.map(({ icon: Icon, label, value }) => (
               <div key={label} style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '0.72rem' }}>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '20px', height: '20px', borderRadius: '6px', background: 'rgba(227, 93, 59, 0.08)', color: 'var(--accent)', flexShrink: 0 }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '20px', height: '20px', borderRadius: '6px', background: 'rgba(37, 99, 235, 0.08)', color: 'var(--accent)', flexShrink: 0 }}>
                   <Icon size={11} />
                 </div>
                 <span style={{ color: 'var(--text-secondary)', fontWeight: 500 }}>{label}</span>

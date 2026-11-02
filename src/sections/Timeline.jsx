@@ -61,7 +61,7 @@ const Timeline = () => {
           right: '-10%',
           width: '50vw',
           height: '50vw',
-          background: 'radial-gradient(circle, rgba(227, 93, 59, 0.02) 0%, rgba(255, 255, 255, 0) 70%)',
+          background: 'radial-gradient(circle, rgba(37, 99, 235, 0.02) 0%, rgba(255, 255, 255, 0) 70%)',
           zIndex: 0,
           pointerEvents: 'none',
         }}
@@ -155,8 +155,8 @@ const Timeline = () => {
                       backgroundColor: 'var(--bg-primary)',
                       border: isCurrent || isHovered ? '3px solid var(--accent)' : '2px solid var(--accent)',
                       boxShadow: isCurrent || isHovered
-                        ? '0 0 25px rgba(227, 93, 59, 0.4)'
-                        : '0 8px 24px rgba(227, 93, 59, 0.15)',
+                        ? '0 0 25px rgba(37, 99, 235, 0.4)'
+                        : '0 8px 24px rgba(37, 99, 235, 0.15)',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
@@ -180,14 +180,14 @@ const Timeline = () => {
                       padding: '28px',
                       background: 'var(--bg-primary)',
                       borderWidth: '1px',
-                      borderColor: isCurrent || isHovered ? 'rgba(227, 93, 59, 0.35)' : 'var(--border-color)',
+                      borderColor: isCurrent || isHovered ? 'rgba(37, 99, 235, 0.35)' : 'var(--border-color)',
                       borderRadius: '24px',
                       flexGrow: 1,
                       display: 'flex',
                       flexDirection: 'column',
                       alignItems: 'flex-start',
                       boxShadow: isCurrent || isHovered
-                        ? '0 20px 40px rgba(227, 93, 59, 0.05)'
+                        ? '0 20px 40px rgba(37, 99, 235, 0.05)'
                         : '0 10px 30px rgba(0,0,0,0.01)',
                       transition: 'transform var(--duration-fast) var(--ease-out), border-color var(--duration-normal) var(--ease-out), box-shadow var(--duration-normal) var(--ease-out)',
                       position: 'relative',
@@ -202,7 +202,7 @@ const Timeline = () => {
                         position: 'absolute',
                         inset: 0,
                         borderRadius: '24px',
-                        background: 'radial-gradient(circle 180px at var(--mx, 50%) var(--my, 50%), rgba(227, 93, 59, 0.08), transparent)',
+                        background: 'radial-gradient(circle 180px at var(--mx, 50%) var(--my, 50%), rgba(37, 99, 235, 0.08), transparent)',
                         opacity: isHovered ? 1 : 0,
                         transition: 'opacity var(--duration-fast) var(--ease-out)',
                         pointerEvents: 'none',
@@ -297,7 +297,7 @@ const Timeline = () => {
                           fontFamily: 'var(--font-subtitle)',
                           color: 'var(--accent-hover)',
                           backgroundColor: 'var(--accent-light)',
-                          border: '1px solid rgba(227, 93, 59, 0.25)',
+                          border: '1px solid rgba(37, 99, 235, 0.25)',
                           padding: '3px 10px',
                           borderRadius: '20px',
                           marginTop: '8px',

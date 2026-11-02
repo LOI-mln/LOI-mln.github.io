@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 
 const AntigravityCanvas = ({
   mode = 'light',           // 'light' (fond clair) ou 'dark' (fond sombre)
-  colorScheme = 'amber',    // 'amber' (dégradé d'orange chaud) ou 'neon' (multicolore néon)
+  colorScheme = 'blue',     // 'blue' (dégradé de bleus) ou 'neon' (multicolore néon)
   density = 'medium',       // 'high' (80 particules), 'medium' (50 particules) ou 'low' (25 particules)
   clusterRight = false,     // Activer la concentration des particules sur le tiers droit
   velocityStretch = true    // Activer l'étirement des particules rapides selon la vitesse
@@ -63,10 +63,10 @@ const AntigravityCanvas = ({
       { h: 270, s: 100, l: 65 }
     ];
 
-    const amberPalette = [
-      { h: 36, s: 100, l: 55 },
-      { h: 24, s: 100, l: 50 },
-      { h: 45, s: 100, l: 58 }
+    const bluePalette = [
+      { h: 217, s: 91, l: 60 },
+      { h: 224, s: 76, l: 48 },
+      { h: 199, s: 89, l: 48 }
     ];
 
     // Recalculer les limites et réinitialiser les points lors d'un redimensionnement
@@ -103,7 +103,7 @@ const AntigravityCanvas = ({
 
         this.sizeFactor = Math.random();
 
-        const palette = colorScheme === 'neon' ? neonPalette : amberPalette;
+        const palette = colorScheme === 'neon' ? neonPalette : bluePalette;
         const colorConfig = palette[Math.floor(Math.random() * palette.length)];
         this.h = colorConfig.h;
         this.s = colorConfig.s;
