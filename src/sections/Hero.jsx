@@ -206,7 +206,7 @@ const Hero = () => {
                 letterSpacing: '0.02em',
               }}
             >
-              Recherche alternance master cyber · sept. 2027
+              Recherche alternance développement · sept. 2027
             </span>
           </div>
 
@@ -276,14 +276,14 @@ const Hero = () => {
               }}
             />
             <span style={{ fontFamily: 'var(--font-subtitle)', fontSize: '0.75rem', fontWeight: 700 }}>
-              Recherche alternance master cyber · sept. 2027
+              Recherche alternance développement · sept. 2027
             </span>
           </div>
         </div>
 
         {/* Phrase d'accroche : qui je suis en une lecture */}
         <p className="hero-pitch">
-          Développeur logiciel en alternance chez <strong>Ceva Santé Animale</strong> et en 3<sup>e</sup> année de <strong>BUT Informatique</strong> à Limoges. Je m'oriente vers la <strong>cybersécurité</strong> pour mon master.
+          Développeur logiciel en alternance chez <strong>Ceva Santé Animale</strong> et en 3<sup>e</sup> année de <strong>BUT Informatique</strong> à Limoges. Je poursuis en <strong>développement logiciel</strong> pour mon master.
         </p>
 
         {/* Bouton d'action principal */}
