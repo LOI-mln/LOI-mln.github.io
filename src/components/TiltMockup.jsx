@@ -70,7 +70,7 @@ const TiltMockup = ({ children, speed = -0.05 }) => {
 
       card.style.setProperty('--mx', `${x}px`);
       card.style.setProperty('--my', `${y}px`);
-      card.style.boxShadow = '0 30px 65px rgba(0, 0, 0, 0.2), 0 0 35px rgba(227, 93, 59, 0.08)';
+      card.style.boxShadow = '0 30px 65px rgba(0, 0, 0, 0.2), 0 0 35px rgba(37, 99, 235, 0.08)';
 
       startLoop();
     };

@@ -165,7 +165,7 @@ const OrganicCanvas = ({ mode = 'light' }) => {
 
       // Points lumineux à proximité du curseur
       if (mouse.x !== -1000) {
-        ctx.fillStyle = '#e35d3b'; // Amber accent for glowing intersection points
+        ctx.fillStyle = '#2563eb'; // Accent for glowing intersection points
         for (let r = 0; r <= rows; r += 2) {
           for (let c = 0; c <= cols; c += 2) {
             const pt = grid[r][c];
@@ -174,7 +174,7 @@ const OrganicCanvas = ({ mode = 'light' }) => {
               const opacity = (1 - dist / 150) * 0.6;
               ctx.beginPath();
               ctx.arc(pt.x, pt.y, 2 + opacity * 2, 0, Math.PI * 2);
-              ctx.fillStyle = `rgba(227, 93, 59, ${opacity})`;
+              ctx.fillStyle = `rgba(37, 99, 235, ${opacity})`;
               ctx.fill();
             }
           }

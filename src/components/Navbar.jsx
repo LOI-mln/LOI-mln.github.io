@@ -85,7 +85,7 @@ const Navbar = () => {
           pointerEvents: 'auto',
           borderRadius: isCollapsed ? '50%' : (scrolled ? '50px' : '24px'),
           transition: 'all 0.5s cubic-bezier(0.16, 1, 0.3, 1)',
-          boxShadow: isCollapsed ? '0 8px 24px rgba(255, 159, 28, 0.18)' : (scrolled ? '0 12px 30px rgba(0, 0, 0, 0.05)' : '0 4px 15px rgba(0, 0, 0, 0.01)'),
+          boxShadow: isCollapsed ? '0 8px 24px rgba(96, 165, 250, 0.18)' : (scrolled ? '0 12px 30px rgba(0, 0, 0, 0.05)' : '0 4px 15px rgba(0, 0, 0, 0.01)'),
           background: isCollapsed ? 'var(--navbar-bg-collapsed)' : (scrolled ? 'var(--navbar-bg-scrolled)' : 'var(--navbar-bg-idle)'),
           border: isCollapsed ? '1.5px solid var(--accent)' : '1px solid var(--border-color)',
           cursor: isCollapsed ? 'pointer' : 'default',

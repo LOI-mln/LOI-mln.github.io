@@ -65,7 +65,7 @@ const CurtainReveal = () => {
       <div className="curtain-sticky-wrapper">
         {/* Contenu révélé */}
         <div ref={contentRef} className="curtain-reveal-content">
-          <span className="organic-badge" style={{ marginBottom: '16px', color: '#ff9f1c', background: 'rgba(255, 159, 28, 0.08)' }}>
+          <span className="organic-badge" style={{ marginBottom: '16px', color: '#60a5fa', background: 'rgba(96, 165, 250, 0.08)' }}>
             COLLECTION EXCLUSIVE
           </span>
           <h3 className="curtain-reveal-h3">
@@ -185,7 +185,7 @@ const CurtainReveal = () => {
           justify-content: center;
           text-align: center;
           padding: 40px 24px;
-          background: radial-gradient(circle at center, rgba(255, 159, 28, 0.04) 0%, rgba(7, 8, 11, 0) 70%);
+          background: radial-gradient(circle at center, rgba(96, 165, 250, 0.04) 0%, rgba(7, 8, 11, 0) 70%);
           will-change: transform, opacity;
         }
 
@@ -230,7 +230,7 @@ const CurtainReveal = () => {
           left: 50%;
           width: 4px;
           height: 6px;
-          background-color: #ff9f1c;
+          background-color: #60a5fa;
           border-radius: 50%;
           transform: translateX(-50%);
           animation: wheelScroll 1.8s infinite ease-in-out;
