@@ -24,14 +24,16 @@ const StageWindow = ({ title, footer, paused, onTogglePause, light, innerRef, la
     <div className="stage-bar">
       <span className="stage-dots" aria-hidden="true"><i /><i /><i /></span>
       <span className="stage-title">{title}</span>
-      <button
-        type="button"
-        className="stage-toggle"
-        onClick={onTogglePause}
-        aria-label={paused ? `Relancer : ${label}` : `Mettre en pause : ${label}`}
-      >
-        {paused ? <Play size={13} fill="currentColor" /> : <Pause size={13} fill="currentColor" />}
-      </button>
+      {onTogglePause && (
+        <button
+          type="button"
+          className="stage-toggle"
+          onClick={onTogglePause}
+          aria-label={paused ? `Relancer : ${label}` : `Mettre en pause : ${label}`}
+        >
+          {paused ? <Play size={13} fill="currentColor" /> : <Pause size={13} fill="currentColor" />}
+        </button>
+      )}
     </div>
     <div className="stage-body">{children}</div>
     {footer && <figcaption className="stage-footer">{footer}</figcaption>}
@@ -79,6 +81,13 @@ const VideoStage = ({ title, footer, src, poster }) => {
     </StageWindow>
   );
 };
+
+// Capture fixe de l'application
+const ImageStage = ({ title, footer, src, alt }) => (
+  <StageWindow light title={title} footer={footer}>
+    <img className="stage-video" src={src} alt={alt} loading="lazy" />
+  </StageWindow>
+);
 
 // Délai avant de passer à l'étape suivante du terminal
 const terminalDelay = (line) => {
@@ -225,6 +234,7 @@ const ResearchStage = ({ title, footer, rows, max, label }) => {
 const ProjectStage = ({ kind, ...props }) => (
   <>
     {kind === 'video' && <VideoStage {...props} />}
+    {kind === 'image' && <ImageStage {...props} />}
     {kind === 'terminal' && <TerminalStage {...props} />}
     {kind === 'research' && <ResearchStage {...props} />}
 
