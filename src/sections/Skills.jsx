@@ -7,7 +7,7 @@ const SkillsMesh = ({ mode }) => {
   return (
     <AntigravityCanvas
       mode={mode}
-      colorScheme="amber"
+      colorScheme="blue"
       density="low"
       clusterRight={false}
       velocityStretch={false}
@@ -117,7 +117,7 @@ const Skills = ({ theme }) => {
           <div className="sk-ribbon-group">
             <Building2 size={15} style={{ color: 'var(--accent)', flexShrink: 0 }} />
             <span className="sk-ribbon-label" style={{ color: 'var(--accent)' }}>Entreprise</span>
-            <span className="sk-env-tag" style={{ border: '1px solid rgba(227, 93, 59, 0.3)', background: 'rgba(227, 93, 59, 0.08)', color: 'var(--text-primary)', fontWeight: 700 }}>
+            <span className="sk-env-tag" style={{ border: '1px solid rgba(37, 99, 235, 0.3)', background: 'rgba(37, 99, 235, 0.08)', color: 'var(--text-primary)', fontWeight: 700 }}>
               Alternance · Ceva Santé Animale
             </span>
           </div>

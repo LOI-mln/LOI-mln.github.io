@@ -10,13 +10,13 @@
   --text-secondary: #4b5563;
   --text-muted: #6b7280; /* Ratio > 4.5:1 sur fond blanc */
   
-  --accent-rgb: 227, 93, 59; /* Cuivre / Orange brulé premium */
+  --accent-rgb: 37, 99, 235; /* Bleu franc */
   --accent: rgb(var(--accent-rgb));
-  --accent-hover: #c54425;
+  --accent-hover: #1d4ed8;
   --accent-light: rgba(var(--accent-rgb), 0.08);
   --accent-glow: rgba(var(--accent-rgb), 0.25);
-  --accent-gradient: linear-gradient(135deg, #e35d3b 0%, #b83214 100%);
-  --accent-gradient-text: linear-gradient(135deg, #e35d3b 0%, #a1240c 100%);
+  --accent-gradient: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+  --accent-gradient-text: linear-gradient(135deg, #2563eb 0%, #1e3a8a 100%);
   
   --border-color: rgba(17, 24, 39, 0.08);
   --border-color-hover: rgba(var(--accent-rgb), 0.3);
@@ -369,7 +369,7 @@ h1, h2, h3, h4 {
 }
 
 /* Animation de pulsation */
-@keyframes pulse-orange {
+@keyframes pulse-accent {
   0% {
     transform: scale(0.95);
     box-shadow: 0 0 0 0 rgba(var(--accent-rgb), 0.7);
@@ -385,7 +385,7 @@ h1, h2, h3, h4 {
 }
 
 .pulse-dot {
-  animation: pulse-orange 2s infinite;
+  animation: pulse-accent 2s infinite;
   display: inline-block;
   border-radius: 50%;
 }

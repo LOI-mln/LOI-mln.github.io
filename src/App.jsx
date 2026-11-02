@@ -105,10 +105,10 @@ function App() {
               backgroundColor: 'var(--bg-primary)',
             }}
           >
-            {/* Constellation interactive subtile ambrée */}
+            {/* Constellation interactive subtile bleue */}
             <AntigravityCanvas
               mode="light"
-              colorScheme="amber"
+              colorScheme="blue"
               density="low"
               clusterRight={false}
               velocityStretch={false}
@@ -187,7 +187,7 @@ function App() {
                     onMouseEnter={(e) => {
                       e.currentTarget.style.transform = 'translateY(-3px)';
                       e.currentTarget.style.borderColor = 'var(--accent-hover)';
-                      e.currentTarget.style.boxShadow = '0 10px 25px rgba(227, 93, 59, 0.05)';
+                      e.currentTarget.style.boxShadow = '0 10px 25px rgba(37, 99, 235, 0.05)';
                     }}
                     onMouseLeave={(e) => {
                       e.currentTarget.style.transform = 'translateY(0)';
@@ -201,7 +201,7 @@ function App() {
                         width: '40px',
                         height: '40px',
                         borderRadius: '50%',
-                        backgroundColor: 'rgba(227, 93, 59, 0.08)',
+                        backgroundColor: 'rgba(37, 99, 235, 0.08)',
                         color: 'var(--accent-hover)',
                         display: 'flex',
                         alignItems: 'center',
@@ -236,7 +236,7 @@ function App() {
                     onMouseEnter={(e) => {
                       e.currentTarget.style.transform = 'translateY(-3px)';
                       e.currentTarget.style.borderColor = 'var(--accent-hover)';
-                      e.currentTarget.style.boxShadow = '0 10px 25px rgba(227, 93, 59, 0.05)';
+                      e.currentTarget.style.boxShadow = '0 10px 25px rgba(37, 99, 235, 0.05)';
                     }}
                     onMouseLeave={(e) => {
                       e.currentTarget.style.transform = 'translateY(0)';
@@ -250,7 +250,7 @@ function App() {
                         width: '40px',
                         height: '40px',
                         borderRadius: '50%',
-                        backgroundColor: 'rgba(227, 93, 59, 0.08)',
+                        backgroundColor: 'rgba(37, 99, 235, 0.08)',
                         color: 'var(--accent-hover)',
                         display: 'flex',
                         alignItems: 'center',
@@ -285,7 +285,7 @@ function App() {
                     onMouseEnter={(e) => {
                       e.currentTarget.style.transform = 'translateY(-3px)';
                       e.currentTarget.style.borderColor = 'var(--accent-hover)';
-                      e.currentTarget.style.boxShadow = '0 10px 25px rgba(227, 93, 59, 0.05)';
+                      e.currentTarget.style.boxShadow = '0 10px 25px rgba(37, 99, 235, 0.05)';
                     }}
                     onMouseLeave={(e) => {
                       e.currentTarget.style.transform = 'translateY(0)';
@@ -299,7 +299,7 @@ function App() {
                         width: '40px',
                         height: '40px',
                         borderRadius: '50%',
-                        backgroundColor: 'rgba(227, 93, 59, 0.08)',
+                        backgroundColor: 'rgba(37, 99, 235, 0.08)',
                         color: 'var(--accent-hover)',
                         display: 'flex',
                         alignItems: 'center',
@@ -334,7 +334,7 @@ function App() {
                     onMouseEnter={(e) => {
                       e.currentTarget.style.transform = 'translateY(-3px)';
                       e.currentTarget.style.borderColor = 'var(--accent-hover)';
-                      e.currentTarget.style.boxShadow = '0 10px 25px rgba(227, 93, 59, 0.05)';
+                      e.currentTarget.style.boxShadow = '0 10px 25px rgba(37, 99, 235, 0.05)';
                     }}
                     onMouseLeave={(e) => {
                       e.currentTarget.style.transform = 'translateY(0)';
@@ -348,7 +348,7 @@ function App() {
                         width: '40px',
                         height: '40px',
                         borderRadius: '50%',
-                        backgroundColor: 'rgba(227, 93, 59, 0.08)',
+                        backgroundColor: 'rgba(37, 99, 235, 0.08)',
                         color: 'var(--accent-hover)',
                         display: 'flex',
                         alignItems: 'center',
@@ -383,7 +383,7 @@ function App() {
                     onMouseEnter={(e) => {
                       e.currentTarget.style.transform = 'translateY(-3px)';
                       e.currentTarget.style.borderColor = 'var(--accent-hover)';
-                      e.currentTarget.style.boxShadow = '0 10px 25px rgba(227, 93, 59, 0.05)';
+                      e.currentTarget.style.boxShadow = '0 10px 25px rgba(37, 99, 235, 0.05)';
                     }}
                     onMouseLeave={(e) => {
                       e.currentTarget.style.transform = 'translateY(0)';
@@ -397,7 +397,7 @@ function App() {
                         width: '40px',
                         height: '40px',
                         borderRadius: '50%',
-                        backgroundColor: 'rgba(227, 93, 59, 0.08)',
+                        backgroundColor: 'rgba(37, 99, 235, 0.08)',
                         color: 'var(--accent-hover)',
                         display: 'flex',
                         alignItems: 'center',
