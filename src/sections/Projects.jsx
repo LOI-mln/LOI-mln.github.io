@@ -51,6 +51,22 @@ const PROJECT_INFO = [
   },
   {
     number: '02',
+    category: 'Site web & full-stack',
+    title: 'Site du BCM',
+    meta: 'Badminton Club Montponnais · depuis 2026',
+    status: 'En ligne',
+    summary: "Donner au club de badminton de Montpon-Ménestérol un site à jour : horaires, calendrier de la saison et inscriptions.",
+    points: [
+      'Site Next.js et React en production, déployé sur Vercel',
+      'Calendrier consultable par mois, avec le détail de chaque événement',
+      "Panneau d'administration : calendrier, newsletter et envoi de mails",
+    ],
+    tags: ['Next.js', 'React', 'TypeScript', 'Vercel'],
+    demo: { src: '/videos/bcm-site-demo.mp4', poster: '/videos/bcm-site-demo.jpg', duration: '15 s', label: 'Visite réelle' },
+    link: { href: 'https://www.bcm24.fr', label: 'Voir le site', kind: 'site' },
+  },
+  {
+    number: '03',
     category: 'Recherche IA',
     title: 'RGU Aberdeen',
     meta: 'Stage Erasmus+ · Écosse · 2026',
@@ -65,41 +81,18 @@ const PROJECT_INFO = [
     link: { href: '/research_paper.pdf', label: 'Lire le papier', kind: 'pdf' },
   },
   {
-    number: '03',
-    category: 'Homelab & auto-hébergement',
-    title: 'Homelab Proxmox',
-    meta: 'Projet personnel',
-    summary: "Héberger mes propres services (cloud, média, domotique, DNS) et les cloisonner par VLAN.",
-    points: [
-      'Services virtualisés sous Proxmox VE',
-      'Réseau découpé en VLAN, filtré par le pare-feu Proxmox',
-      'Sauvegardes automatiques et suivi via les logs Proxmox',
-    ],
-    tags: ['Proxmox VE', 'VLAN', 'Pare-feu', 'Sauvegardes'],
-    demo: {
-      src: '/videos/homelab-reconstitution.mp4',
-      poster: '/videos/homelab-reconstitution.jpg',
-      duration: '29 s',
-      button: 'Voir la reconstitution',
-      label: 'Reconstitution en lab',
-      note: "Architecture reproduite dans un lab Kathara (VLAN 802.1Q, pare-feu iptables) : ce n'est pas le matériel réel.",
-    },
-  },
-  {
     number: '04',
-    category: 'Site web & full-stack',
-    title: 'Site du BCM',
-    meta: 'Badminton Club Montponnais · depuis 2026',
-    status: 'En ligne',
-    summary: "Donner au club de badminton de Montpon-Ménestérol un site à jour : horaires, calendrier de la saison et inscriptions.",
+    category: 'Application web',
+    title: 'Questionary',
+    meta: 'Projet BUT · En équipe · 2025-2026',
+    summary: "Créer des questionnaires, les diffuser par QR code et en analyser les réponses, y compris les réponses libres.",
     points: [
-      'Site Next.js et React en production, déployé sur Vercel',
-      'Calendrier consultable par mois, avec le détail de chaque événement',
-      "Panneau d'administration : calendrier, newsletter et envoi de mails",
+      'PHP natif en MVC, base MariaDB, interface Vue.js',
+      'Connexion universitaire CAS, questions conditionnelles, notifications',
+      'Fréquence des mots dans les réponses libres, exports PDF, Excel et CSV',
     ],
-    tags: ['Next.js', 'React', 'TypeScript', 'Vercel'],
-    demo: { src: '/videos/bcm-site-demo.mp4', poster: '/videos/bcm-site-demo.jpg', duration: '15 s', label: 'Visite réelle' },
-    link: { href: 'https://www.bcm24.fr', label: 'Voir le site', kind: 'site' },
+    tags: ['Vue.js', 'PHP', 'MariaDB', 'CAS'],
+    link: { href: 'https://github.com/Mdeterne/php-mariadb-Questionary', label: 'Voir le dépôt', kind: 'github' },
   },
 ];
 
@@ -117,6 +110,13 @@ const PROJECT_STAGE = [
     poster: '/videos/unilim-edt-demo.jpg',
   },
   {
+    kind: 'video',
+    title: 'bcm24.fr',
+    footer: 'Visite réelle du site en ligne',
+    src: '/videos/bcm-site-demo.mp4',
+    poster: '/videos/bcm-site-demo.jpg',
+  },
+  {
     kind: 'research',
     title: 'Polarisation par communauté',
     footer: 'Tableau 1 du papier · graphe de 20 641 nœuds, Louvain Q = 0,954',
@@ -132,38 +132,11 @@ const PROJECT_STAGE = [
     ],
   },
   {
-    kind: 'terminal',
-    title: 'Reconstitution du homelab',
-    footer: "Lab Kathara rejoué, ce n'est pas le matériel réel",
-    label: "Terminal montrant les VLAN de l'hôte, un accès bloqué entre VLAN et les règles du pare-feu",
-    lines: [
-      c('# Hôte : une interface par VLAN sur la liaison trunk 802.1Q'),
-      run('root@pve:~#', 'ip -br addr | grep eth1.'),
-      out('eth1.10@eth1     UP     10.0.10.1/24'),
-      out('eth1.20@eth1     UP     10.0.20.1/24'),
-      out('eth1.30@eth1     UP     10.0.30.1/24'),
-      c("# VLAN média -> VLAN cloud : bloqué par le pare-feu de l'hôte"),
-      run('root@media:~#', "curl -s -m 3 http://10.0.10.10/ || echo 'connexion bloquée'"),
-      out('connexion bloquée', 'bad'),
-      c('# Depuis Internet : seul le service cloud est exposé (port 8080)'),
-      run('root@internet:~#', 'curl -s http://192.0.2.2:8080/'),
-      out('Cloud perso (service HTTP de test, VLAN 10)', 'good'),
-      c("# Depuis Internet : le serveur média n'est pas exposé"),
-      run('root@internet:~#', "curl -s -m 3 http://192.0.2.2:8096/ || echo 'connexion refusée'"),
-      out('connexion refusée', 'bad'),
-      c("# Règles du pare-feu de l'hôte, avec compteurs de paquets"),
-      run('root@pve:~#', 'iptables -S FORWARD -v'),
-      out('-P FORWARD DROP -c 0 0'),
-      out('-A FORWARD -i eth1.+ -o eth0 -m comment --comment "VLAN vers Internet" -c 2 168 -j ACCEPT'),
-      out('-A FORWARD -m comment --comment "tout le reste est bloque" -c 6 360 -j DROP'),
-    ],
-  },
-  {
-    kind: 'video',
-    title: 'bcm24.fr',
-    footer: 'Visite réelle du site en ligne',
-    src: '/videos/bcm-site-demo.mp4',
-    poster: '/videos/bcm-site-demo.jpg',
+    kind: 'image',
+    title: 'Questionary · Accueil',
+    footer: "Capture réelle de l'application",
+    src: '/img/cards/questionary.png',
+    alt: "Accueil de Questionary : création d'un questionnaire, import et liste des questionnaires avec leur QR code",
   },
 ];
 
@@ -635,7 +608,7 @@ const Projects = () => {
               lineHeight: 1.6,
             }}
           >
-            Quatre projets : une application en production à l'IUT, un stage de recherche en IA, mon homelab et le site d'un club de badminton.
+            Quatre projets : une application en production à l'IUT, le site d'un club de badminton, un stage de recherche en IA et une application de questionnaires.
           </p>
         </div>
 
@@ -652,39 +625,39 @@ const Projects = () => {
           </div>
         </div>
 
-        {/* 2. Stage RGU Aberdeen (Recherche / Écosse) */}
+        {/* 2. Site du BCM (Web / Full-stack) */}
         <div className="project-card-showcase reveal-on-scroll">
-          <div className="card-ambient-glow card-glow-accent" />
+          <div className="card-ambient-glow card-glow-cyan" />
           <div className="project-row" style={{ display: 'flex', gap: '56px', alignItems: 'center', position: 'relative', zIndex: 1 }}>
             <ProjectSummary {...PROJECT_INFO[1]} />
 
-            {/* RGU Mockup (Physical AI Research Workstation) */}
+            {/* Visite vidéo du site en ligne */}
             <div ref={el => mockupRefs.current[1] = el} className="project-mockup reveal-scale delay-200" style={{ flex: '1.15', minWidth: '320px', display: 'flex', justifyContent: 'center' }}>
               <ProjectStage {...PROJECT_STAGE[1]} />
             </div>
           </div>
         </div>
 
-        {/* 3. Homelab Proxmox (Infrastructure personnelle) */}
+        {/* 3. Stage RGU Aberdeen (Recherche / Écosse) */}
         <div className="project-card-showcase reveal-on-scroll">
-          <div className="card-ambient-glow card-glow-violet" />
+          <div className="card-ambient-glow card-glow-accent" />
           <div className="project-row" style={{ display: 'flex', gap: '56px', alignItems: 'center', flexDirection: 'row-reverse', position: 'relative', zIndex: 1 }}>
             <ProjectSummary {...PROJECT_INFO[2]} />
 
-            {/* Homelab Mockup (Console Proxmox) */}
+            {/* Résultats du papier de recherche */}
             <div ref={el => mockupRefs.current[2] = el} className="project-mockup reveal-scale delay-200" style={{ flex: '1.15', minWidth: '320px', display: 'flex', justifyContent: 'center' }}>
               <ProjectStage {...PROJECT_STAGE[2]} />
             </div>
           </div>
         </div>
 
-        {/* 4. Site du BCM (Web / Full-stack) */}
+        {/* 4. Questionary (Application web) */}
         <div className="project-card-showcase reveal-on-scroll">
-          <div className="card-ambient-glow card-glow-cyan" />
+          <div className="card-ambient-glow card-glow-violet" />
           <div className="project-row" style={{ display: 'flex', gap: '56px', alignItems: 'center', position: 'relative', zIndex: 1 }}>
             <ProjectSummary {...PROJECT_INFO[3]} />
 
-            {/* Visite vidéo du site en ligne */}
+            {/* Capture de l'application */}
             <div ref={el => mockupRefs.current[3] = el} className="project-mockup reveal-scale delay-200" style={{ flex: '1.15', minWidth: '320px', display: 'flex', justifyContent: 'center' }}>
               <ProjectStage {...PROJECT_STAGE[3]} />
             </div>
