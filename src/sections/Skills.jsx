@@ -59,7 +59,7 @@ const Skills = ({ theme }) => {
       id: 'c6', code: 'C6', title: 'Sécuriser', icon: <ShieldAlert size={22} />,
       level: 'Niveau 3 · Adapter',
       desc: 'Protéger les données et systèmes contre les menaces numériques.',
-      highlights: ['Certification Cisco Ethical Hacker (en préparation)', 'Cours Cisco validé : Introduction à la cybersécurité', 'Architecture réseau multi-zones (Kathara)', 'Cryptographie & Chiffrement AES-256'],
+      highlights: ['Cours Cisco validé : Introduction à la cybersécurité', 'Architecture réseau multi-zones (Kathara)', 'Cryptographie & Chiffrement AES-256'],
       techs: ['Cisco CyberSec', 'Cybersécurité', 'Cryptographie', 'AES-256', 'Sécurité Réseau'],
     },
   ];
@@ -108,9 +108,6 @@ const Skills = ({ theme }) => {
             <span className="sk-ribbon-label" style={{ color: '#10b981' }}>Certification</span>
             <span className="sk-env-tag" style={{ border: '1px solid rgba(16, 185, 129, 0.3)', background: 'rgba(16, 185, 129, 0.08)', color: 'var(--text-primary)', fontWeight: 700 }}>
               Cisco · Introduction à la cybersécurité
-            </span>
-            <span className="sk-env-tag" style={{ border: '1px dashed rgba(16, 185, 129, 0.4)', background: 'transparent', color: 'var(--text-primary)', fontWeight: 700 }}>
-              Cisco · Ethical Hacker (en préparation)
             </span>
           </div>
           <span className="sk-ribbon-sep" />
