@@ -10,7 +10,7 @@ import Skills from './sections/Skills';
 import Projects from './sections/Projects';
 import Timeline from './sections/Timeline';
 import CurtainReveal from './components/CurtainReveal';
-import { Heart, Trophy, Zap, ShieldCheck, Flame, Compass, ShoppingBag, Sparkles } from 'lucide-react';
+import { ArrowUpRight, Trophy, Zap, ShieldCheck, Flame, Compass, ShoppingBag, Sparkles } from 'lucide-react';
 import Lenis from 'lenis';
 import useScrollReveal from './hooks/useScrollReveal';
 
@@ -471,8 +471,11 @@ function App() {
               </span>
             </div>
 
-            {/* Indicateur de technologies utilisées */}
-            <div
+            {/* Lien vers le code du portfolio */}
+            <a
+              href="https://github.com/LOI-mln/LOI-mln.github.io"
+              target="_blank"
+              rel="noopener noreferrer"
               style={{
                 display: 'flex',
                 alignItems: 'center',
@@ -483,10 +486,9 @@ function App() {
                 color: 'var(--text-secondary)',
               }}
             >
-              <span>Conçu avec</span>
-              <Heart size={12} style={{ color: 'var(--accent)', fill: 'var(--accent)' }} />
-              <span>en React & Vite</span>
-            </div>
+              <span>Code source sur GitHub</span>
+              <ArrowUpRight size={12} />
+            </a>
 
             {/* Statistiques système du projet */}
             <div
