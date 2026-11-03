@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   createPortal } from 'react-dom';
 import ProjectStage from '../components/ProjectStage';
@@ -37,7 +37,7 @@ const PROJECT_INFO = [
     number: '01',
     category: 'Application en production',
     title: "Emplois du temps de l'IUT",
-    tab: 'Emplois du temps',
+    figure: { value: '200', prefix: '≈ ', label: "personnes s'en servent à l'IUT" },
     meta: "Unilim EDT · Projet BUT · Lead dev, équipe de 4 · 2025-2026",
     status: "En production à l'IUT",
     summary: "L'IUT du Limousin faisait ses emplois du temps à la main. L'application les génère toute seule, sans qu'une salle, un enseignant ou un groupe soit pris deux fois.",
@@ -53,6 +53,7 @@ const PROJECT_INFO = [
     number: '02',
     category: 'Site web',
     title: 'Site du BCM',
+    figure: { value: '25', label: 'partenaires du club mis en avant' },
     meta: 'Badminton Club Montponnais · depuis 2026',
     status: 'En ligne',
     summary: "Le club de badminton de Montpon-Ménestérol, actif depuis 1999, n'avait pas de site à jour. Il en a maintenant un qu'il gère seul.",
@@ -69,6 +70,7 @@ const PROJECT_INFO = [
     number: '03',
     category: 'Recherche IA',
     title: 'RGU Aberdeen',
+    figure: { value: '32 000', prefix: '+', label: "commentaires analysés par l'IA" },
     meta: 'Stage Erasmus+ · Écosse · 2026',
     status: 'Publication prochaine',
     summary: "Mesurer à quel point les débats politiques en ligne divisent, sur 5 réseaux sociaux, avec de l'IA plutôt qu'en lisant tout à la main.",
@@ -86,6 +88,7 @@ const PROJECT_INFO = [
     number: '04',
     category: 'Application web',
     title: 'Questionary',
+    figure: { value: '2 400', label: "étudiants de l'IUT pourraient l'utiliser" },
     meta: 'Projet BUT · En équipe · 2025-2026',
     summary: "Créer un questionnaire, le partager par QR code et lire les résultats sans passer par un tableur, réponses libres comprises.",
     points: [
@@ -211,501 +214,98 @@ const ProjectSummary = ({ number, category, title, meta, status, summary, points
   );
 };
 
-const Projects = () => {
-  const sectionRef = useRef(null);
-  const trunkRef = useRef(null);
-  const branchRefs = useRef([]);
-  const nodeRefs = useRef([]);
-  const headingRef = useRef(null);
-  const mockupRefs = useRef([]);
-  const targetCoordsRef = useRef([]);
-  const railRef = useRef(null);
+// Teinte de chaque projet (RVB), dans l'ordre des fiches
+const TINTS = ['emerald', 'cyan', 'accent', 'violet'];
 
-  // Galerie : réduit chaque carte juste assez pour qu'elle tienne entière entre la navigation et la progression
-  useEffect(() => {
-    const rail = railRef.current;
-    if (!rail || !('ResizeObserver' in window)) return;
-    const cards = [...rail.querySelectorAll('.project-card-showcase')];
-    const fit = () => {
-      const available = window.innerHeight - 170;
-      cards.forEach((card) => card.style.setProperty('--fit', Math.min(1, available / card.offsetHeight).toFixed(3)));
-    };
-    const observer = new ResizeObserver(fit);
-    cards.forEach((card) => observer.observe(card));
-    window.addEventListener('resize', fit);
-    return () => { observer.disconnect(); window.removeEventListener('resize', fit); };
-  }, []);
+// Chiffre qui défile jusqu'à sa valeur, chiffre par chiffre, quand l'affiche arrive
+const RollingFigure = ({ value, prefix }) => (
+  <span className="pj-figure-value" aria-label={`${prefix || ''}${value}`}>
+    {prefix && <span className="pj-figure-prefix" aria-hidden="true">{prefix}</span>}
+    {[...value].map((ch, i) => (/\d/.test(ch) ? (
+      <span key={i} className="pj-digit" aria-hidden="true" style={{ '--d': ch, '--i': i }}>
+        <span className="pj-digit-strip">
+          {'0123456789'.split('').map((n) => <span key={n}>{n}</span>)}
+        </span>
+      </span>
+    ) : (
+      <span key={i} aria-hidden="true">{ch === ' ' ? '\u202f' : ch}</span>
+    )))}
+  </span>
+);
 
-  useEffect(() => {
-    const updateTreeCoordinates = () => {
-      if (window.innerWidth <= 991) return;
-
-      const sec = sectionRef.current;
-      if (!sec) return;
-
-      const sectionRect = sec.getBoundingClientRect();
-      const sectionWidth = sectionRect.width;
-      const sectionHeight = sectionRect.height;
-
-      // Position de l'en-tête
-      const heading = headingRef.current;
-      if (!heading) return;
-      const headingRect = heading.getBoundingClientRect();
-      
-      // Point de départ du tronc de l'arbre
-      const startX = headingRect.left + headingRect.width / 2 - sectionRect.left;
-      const startY = headingRect.bottom - sectionRect.top;
-
-      const centerX = sectionWidth / 2;
-
-      // Positions des maquettes et cibles
-      const targets = [];
-      for (let i = 0; i < 4; i++) {
-        const mockup = mockupRefs.current[i];
-        if (!mockup) continue;
-
-        const mockupRect = mockup.getBoundingClientRect();
-        
-        // Déterminer le point de connexion selon le côté
-        const isRightMockup = (i % 2 === 1);
-        
-        const targetX = isRightMockup 
-          ? mockupRect.left - sectionRect.left - 5 
-          : mockupRect.right - sectionRect.left + 5;
-        
-        // Centre vertical de la maquette
-        const targetY = mockupRect.top + mockupRect.height / 2 - sectionRect.top;
-
-        targets.push({ x: targetX, y: targetY, isRight: isRightMockup });
-      }
-
-      if (targets.length === 0) return;
-
-      // Construction du tronc de l'arbre
-      let trunkD = `M ${startX},${startY}`;
-      const transitionY = startY + 60;
-      trunkD += ` C ${startX},${startY + 30} ${centerX},${transitionY - 30} ${centerX},${transitionY}`;
-
-      // Points de contrôle pour rendre le tronc ondulé
-      const trunkPoints = [];
-      const startWaveY = transitionY;
-      const endWaveY = targets[targets.length - 1].y + 100;
-      const numPoints = 12;
-      const waveFreq = 2.5;
-      
-      for (let k = 0; k <= numPoints; k++) {
-        const t = k / numPoints;
-        const y = startWaveY + (endWaveY - startWaveY) * t;
-        const sway = Math.sin(t * Math.PI * 2 * waveFreq) * 20;
-        trunkPoints.push({ x: centerX + sway, y: y });
-      }
-
-      // Tracer le tronc ondulé avec des courbes de Bézier
-      for (let k = 0; k < trunkPoints.length - 1; k++) {
-        const p0 = trunkPoints[k];
-        const p1 = trunkPoints[k + 1];
-        const midY = (p0.y + p1.y) / 2;
-        trunkD += ` C ${p0.x},${midY} ${p1.x},${midY} ${p1.x},${p1.y}`;
-      }
-
-      // Finir le tronc tout droit vers le bas
-      trunkD += ` L ${centerX},${sectionHeight - 40}`;
-
-      // Mettre à jour l'élément DOM du tronc
-      const trunk = trunkRef.current;
-      if (trunk) {
-        trunk.setAttribute('d', trunkD);
-      }
-
-      // Dessiner les branches et les nœuds lumineux
-      targets.forEach((target, idx) => {
-        const branch = branchRefs.current[idx];
-        if (!branch) return;
-
-        // Point de départ de la branche sur le tronc
-        const branchStartY = Math.max(transitionY, target.y - 80);
-        
-        // Récupérer l'abscisse du tronc à cette hauteur
-        const t = (branchStartY - startWaveY) / (endWaveY - startWaveY);
-        const swayVal = Math.sin(Math.max(0, Math.min(1, t)) * Math.PI * 2 * waveFreq) * 20;
-        const trunkXAtHeight = centerX + swayVal;
-
-        // Relier le tronc à la maquette
-        const cp1x = trunkXAtHeight + (target.isRight ? 40 : -40);
-        const cp1y = branchStartY;
-        const cp2x = target.x + (target.isRight ? -60 : 60);
-        const cp2y = target.y;
-
-        const branchD = `M ${trunkXAtHeight},${branchStartY} C ${cp1x},${cp1y} ${cp2x},${cp2y} ${target.x},${target.y}`;
-        branch.setAttribute('d', branchD);
-      });
-      targetCoordsRef.current = targets;
-    };
-
-    // Initialiser les valeurs du tracé SVG
-    const initDashValues = () => {
-      const trunk = trunkRef.current;
-      if (trunk) {
-        const length = trunk.getTotalLength();
-        trunk.style.strokeDasharray = length;
-        trunk.style.strokeDashoffset = length;
-      }
-
-      branchRefs.current.forEach((branch) => {
-        if (branch) {
-          const length = branch.getTotalLength();
-          branch.style.strokeDasharray = length;
-          branch.style.strokeDashoffset = length;
-        }
-      });
-
-      nodeRefs.current.forEach((node) => {
-        if (node) {
-          node.style.opacity = 0;
-          node.style.transform = 'scale(0)';
-        }
-      });
-    };
-
-    const handleScroll = () => {
-      // Mettre à jour les coordonnées dynamiquement
-      updateTreeCoordinates();
-
-      const sec = sectionRef.current;
-      if (!sec) return;
-
-      const rect = sec.getBoundingClientRect();
-      const viewportHeight = window.innerHeight;
-      const sectionHeight = rect.height;
-      const sectionTop = rect.top;
-
-      // Progression du défilement
-      const scrolled = viewportHeight - sectionTop;
-      const progress = Math.max(0, Math.min(1, scrolled / (sectionHeight - 350)));
-
-      // Animation de croissance du tronc
-      const trunk = trunkRef.current;
-      if (trunk) {
-        const length = trunk.getTotalLength();
-        trunk.style.strokeDasharray = length;
-        const trunkProgress = Math.max(0, Math.min(1, progress * 1.25));
-        trunk.style.strokeDashoffset = length - (length * trunkProgress);
-      }
-
-      // Animation des branches décalées
-      branchRefs.current.forEach((branch, idx) => {
-        if (!branch) return;
-        const length = branch.getTotalLength();
-        branch.style.strokeDasharray = length;
-        const thresholds = [0.1, 0.34, 0.58, 0.8]; // Seuils d'apparition
-        const start = thresholds[idx];
-        const branchProgress = Math.max(0, Math.min(1, (progress - start) * 6.0));
-        branch.style.strokeDashoffset = length - (length * branchProgress);
-
-        // Rendu des nœuds lumineux terminaux
-        const node = nodeRefs.current[idx];
-        if (node) {
-          const nodeProgress = Math.max(0, Math.min(1, (branchProgress - 0.78) * 4.5));
-          node.style.opacity = nodeProgress;
-          
-          const coords = targetCoordsRef.current[idx];
-          if (coords) {
-            node.style.transform = `translate(${coords.x}px, ${coords.y}px) scale(${nodeProgress})`;
-          } else {
-            node.style.transform = `scale(${nodeProgress})`;
-          }
-        }
-      });
-    };
-
-    // Calculer les chemins et hauteurs
-    updateTreeCoordinates();
-    initDashValues();
-
-    // Écouteurs d'événements passifs
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    window.addEventListener('resize', handleScroll, { passive: true });
-    
-    // Calcul initial
-    handleScroll();
-
-    // Déclencher une mise à jour différée après chargement des images
-    const loadTimeout = setTimeout(handleScroll, 1000);
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('resize', handleScroll);
-      clearTimeout(loadTimeout);
-    };
-  }, []);
-
-  return (
-    <section
-      ref={sectionRef}
-      id="projects"
-      style={{
-        position: 'relative',
-        backgroundColor: 'var(--bg-primary)',
-        padding: '120px 24px',
-        /* clip et non hidden : hidden ferait de la section un conteneur de défilement, et la galerie ne resterait pas épinglée */
-        overflow: 'clip',
-      }}
-    >
-      {/* Organic Scroll-Drawn Connecting Tree SVG */}
-      <svg
-        className="organic-tree-svg"
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          zIndex: 0,
-          pointerEvents: 'none',
-        }}
-      >
-        <defs>
-          <linearGradient id="trunk-grad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="var(--accent)" stopOpacity="0.8" />
-            <stop offset="50%" stopColor="#1d4ed8" stopOpacity="0.6" />
-            <stop offset="100%" stopColor="var(--accent-hover)" stopOpacity="0.45" />
-          </linearGradient>
-          <linearGradient id="branch-grad-right" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%" stopColor="var(--accent)" stopOpacity="0.75" />
-            <stop offset="100%" stopColor="var(--accent)" stopOpacity="0.08" />
-          </linearGradient>
-          <linearGradient id="branch-grad-left" x1="1" y1="0" x2="0" y2="0">
-            <stop offset="0%" stopColor="var(--accent)" stopOpacity="0.75" />
-            <stop offset="100%" stopColor="var(--accent)" stopOpacity="0.08" />
-          </linearGradient>
-        </defs>
-
-        {/* Dynamic hand-drawn organic trunk path */}
-        <path
-          ref={trunkRef}
-          d=""
-          fill="none"
-          stroke="url(#trunk-grad)"
-          strokeWidth="3.5"
-          strokeLinecap="round"
-          style={{ transition: 'stroke-dashoffset 0.1s ease-out', willChange: 'stroke-dashoffset' }}
-        />
-
-        {/* Branch 0 (pointing left to first mockup right edge) */}
-        <path
-          ref={el => branchRefs.current[0] = el}
-          d=""
-          fill="none"
-          stroke="url(#branch-grad-left)"
-          strokeWidth="2"
-          strokeLinecap="round"
-          style={{ transition: 'stroke-dashoffset 0.1s ease-out', willChange: 'stroke-dashoffset' }}
-        />
-
-        {/* Staggered Branch 1 (pointing right to project 1 mockup left edge) */}
-        <path
-          ref={el => branchRefs.current[1] = el}
-          d=""
-          fill="none"
-          stroke="url(#branch-grad-right)"
-          strokeWidth="2"
-          strokeLinecap="round"
-          style={{ transition: 'stroke-dashoffset 0.1s ease-out', willChange: 'stroke-dashoffset' }}
-        />
-
-        {/* Staggered Branch 2 (pointing left to project 2 mockup right edge) */}
-        <path
-          ref={el => branchRefs.current[2] = el}
-          d=""
-          fill="none"
-          stroke="url(#branch-grad-left)"
-          strokeWidth="2"
-          strokeLinecap="round"
-          style={{ transition: 'stroke-dashoffset 0.1s ease-out', willChange: 'stroke-dashoffset' }}
-        />
-
-        {/* Staggered Branch 3 (pointing right to project 3 mockup left edge) */}
-        <path
-          ref={el => branchRefs.current[3] = el}
-          d=""
-          fill="none"
-          stroke="url(#branch-grad-right)"
-          strokeWidth="2"
-          strokeLinecap="round"
-          style={{ transition: 'stroke-dashoffset 0.1s ease-out', willChange: 'stroke-dashoffset' }}
-        />
-
-
-
-        {/* Branch 0 Glowing Node */}
-        <g
-          ref={el => nodeRefs.current[0] = el}
-          style={{ transition: 'opacity 0.2s ease', willChange: 'opacity, transform' }}
+const Projects = () => (
+  <section
+    id="projects"
+    style={{
+      position: 'relative',
+      backgroundColor: 'var(--bg-primary)',
+      paddingTop: '120px',
+      /* clip et non hidden : hidden ferait de la section un conteneur de défilement, et les affiches ne resteraient pas fixes */
+      overflow: 'clip',
+    }}
+  >
+    <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 24px', position: 'relative', zIndex: 1 }}>
+      <div className="reveal-on-scroll" style={{ textAlign: 'center', marginBottom: '90px' }}>
+        <div className="organic-badge" style={{ marginBottom: '16px' }}>
+          RÉALISATIONS MAJEURES
+        </div>
+        <h2
+          className="section-title"
+          style={{
+            fontSize: 'clamp(2.4rem, 6vw, 3.8rem)',
+            color: 'var(--text-primary)',
+            textTransform: 'uppercase',
+            lineHeight: '1.15',
+            margin: 0,
+          }}
         >
-          <circle cx="0" cy="0" r="8" fill="var(--accent)" opacity="0.35" className="pulse-dot" />
-          <circle cx="0" cy="0" r="3.5" fill="var(--accent)" />
-        </g>
-
-        {/* Branch 1 Glowing Node */}
-        <g
-          ref={el => nodeRefs.current[1] = el}
-          style={{ transition: 'opacity 0.2s ease', willChange: 'opacity, transform' }}
+          Showcase <span className="accent-glow-text" style={{ padding: '0 0.05em' }}>Éditorial</span>
+        </h2>
+        <p
+          style={{
+            maxWidth: '620px',
+            margin: '20px auto 0 auto',
+            color: 'var(--text-secondary)',
+            fontFamily: 'var(--font-body)',
+            fontSize: '1.05rem',
+            lineHeight: 1.6,
+          }}
         >
-          <circle cx="0" cy="0" r="8" fill="var(--accent)" opacity="0.35" className="pulse-dot" />
-          <circle cx="0" cy="0" r="3.5" fill="var(--accent)" />
-        </g>
-
-        {/* Branch 2 Glowing Node */}
-        <g
-          ref={el => nodeRefs.current[2] = el}
-          style={{ transition: 'opacity 0.2s ease', willChange: 'opacity, transform' }}
-        >
-          <circle cx="0" cy="0" r="8" fill="var(--accent)" opacity="0.35" className="pulse-dot" />
-          <circle cx="0" cy="0" r="3.5" fill="var(--accent)" />
-        </g>
-
-        {/* Branch 3 Glowing Node */}
-        <g
-          ref={el => nodeRefs.current[3] = el}
-          style={{ transition: 'opacity 0.2s ease', willChange: 'opacity, transform' }}
-        >
-          <circle cx="0" cy="0" r="8" fill="var(--accent)" opacity="0.35" className="pulse-dot" />
-          <circle cx="0" cy="0" r="3.5" fill="var(--accent)" />
-        </g>
-
-
-      </svg>
-
-      {/* Subtle warm background glow */}
-      <div
-        style={{
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          width: '80vw',
-          height: '80vw',
-          background: 'radial-gradient(circle, rgba(37, 99, 235, 0.03) 0%, rgba(255, 255, 255, 0) 70%)',
-          zIndex: 0,
-          pointerEvents: 'none',
-        }}
-      />
-
-      <div style={{ maxWidth: '1200px', margin: '0 auto', position: 'relative', zIndex: 1 }}>
-        {/* Section Heading */}
-        <div ref={headingRef} className="reveal-on-scroll" style={{ textAlign: 'center', marginBottom: '90px' }}>
-          <div className="organic-badge" style={{ marginBottom: '16px' }}>
-            RÉALISATIONS MAJEURES
-          </div>
-          <h2
-            className="section-title"
-            style={{
-              fontSize: 'clamp(2.4rem, 6vw, 3.8rem)',
-              color: 'var(--text-primary)',
-              textTransform: 'uppercase',
-              lineHeight: '1.15',
-              margin: 0,
-            }}
-          >
-            Showcase <span className="accent-glow-text" style={{ padding: '0 0.05em' }}>Éditorial</span>
-          </h2>
-          <p
-            style={{
-              maxWidth: '620px',
-              margin: '20px auto 0 auto',
-              color: 'var(--text-secondary)',
-              fontFamily: 'var(--font-body)',
-              fontSize: '1.05rem',
-              lineHeight: 1.6,
-            }}
-          >
-            Quatre projets : une application en production à l'IUT, le site d'un club de badminton, un stage de recherche en IA et une application de questionnaires.
-          </p>
-        </div>
-
-        {/* Galerie : sur grand écran, la section reste épinglée et les projets défilent de droite à gauche */}
-        <div className="pj-scroller">
-        <div className="pj-pin">
-        <div className="pj-rail" ref={railRef}>
-        <div className="pj-panel pj-panel--0">
-        <span className="pj-number" aria-hidden="true">01</span>
-        {/* 1. Emplois du temps de l'IUT (Unilim EDT) */}
-        <div className="project-card-showcase reveal-on-scroll">
-          <div className="card-ambient-glow card-glow-emerald" />
-          <div className="project-row" style={{ display: 'flex', gap: '56px', alignItems: 'center', flexDirection: 'row-reverse', position: 'relative', zIndex: 1 }}>
-            <ProjectSummary {...PROJECT_INFO[0]} />
-
-            {/* Unilim EDT Physical Mockup */}
-            <div ref={el => mockupRefs.current[0] = el} className="project-mockup reveal-scale delay-200" style={{ flex: '1.15', minWidth: '320px', display: 'flex', justifyContent: 'center' }}>
-              <ProjectStage {...PROJECT_STAGE[0]} />
-            </div>
-          </div>
-        </div>
-
-        </div>
-        <div className="pj-panel pj-panel--1">
-        <span className="pj-number" aria-hidden="true">02</span>
-        {/* 2. Site du BCM (Web / Full-stack) */}
-        <div className="project-card-showcase reveal-on-scroll">
-          <div className="card-ambient-glow card-glow-cyan" />
-          <div className="project-row" style={{ display: 'flex', gap: '56px', alignItems: 'center', position: 'relative', zIndex: 1 }}>
-            <ProjectSummary {...PROJECT_INFO[1]} />
-
-            {/* Visite vidéo du site en ligne */}
-            <div ref={el => mockupRefs.current[1] = el} className="project-mockup reveal-scale delay-200" style={{ flex: '1.15', minWidth: '320px', display: 'flex', justifyContent: 'center' }}>
-              <ProjectStage {...PROJECT_STAGE[1]} />
-            </div>
-          </div>
-        </div>
-
-        </div>
-        <div className="pj-panel pj-panel--2">
-        <span className="pj-number" aria-hidden="true">03</span>
-        {/* 3. Stage RGU Aberdeen (Recherche / Écosse) */}
-        <div className="project-card-showcase reveal-on-scroll">
-          <div className="card-ambient-glow card-glow-accent" />
-          <div className="project-row" style={{ display: 'flex', gap: '56px', alignItems: 'center', flexDirection: 'row-reverse', position: 'relative', zIndex: 1 }}>
-            <ProjectSummary {...PROJECT_INFO[2]} />
-
-            {/* Résultats du papier de recherche */}
-            <div ref={el => mockupRefs.current[2] = el} className="project-mockup reveal-scale delay-200" style={{ flex: '1.15', minWidth: '320px', display: 'flex', justifyContent: 'center' }}>
-              <ProjectStage {...PROJECT_STAGE[2]} />
-            </div>
-          </div>
-        </div>
-
-        </div>
-        <div className="pj-panel pj-panel--3">
-        <span className="pj-number" aria-hidden="true">04</span>
-        {/* 4. Questionary (Application web) */}
-        <div className="project-card-showcase reveal-on-scroll">
-          <div className="card-ambient-glow card-glow-violet" />
-          <div className="project-row" style={{ display: 'flex', gap: '56px', alignItems: 'center', position: 'relative', zIndex: 1 }}>
-            <ProjectSummary {...PROJECT_INFO[3]} />
-
-            {/* Capture de l'application */}
-            <div ref={el => mockupRefs.current[3] = el} className="project-mockup reveal-scale delay-200" style={{ flex: '1.15', minWidth: '320px', display: 'flex', justifyContent: 'center' }}>
-              <ProjectStage {...PROJECT_STAGE[3]} />
-            </div>
-          </div>
-        </div>
-        </div>
-        </div>
-
-        {/* Progression : le projet à l'écran est mis en avant */}
-        <ol className="pj-progress" aria-hidden="true">
-          {PROJECT_INFO.map((project, i) => (
-            <li key={project.title} className={`pj-tab pj-tab--${i}`}>
-              <span>{project.number}</span>{project.tab || project.title}
-            </li>
-          ))}
-          <li className="pj-progress-bar" />
-        </ol>
-        </div>
-        </div>
+          Quatre projets : une application en production à l'IUT, le site d'un club de badminton, un stage de recherche en IA et une application de questionnaires.
+        </p>
       </div>
+    </div>
 
-      {/* Internal CSS for Physical Devices, Responsive Grid, and Live Animations */}
+    {/* Un chapitre par projet : son affiche reste fixe, puis sa fiche remonte par-dessus comme une feuille */}
+    {PROJECT_INFO.map((project, i) => (
+      <article key={project.title} className={`pj-chapter pj-chapter--${TINTS[i]}`}>
+        <div className="pj-poster">
+          <div className="pj-poster-inner">
+            <div className="pj-poster-text">
+              <p className="pj-poster-category">{project.category}</p>
+              <h3 className="pj-poster-title">{project.title}</h3>
+            </div>
+            <p className="pj-figure">
+              <RollingFigure {...project.figure} />
+              <span className="pj-figure-label">{project.figure.label}</span>
+            </p>
+          </div>
+        </div>
+
+        <div className="pj-sheet">
+          <div className="project-card-showcase">
+            <div className={`card-ambient-glow card-glow-${TINTS[i]}`} />
+            <div className="project-row" style={{ display: 'flex', gap: '56px', alignItems: 'center', flexDirection: i % 2 ? 'row' : 'row-reverse', position: 'relative', zIndex: 1 }}>
+              <ProjectSummary {...project} />
+              <div className="project-mockup" style={{ flex: '1.15', minWidth: '320px', display: 'flex', justifyContent: 'center' }}>
+                <ProjectStage {...PROJECT_STAGE[i]} />
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+    ))}
+
       <style dangerouslySetInnerHTML={{ __html: `
         /* Premium Showcase Card Frame */
         .project-card-showcase {
@@ -910,9 +510,6 @@ const Projects = () => {
         }
 
         @media (max-width: 991px) {
-          .organic-tree-svg {
-            display: none !important;
-          }
           .project-card-showcase {
             padding: 10px !important;
             margin-bottom: 40px !important;
@@ -939,164 +536,122 @@ const Projects = () => {
           }
         }
 
-        /* Galerie horizontale : hors grand écran, sans animation au défilement ou en mouvement réduit,
-           les projets restent empilés comme avant */
-        .pj-number, .pj-progress { display: none; }
-        @supports (animation-timeline: view()) {
-          @media (min-width: 1000px) and (min-height: 600px) and (prefers-reduced-motion: no-preference) {
-            .organic-tree-svg { display: none !important; }
-            .pj-scroller {
-              height: 450vh;
-              width: 100vw;
-              margin-left: calc(50% - 50vw);
-              view-timeline: --pj block;
-            }
-            .pj-pin {
-              position: sticky;
-              top: 0;
-              height: 100vh;
-              overflow: hidden;
-            }
-            /* Quatre panneaux côte à côte ; le rail glisse d'un écran à l'autre avec une pause sur chaque projet */
-            .pj-rail {
-              display: flex;
-              width: 400vw;
-              height: 100%;
-              animation: pj-slide var(--ease-in-out) both;
-              animation-timeline: --pj;
-              animation-range: contain 0% contain 100%;
-            }
-            .pj-panel, .pj-number, .pj-tab {
-              animation-timeline: --pj;
-              animation-range: contain 0% contain 100%;
-              animation-fill-mode: both;
-              animation-timing-function: var(--ease-in-out);
-            }
-            .pj-panel {
-              position: relative;
-              flex: 0 0 100vw;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              padding: 90px 48px 80px;
-              box-sizing: border-box;
-            }
-            .pj-panel > .project-card-showcase {
-              width: min(1100px, 100%);
-              margin: 0;
-              z-index: 1;
-              scale: var(--fit, 1);
-            }
-            .pj-panel > .project-card-showcase.reveal-on-scroll { opacity: 1; transform: none; }
-            /* Numéro géant en contour, qui défile moins vite que la carte */
-            .pj-number {
-              display: block;
-              position: absolute;
-              top: 50%;
-              left: 2vw;
-              translate: 0 -55%;
-              font-family: var(--font-display);
-              font-size: min(46vh, 30vw);
-              font-weight: 800;
-              line-height: 1;
-              letter-spacing: -0.06em;
-              color: transparent;
-              -webkit-text-stroke: 2px rgba(var(--accent-rgb), 0.14);
-              pointer-events: none;
-              user-select: none;
-            }
-            /* Fiche compacte : la galerie montre un projet par écran */
-            /* Colonne de texte plus large que la démo : moins de lignes, la carte a moins besoin d'être réduite */
-            .pj-panel .ps { padding: 28px 32px 22px; flex: 1.35; }
-            .pj-panel .project-mockup { flex: 1 !important; min-width: 0 !important; }
-            .pj-panel .ps-title { font-size: clamp(1.7rem, 2.6vw, 2.2rem); }
-            .pj-panel .ps-summary { font-size: 1rem; }
-            .pj-panel .ps-points { gap: 8px; }
-            .pj-panel .ps-points li { font-size: 0.88rem; }
-            .pj-panel .ps-footer { padding-top: 14px; }
-            .pj-panel .project-mockup { padding: 18px; }
+        /* Chapitres : une affiche fixe dans la teinte du projet, puis la fiche qui remonte par-dessus */
+        .pj-chapter { position: relative; view-timeline: --chapter block; }
+        .pj-chapter--emerald { --tint: 5, 150, 105; }
+        .pj-chapter--cyan { --tint: 14, 116, 144; }
+        .pj-chapter--accent { --tint: 37, 99, 235; }
+        .pj-chapter--violet { --tint: 124, 58, 237; }
 
-            .pj-progress {
-              display: flex;
-              position: absolute;
-              left: 50%;
-              bottom: 24px;
-              translate: -50% 0;
-              gap: 6px;
-              margin: 0;
-              padding: 6px;
-              list-style: none;
-              border-radius: 50px;
-              background: rgba(255, 255, 255, 0.85);
-              border: 1px solid var(--border-color);
-              box-shadow: 0 10px 30px rgba(17, 24, 39, 0.08);
-              backdrop-filter: blur(12px);
-              -webkit-backdrop-filter: blur(12px);
-              overflow: hidden;
+        .pj-poster {
+          position: sticky;
+          top: 0;
+          height: 100vh;
+          height: 100svh;
+          display: flex;
+          align-items: center;
+          background: rgb(var(--tint));
+          color: #ffffff;
+          overflow: hidden;
+        }
+        .pj-poster-inner {
+          width: 100%;
+          max-width: 1200px;
+          margin: 0 auto;
+          padding: 96px 24px 48px;
+          min-height: 72vh;
+          box-sizing: border-box;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          gap: 44px;
+        }
+        .pj-poster-category {
+          margin: 0 0 18px;
+          font-family: var(--font-subtitle);
+          font-size: 1.05rem;
+          font-weight: 700;
+          color: rgba(255, 255, 255, 0.8);
+        }
+        .pj-poster-title {
+          margin: 0;
+          font-family: var(--font-display);
+          font-size: clamp(2.6rem, 6.2vw, 6.4rem);
+          max-width: 14ch;
+          font-weight: 800;
+          line-height: 0.95;
+          letter-spacing: -0.04em;
+          text-transform: uppercase;
+          text-wrap: balance;
+        }
+        /* Le chiffre en bas à droite répond au titre en haut à gauche ; sa légende passe dessous */
+        .pj-figure { margin: 0; align-self: flex-end; display: flex; flex-direction: column; align-items: flex-end; gap: 10px; text-align: right; }
+        .pj-figure-value {
+          display: inline-flex;
+          align-items: flex-start;
+          font-family: var(--font-display);
+          font-size: clamp(4rem, 10vw, 9rem);
+          font-weight: 800;
+          line-height: 1;
+          letter-spacing: -0.05em;
+          font-variant-numeric: tabular-nums;
+        }
+        .pj-figure-prefix { margin-right: 0.04em; }
+        .pj-digit { display: inline-block; height: 1em; overflow: hidden; }
+        .pj-digit-strip { display: flex; flex-direction: column; transform: translateY(calc(var(--d) * -1em)); }
+        .pj-digit-strip span { height: 1em; line-height: 1; }
+        .pj-figure-label {
+          font-family: var(--font-body);
+          font-size: 1.15rem;
+          line-height: 1.4;
+          color: rgba(255, 255, 255, 0.9);
+          max-width: 26ch;
+        }
+
+        /* La feuille : un écran blanc aux coins hauts arrondis qui recouvre l'affiche */
+        .pj-sheet {
+          position: relative;
+          z-index: 2;
+          min-height: 100vh;
+          min-height: 100svh;
+          display: flex;
+          align-items: center;
+          padding: 72px 24px;
+          box-sizing: border-box;
+          background: var(--bg-primary);
+          border-radius: 36px 36px 0 0;
+          box-shadow: 0 -24px 60px rgba(17, 24, 39, 0.12);
+        }
+        .pj-sheet > .project-card-showcase { width: 100%; max-width: 1200px; margin: 0 auto; }
+
+        /* En mouvement : les chiffres défilent quand l'affiche arrive, et l'affiche recule quand la feuille la couvre */
+        @supports (animation-timeline: view()) {
+          @media (prefers-reduced-motion: no-preference) {
+            .pj-digit-strip {
+              animation: pj-roll var(--ease-out) both;
+              animation-timeline: --chapter;
+              animation-range: cover calc(20vh + var(--i) * 4vh) cover calc(85vh + var(--i) * 4vh);
             }
-            .pj-tab {
-              display: inline-flex;
-              align-items: center;
-              gap: 8px;
-              padding: 7px 14px;
-              border-radius: 50px;
-              font-family: var(--font-subtitle);
-              font-size: 0.8rem;
-              font-weight: 700;
-              color: var(--text-primary);
-              white-space: nowrap;
+            .pj-poster-inner {
+              transform-origin: 50% 30%;
+              animation: pj-recede linear both;
+              animation-timeline: --chapter;
+              animation-range: cover 100vh cover 200vh;
             }
-            .pj-tab span { font-family: var(--font-mono); font-size: 0.72rem; color: var(--accent-hover); }
-            .pj-progress-bar {
-              position: absolute;
-              left: 0; right: 0; bottom: 0;
-              height: 2px;
-              background: var(--accent);
-              transform-origin: left;
-              animation: pj-bar linear both;
-              animation-timeline: --pj;
-              animation-range: contain 0% contain 100%;
-            }
-            .pj-panel--0 { animation-name: pj-focus-0; }
-            .pj-panel--0 .pj-number { animation-name: pj-num-0; }
-            .pj-tab--0 { animation-name: pj-tab-0; }
-            .pj-panel--1 { animation-name: pj-focus-1; }
-            .pj-panel--1 .pj-number { animation-name: pj-num-1; }
-            .pj-tab--1 { animation-name: pj-tab-1; }
-            .pj-panel--2 { animation-name: pj-focus-2; }
-            .pj-panel--2 .pj-number { animation-name: pj-num-2; }
-            .pj-tab--2 { animation-name: pj-tab-2; }
-            .pj-panel--3 { animation-name: pj-focus-3; }
-            .pj-panel--3 .pj-number { animation-name: pj-num-3; }
-            .pj-tab--3 { animation-name: pj-tab-3; }
           }
         }
-        @keyframes pj-slide {
-          0% { transform: translateX(-0vw); }
-          10% { transform: translateX(-0vw); }
-          30% { transform: translateX(-100vw); }
-          40% { transform: translateX(-100vw); }
-          60% { transform: translateX(-200vw); }
-          70% { transform: translateX(-200vw); }
-          90% { transform: translateX(-300vw); }
-          100% { transform: translateX(-300vw); }
+        @keyframes pj-roll { from { transform: translateY(0); } }
+        @keyframes pj-recede { to { scale: 0.9; opacity: 0.25; } }
+
+        @media (max-width: 860px) {
+          .pj-poster-inner { gap: 32px; padding: 96px 20px 40px; }
+          .pj-figure { align-self: flex-start; align-items: flex-start; text-align: left; }
+          .pj-poster-title { font-size: clamp(2.2rem, 11vw, 3.6rem); }
+          .pj-figure-value { font-size: clamp(3.6rem, 22vw, 6rem); }
+          .pj-sheet { padding: 40px 12px; border-radius: 28px 28px 0 0; }
         }
-        @keyframes pj-bar { from { transform: scaleX(0); } to { transform: scaleX(1); } }
-        @keyframes pj-num-0 { 0% { transform: translateX(0vw); } 10% { transform: translateX(0vw); } 30% { transform: translateX(30vw); } 40% { transform: translateX(30vw); } 60% { transform: translateX(60vw); } 70% { transform: translateX(60vw); } 90% { transform: translateX(90vw); } 100% { transform: translateX(90vw); } }
-        @keyframes pj-num-1 { 0% { transform: translateX(-30vw); } 10% { transform: translateX(-30vw); } 30% { transform: translateX(0vw); } 40% { transform: translateX(0vw); } 60% { transform: translateX(30vw); } 70% { transform: translateX(30vw); } 90% { transform: translateX(60vw); } 100% { transform: translateX(60vw); } }
-        @keyframes pj-num-2 { 0% { transform: translateX(-60vw); } 10% { transform: translateX(-60vw); } 30% { transform: translateX(-30vw); } 40% { transform: translateX(-30vw); } 60% { transform: translateX(0vw); } 70% { transform: translateX(0vw); } 90% { transform: translateX(30vw); } 100% { transform: translateX(30vw); } }
-        @keyframes pj-num-3 { 0% { transform: translateX(-90vw); } 10% { transform: translateX(-90vw); } 30% { transform: translateX(-60vw); } 40% { transform: translateX(-60vw); } 60% { transform: translateX(-30vw); } 70% { transform: translateX(-30vw); } 90% { transform: translateX(0vw); } 100% { transform: translateX(0vw); } }
-        @keyframes pj-focus-0 { 0% { scale: 1; opacity: 1; } 10% { scale: 1; opacity: 1; } 30% { scale: 0.86; opacity: 0.35; } 40% { scale: 0.86; opacity: 0.35; } 60% { scale: 0.86; opacity: 0.35; } 70% { scale: 0.86; opacity: 0.35; } 90% { scale: 0.86; opacity: 0.35; } 100% { scale: 0.86; opacity: 0.35; } }
-        @keyframes pj-focus-1 { 0% { scale: 0.86; opacity: 0.35; } 10% { scale: 0.86; opacity: 0.35; } 30% { scale: 1; opacity: 1; } 40% { scale: 1; opacity: 1; } 60% { scale: 0.86; opacity: 0.35; } 70% { scale: 0.86; opacity: 0.35; } 90% { scale: 0.86; opacity: 0.35; } 100% { scale: 0.86; opacity: 0.35; } }
-        @keyframes pj-focus-2 { 0% { scale: 0.86; opacity: 0.35; } 10% { scale: 0.86; opacity: 0.35; } 30% { scale: 0.86; opacity: 0.35; } 40% { scale: 0.86; opacity: 0.35; } 60% { scale: 1; opacity: 1; } 70% { scale: 1; opacity: 1; } 90% { scale: 0.86; opacity: 0.35; } 100% { scale: 0.86; opacity: 0.35; } }
-        @keyframes pj-focus-3 { 0% { scale: 0.86; opacity: 0.35; } 10% { scale: 0.86; opacity: 0.35; } 30% { scale: 0.86; opacity: 0.35; } 40% { scale: 0.86; opacity: 0.35; } 60% { scale: 0.86; opacity: 0.35; } 70% { scale: 0.86; opacity: 0.35; } 90% { scale: 1; opacity: 1; } 100% { scale: 1; opacity: 1; } }
-        @keyframes pj-tab-0 { 0% { opacity: 1; } 10% { opacity: 1; } 30% { opacity: 0.45; } 40% { opacity: 0.45; } 60% { opacity: 0.45; } 70% { opacity: 0.45; } 90% { opacity: 0.45; } 100% { opacity: 0.45; } }
-        @keyframes pj-tab-1 { 0% { opacity: 0.45; } 10% { opacity: 0.45; } 30% { opacity: 1; } 40% { opacity: 1; } 60% { opacity: 0.45; } 70% { opacity: 0.45; } 90% { opacity: 0.45; } 100% { opacity: 0.45; } }
-        @keyframes pj-tab-2 { 0% { opacity: 0.45; } 10% { opacity: 0.45; } 30% { opacity: 0.45; } 40% { opacity: 0.45; } 60% { opacity: 1; } 70% { opacity: 1; } 90% { opacity: 0.45; } 100% { opacity: 0.45; } }
-        @keyframes pj-tab-3 { 0% { opacity: 0.45; } 10% { opacity: 0.45; } 30% { opacity: 0.45; } 40% { opacity: 0.45; } 60% { opacity: 0.45; } 70% { opacity: 0.45; } 90% { opacity: 1; } 100% { opacity: 1; } }
       `}} />
-    </section>
-  );
-};
+  </section>
+);
 
 export default Projects;
