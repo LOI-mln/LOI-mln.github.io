@@ -56,7 +56,7 @@ const PROJECT_INFO = [
     status: 'En ligne',
     summary: "Le club de badminton de Montpon-Ménestérol, actif depuis 1999, n'avait pas de site à jour. Il en a maintenant un qu'il gère seul.",
     points: [
-      '8 pages pour tout savoir avant de venir : horaires, tarifs, calendrier, compétitions, boutique',
+      'Tout pour venir jouer : 5 créneaux par semaine sur 5 terrains, tarifs et inscription en ligne',
       'Les 4 équipes en interclubs et les 25 partenaires du club mis en avant',
       'Le bureau publie le calendrier et envoie la newsletter sans passer par moi',
     ],
@@ -88,7 +88,7 @@ const PROJECT_INFO = [
     meta: 'Projet BUT · En équipe · 2025-2026',
     summary: "Créer un questionnaire, le partager par QR code et lire les résultats sans passer par un tableur, réponses libres comprises.",
     points: [
-      "Connexion avec le compte de l'université, rien à créer",
+      "Pensée pour tout l'IUT du Limousin : 2 400 étudiants sur 5 sites, connexion avec le compte de l'université",
       "Des questions qui s'adaptent selon les réponses précédentes",
       'Résultats prêts à partager : mots les plus cités, export PDF, Excel ou CSV',
     ],
