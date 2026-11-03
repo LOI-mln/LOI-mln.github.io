@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Calendar, Briefcase, GraduationCap, MapPin, ShieldCheck, Building2 } from 'lucide-react';
 import useSpotlight from '../hooks/useSpotlight';
-import JourneyMap from '../components/JourneyMap';
+import JourneyScene from '../components/JourneyScene';
 
 const Timeline = () => {
   const containerRef = useSpotlight();
@@ -50,7 +50,7 @@ const Timeline = () => {
       style={{
         position: 'relative',
         backgroundColor: 'var(--bg-secondary)',
-        /* clip et non hidden : hidden ferait de la section un conteneur de défilement, et le trajet ne suivrait plus la page */
+        /* clip et non hidden : hidden ferait de la section un conteneur de défilement, et la scène du trajet ne suivrait plus la page */
         overflow: 'clip',
       }}
     >
@@ -102,14 +102,13 @@ const Timeline = () => {
           </p>
         </div>
 
-        {/* Sur grand écran, la carte du trajet reste fixe à gauche pendant que les étapes défilent */}
-        <div className="tl-layout">
-        <JourneyMap />
+        {/* Le trajet en plein écran ; la liste ci-dessous prend le relais quand les animations sont indisponibles ou réduites */}
+        <JourneyScene steps={timelineData} />
 
         {/* Conteneur de la timeline */}
         <div
           ref={containerRef}
-          className="tl-track"
+          className="tl-list"
           style={{
             position: 'relative',
             maxWidth: '800px',
@@ -128,9 +127,6 @@ const Timeline = () => {
             }}
             className="timeline-line"
           />
-          {/* Trajet parcouru : la ligne se remplit au défilement, une comète en tête */}
-          <div className="tl-fill" aria-hidden="true" />
-          <div className="tl-comet" aria-hidden="true" />
 
           {/* Éléments de la timeline */}
           <div
@@ -147,7 +143,7 @@ const Timeline = () => {
               return (
                 <div
                   key={i}
-                  className={`tl-item tl-item--${i + 1} reveal-on-scroll delay-${i * 150}`}
+                  className={`reveal-on-scroll delay-${i * 150}`}
                   style={{
                     display: 'flex',
                     gap: '28px',
@@ -155,9 +151,8 @@ const Timeline = () => {
                   }}
                 >
 
-                  {/* Point de repère sur la ligne : il s'allume quand la comète l'atteint */}
+                  {/* Point de repère sur la ligne */}
                   <div
-                    className="tl-node"
                     style={{
                       width: '64px',
                       height: '64px',
@@ -178,12 +173,10 @@ const Timeline = () => {
                       transform: isHovered ? 'scale(1.08)' : 'scale(1)',
                     }}
                   >
-                    <span className="tl-node-fill" aria-hidden="true" />
-                    <span className="tl-node-icon">{item.icon}</span>
+                    {item.icon}
                   </div>
 
-                  {/* Carte de contenu de l'expérience, dévoilée de gauche à droite */}
-                  <div className="tl-card-wrap" style={{ flexGrow: 1, minWidth: 0, display: 'flex' }}>
+                  {/* Carte de contenu de l'expérience */}
                   <div
                     className="glass-panel spotlight-card timeline-card"
                     onMouseEnter={() => setHoveredIdx(i)}
@@ -355,12 +348,10 @@ const Timeline = () => {
                       <span>{item.location}</span>
                     </div>
                   </div>
-                  </div>
                 </div>
               );
             })}
           </div>
-        </div>
         </div>
       </div>
 
@@ -371,176 +362,6 @@ const Timeline = () => {
         .timeline-card:active {
           transform: scale(0.98) translateY(0) !important;
           transition-duration: 80ms !important;
-        }
-        .tl-node-icon { position: relative; display: flex; }
-        .tl-fill, .tl-comet { display: none; }
-
-        /* Le trajet : la ligne se remplit au rythme du défilement, comme si on la parcourait.
-           La « ligne de lecture » est à 60 % de la hauteur d'écran : quand elle croise une étape,
-           la pastille s'allume et la carte finit de se dévoiler. Animations CSS pilotées par le scroll, sans JS. */
-        @supports (animation-timeline: view()) {
-          @media (prefers-reduced-motion: no-preference) {
-            .tl-track { view-timeline: --tl-track block; }
-            .tl-item.reveal-on-scroll { opacity: 1; transform: none; transition: none; }
-            .timeline-line { background: var(--bg-tertiary) !important; }
-
-            .tl-fill, .tl-comet {
-              display: block;
-              position: absolute;
-              left: 31px;
-              top: 10px;
-              bottom: 10px;
-              width: 2px;
-              /* Sous les étapes : chacune forme sa propre couche (will-change de l'apparition), le z-index des pastilles n'en sort pas */
-              z-index: 0;
-              pointer-events: none;
-              animation-timeline: --tl-track;
-              animation-timing-function: linear;
-              animation-fill-mode: both;
-              animation-range: cover 40vh cover calc(100% - 60vh);
-            }
-            .tl-fill {
-              background: linear-gradient(to bottom, #60a5fa, var(--accent) 40%, var(--accent-hover));
-              transform-origin: top;
-              animation-name: tl-fill;
-            }
-            /* La comète : la colonne fait la hauteur de la ligne, son point est en haut, et elle descend de 100 % */
-            .tl-comet { animation-name: tl-comet; }
-            .tl-comet::before {
-              content: '';
-              position: absolute;
-              top: -6px;
-              left: -5px;
-              width: 12px;
-              height: 12px;
-              border-radius: 50%;
-              background: #ffffff;
-              border: 3px solid var(--accent);
-              box-shadow: 0 0 0 5px rgba(var(--accent-rgb), 0.15), 0 0 18px 2px rgba(var(--accent-rgb), 0.55);
-            }
-
-            /* Chaque étape a sa propre timeline : la pastille s'allume quand la ligne de lecture la croise */
-            .tl-item--1 { view-timeline: --step-1 block; --step: --step-1; }
-            .tl-item--2 { view-timeline: --step-2 block; --step: --step-2; }
-            .tl-item--3 { view-timeline: --step-3 block; --step: --step-3; }
-            .tl-item--4 { view-timeline: --step-4 block; --step: --step-4; }
-            .tl-node { overflow: hidden; }
-            .tl-node-fill {
-              position: absolute;
-              inset: 0;
-              border-radius: 50%;
-              background: var(--accent-gradient);
-              animation: tl-ignite var(--ease-out) both;
-              animation-timeline: var(--step);
-              animation-range: cover calc(40vh + 12px) cover calc(40vh + 52px);
-            }
-            .tl-node-icon {
-              animation: tl-icon linear both;
-              animation-timeline: var(--step);
-              animation-range: cover calc(40vh + 24px) cover calc(40vh + 40px);
-            }
-
-            /* La carte se dévoile de gauche à droite et finit au moment où sa pastille s'allume.
-               Les marges négatives du clip laissent passer l'ombre et le léger soulèvement au survol. */
-            .tl-card-wrap {
-              animation: tl-wipe var(--ease-out) both;
-              animation-timeline: var(--step);
-              animation-range: cover 8vh cover calc(40vh + 40px);
-            }
-          }
-        }
-        /* La carte du trajet : cachée sur téléphone et tablette, où la ligne verticale suffit */
-        .tl-map { display: none; }
-        @media (min-width: 1000px) {
-          .tl-layout {
-            display: grid;
-            grid-template-columns: minmax(0, 400px) minmax(0, 1fr);
-            gap: 48px;
-            align-items: start;
-            max-width: 1180px;
-            margin: 0 auto;
-            timeline-scope: --step-1, --step-2, --step-3, --step-4;
-          }
-          .tl-layout .tl-track { max-width: none !important; }
-          /* La carte remplace la ligne et les pastilles */
-          .tl-layout .timeline-line, .tl-layout .tl-fill, .tl-layout .tl-comet, .tl-layout .tl-node { display: none !important; }
-          .tl-map {
-            display: block;
-            position: sticky;
-            top: 110px;
-            margin: 0;
-            padding: 20px 20px 16px;
-            border-radius: 24px;
-            background: var(--bg-primary);
-            border: 1px solid var(--border-color);
-            box-shadow: 0 10px 30px rgba(17, 24, 39, 0.04);
-          }
-          .tl-map svg {
-            display: block;
-            width: 100%;
-            height: auto;
-            max-height: calc(100vh - 200px);
-            border-radius: 14px;
-            background: #f8fafc;
-            overflow: hidden;
-          }
-          .tl-map-caption {
-            margin-top: 12px;
-            font-family: var(--font-subtitle);
-            font-size: 0.78rem;
-            font-weight: 600;
-            color: var(--text-muted);
-            text-align: center;
-          }
-        }
-        .tl-land { fill: #edf0f5; stroke: #f8fafc; stroke-width: 0.8; }
-        .tl-land--home { fill: #dde6f7; }
-        .tl-route-base { fill: none; stroke: rgba(var(--accent-rgb), 0.28); stroke-width: 1.2; stroke-dasharray: 2 4; stroke-linecap: round; }
-        .tl-route { fill: none; stroke: var(--accent); stroke-width: 2.5; stroke-linecap: round; stroke-dasharray: 1; stroke-dashoffset: 0; }
-        .tl-plane { opacity: 0; fill: var(--accent-hover); offset-rotate: auto; }
-        .tl-pin circle { transform-box: fill-box; transform-origin: center; }
-        .tl-pin-dot { fill: var(--accent); stroke: #ffffff; stroke-width: 2.5; }
-        .tl-pin-halo { fill: rgba(var(--accent-rgb), 0.16); }
-        .tl-pin-label { font-family: var(--font-subtitle); font-size: 11.5px; font-weight: 700; fill: var(--text-primary); paint-order: stroke; stroke: #f8fafc; stroke-width: 3px; }
-
-        /* Au fil du défilement : chaque trajet se trace pendant que l'étape suivante arrive,
-           l'avion le parcourt, et la ville s'allume quand l'étape atteint la ligne de lecture */
-        @supports (animation-timeline: view()) {
-          @media (min-width: 1000px) and (prefers-reduced-motion: no-preference) {
-            .tl-route, .tl-plane, .tl-pin-dot, .tl-pin-halo, .tl-pin-label {
-              animation-fill-mode: both;
-              animation-timing-function: linear;
-            }
-            /* Même courbe pour le trait et l'avion : l'avion reste en tête du trait */
-            .tl-route { animation-name: tl-draw; animation-timing-function: var(--ease-in-out); animation-range: cover 0vh cover 40vh; }
-            .tl-plane { animation-name: tl-fly; animation-timing-function: var(--ease-in-out); animation-range: cover 0vh cover 40vh; }
-            .tl-pin-dot { animation-name: tl-pin; animation-timing-function: var(--ease-out); animation-range: cover 34vh cover 44vh; }
-            .tl-pin-halo { animation-name: tl-halo; animation-timing-function: var(--ease-out); animation-range: cover 34vh cover 50vh; }
-            .tl-pin-label { animation-name: tl-label; animation-range: cover 30vh cover 40vh; }
-            .tl-route--2, .tl-pin--2 * { animation-timeline: --step-2; }
-            .tl-route--3, .tl-plane--3, .tl-pin--3 * { animation-timeline: --step-3; }
-            .tl-route--4, .tl-plane--4, .tl-pin--4 * { animation-timeline: --step-4; }
-            .tl-pin--1 * { animation-timeline: --step-1; }
-          }
-        }
-        @keyframes tl-draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
-        @keyframes tl-fly {
-          0% { offset-distance: 0%; opacity: 0; }
-          10% { opacity: 1; }
-          90% { opacity: 1; }
-          100% { offset-distance: 100%; opacity: 0; }
-        }
-        @keyframes tl-pin { from { transform: scale(0.4); fill: #ffffff; stroke: rgba(var(--accent-rgb), 0.5); } to { transform: scale(1); fill: var(--accent); stroke: #ffffff; } }
-        @keyframes tl-halo { 0% { transform: scale(0.3); opacity: 0; } 60% { opacity: 1; } 100% { transform: scale(1); opacity: 1; } }
-        @keyframes tl-label { from { opacity: 0.35; } to { opacity: 1; } }
-
-        @keyframes tl-fill { from { transform: scaleY(0); } to { transform: scaleY(1); } }
-        @keyframes tl-comet { from { transform: translateY(0); } to { transform: translateY(100%); } }
-        @keyframes tl-ignite { from { opacity: 0; transform: scale(0.4); } to { opacity: 1; transform: scale(1); } }
-        @keyframes tl-icon { from { color: var(--accent); } to { color: #ffffff; } }
-        @keyframes tl-wipe {
-          from { opacity: 0.25; transform: translateX(-24px); clip-path: inset(-30px 100% -50px -30px round 24px); }
-          to { opacity: 1; transform: none; clip-path: inset(-30px -30px -50px -30px round 24px); }
         }
       `}} />
     </section>
