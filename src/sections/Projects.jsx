@@ -137,7 +137,6 @@ const PROJECT_STAGE = [
   },
 ];
 
-// Bloc texte d'une fiche : pastille, titre, contexte, résumé, points clés, pied (technos + lien)
 // Fenêtre vidéo de démonstration (chargée seulement à l'ouverture)
 const DemoModal = ({ demo, title, onClose }) => {
   useEffect(() => {
@@ -162,55 +161,47 @@ const DemoModal = ({ demo, title, onClose }) => {
   );
 };
 
-const ProjectSummary = ({ number, category, title, meta, status, summary, points, tags, link, demo }) => {
+// Fiche d'un projet, sur la feuille qui recouvre son affiche : texte à la couleur du projet, démo sur un aplat de cette couleur
+const ProjectSheet = ({ project, stage, flipped }) => {
   const [demoOpen, setDemoOpen] = useState(false);
+  const { title, category, meta, status, summary, points, tags, link, demo } = project;
 
   return (
-  <div className="project-content ps">
-    <div className="ps-eyebrow">
-      <span>{number}</span>
-      <span>{category}</span>
-    </div>
-    <h3 className="ps-title">
-      {title}
-    </h3>
-    <p className="ps-meta">
-      <span>{meta}</span>
-      {status && <span className="ps-status">{status}</span>}
-    </p>
-    <p className="ps-summary">{summary}</p>
-    <ul className="ps-points">
-      {points.map((point) => (
-        <li key={point}>
-          <span className="ps-check"><Check size={12} strokeWidth={3} /></span>
-          <span>{point}</span>
-        </li>
-      ))}
-    </ul>
-    <div className="ps-footer">
-      <div className="ps-tags">
-        {tags.map((tag) => <span key={tag}>{tag}</span>)}
+    <div className={`pj-sheet-inner ${flipped ? 'pj-sheet-inner--flipped' : ''}`}>
+      <div className="pj-copy">
+        <p className="pj-copy-status">{status || category}</p>
+        <h3 className="pj-copy-title">{title}</h3>
+        <p className="pj-copy-meta">{meta}</p>
+        <p className="pj-copy-summary">{summary}</p>
+        <ul className="pj-copy-points">
+          {points.map((point) => <li key={point}>{point}</li>)}
+        </ul>
+        <div className="pj-copy-foot">
+          <p className="pj-copy-tags">{tags.join(' · ')}</p>
+          <div className="pj-copy-actions">
+            {demo && (
+              <button type="button" className="pj-btn pj-btn--fill" onClick={() => setDemoOpen(true)}>
+                <Play size={14} fill="currentColor" />
+                <span>{demo.button || 'Voir la démo'} · {demo.duration}</span>
+              </button>
+            )}
+            {link && (
+              <a href={link.href} target="_blank" rel="noopener noreferrer" className="pj-btn">
+                {link.kind === 'github' && <GithubIcon size={15} />}
+                {link.kind === 'pdf' && <FileText size={15} />}
+                {link.kind === 'site' && <ExternalLink size={15} />}
+                <span>{link.label}</span>
+                <ArrowUpRight size={15} />
+              </a>
+            )}
+          </div>
+        </div>
       </div>
-      <div className="ps-actions">
-        {demo && (
-          <button type="button" className="ps-link ps-link--demo" onClick={() => setDemoOpen(true)}>
-            <Play size={14} fill="currentColor" />
-            <span>{demo.button || 'Voir la démo'} · {demo.duration}</span>
-          </button>
-        )}
-        {link && (
-          <a href={link.href} target="_blank" rel="noopener noreferrer" className="ps-link">
-            {link.kind === 'github' && <GithubIcon size={15} />}
-            {link.kind === 'pdf' && <FileText size={15} />}
-            {link.kind === 'site' && <ExternalLink size={15} />}
-            <span>{link.label}</span>
-            <ArrowUpRight size={15} />
-          </a>
-        )}
+      <div className="pj-media">
+        <ProjectStage {...stage} />
       </div>
+      {demoOpen && <DemoModal demo={demo} title={title} onClose={() => setDemoOpen(false)} />}
     </div>
-    {demoOpen && <DemoModal demo={demo} title={title} onClose={() => setDemoOpen(false)} />}
-  </div>
   );
 };
 
@@ -293,172 +284,12 @@ const Projects = () => (
         </div>
 
         <div className="pj-sheet">
-          <div className="project-card-showcase">
-            <div className={`card-ambient-glow card-glow-${TINTS[i]}`} />
-            <div className="project-row" style={{ display: 'flex', gap: '56px', alignItems: 'center', flexDirection: i % 2 ? 'row' : 'row-reverse', position: 'relative', zIndex: 1 }}>
-              <ProjectSummary {...project} />
-              <div className="project-mockup" style={{ flex: '1.15', minWidth: '320px', display: 'flex', justifyContent: 'center' }}>
-                <ProjectStage {...PROJECT_STAGE[i]} />
-              </div>
-            </div>
-          </div>
+          <ProjectSheet project={project} stage={PROJECT_STAGE[i]} flipped={i % 2 === 0} />
         </div>
       </article>
     ))}
 
       <style dangerouslySetInnerHTML={{ __html: `
-        /* Premium Showcase Card Frame */
-        .project-card-showcase {
-          position: relative;
-          border-radius: 28px;
-          background: var(--bg-primary);
-          border: 1px solid rgba(17, 24, 39, 0.08);
-          box-shadow: 0 1px 2px rgba(17, 24, 39, 0.04), 0 24px 48px -24px rgba(17, 24, 39, 0.14);
-          padding: 14px;
-          margin-bottom: 96px;
-          overflow: hidden;
-          transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease;
-        }
-        .project-card-showcase:hover {
-          transform: translateY(-4px);
-          box-shadow: 0 1px 2px rgba(17, 24, 39, 0.04), 0 32px 64px -28px rgba(17, 24, 39, 0.22);
-        }
-        .project-card-showcase .card-ambient-glow { display: none; }
-
-        /* Teinte propre à chaque projet (RVB) */
-        .card-glow-violet ~ .project-row { --tint: 124, 58, 237; }
-        .card-glow-accent ~ .project-row { --tint: 37, 99, 235; }
-        .card-glow-emerald ~ .project-row { --tint: 5, 150, 105; }
-        .card-glow-cyan ~ .project-row { --tint: 14, 116, 144; }
-
-        .project-row {
-          gap: 0 !important;
-          align-items: stretch !important;
-        }
-
-        /* Panneau teinté qui accueille la fenêtre du projet */
-        .project-mockup {
-          align-self: stretch;
-          align-items: stretch;
-          border-radius: 20px;
-          padding: 24px;
-          border: 1px solid rgba(var(--tint), 0.12);
-          background:
-            radial-gradient(120% 90% at 50% 0%, rgba(var(--tint), 0.16), transparent 65%),
-            radial-gradient(rgba(var(--tint), 0.16) 1px, transparent 1px) 0 0 / 18px 18px,
-            rgba(var(--tint), 0.04);
-        }
-
-        /* Bloc texte des fiches */
-        .ps {
-          flex: 1;
-          min-width: 300px;
-          padding: 36px 40px 28px;
-          display: flex;
-          flex-direction: column;
-        }
-        .ps-eyebrow {
-          align-self: flex-start;
-          display: inline-flex; gap: 8px; align-items: center;
-          font-family: var(--font-subtitle);
-          font-size: 0.72rem; font-weight: 700;
-          letter-spacing: 0.08em; text-transform: uppercase;
-          color: rgb(var(--tint));
-          background: rgba(var(--tint), 0.08);
-          border: 1px solid rgba(var(--tint), 0.16);
-          padding: 5px 12px;
-          border-radius: 999px;
-          margin-bottom: 18px;
-        }
-        .ps-eyebrow span:first-child { font-family: monospace; opacity: 0.7; }
-        .ps-title {
-          font-family: var(--font-title);
-          font-size: clamp(2rem, 3.4vw, 2.6rem);
-          font-weight: 800;
-          letter-spacing: -0.025em;
-          line-height: 1.1;
-          color: var(--text-primary);
-          margin: 0 0 10px 0;
-        }
-        .ps-meta {
-          display: flex; flex-wrap: wrap; align-items: center; gap: 6px 16px;
-          font-family: var(--font-subtitle);
-          font-size: 0.85rem; font-weight: 600;
-          color: var(--text-muted);
-          margin: 0 0 22px 0;
-        }
-        .ps-status {
-          display: inline-flex; align-items: center; gap: 6px;
-          color: rgb(var(--tint));
-          font-weight: 700;
-        }
-        .ps-status::before {
-          content: '';
-          width: 7px; height: 7px; border-radius: 50%;
-          background: rgb(var(--tint));
-          box-shadow: 0 0 0 3px rgba(var(--tint), 0.18);
-        }
-        .ps-summary {
-          font-family: var(--font-body);
-          font-size: 1.12rem; line-height: 1.6;
-          color: var(--text-primary);
-          margin: 0 0 22px 0;
-          max-width: 520px;
-        }
-        .ps-points {
-          list-style: none; padding: 0;
-          margin: 0 0 28px 0;
-          display: flex; flex-direction: column; gap: 12px;
-        }
-        .ps-points li {
-          display: flex; gap: 12px; align-items: flex-start;
-          font-size: 0.95rem; line-height: 1.5;
-          color: var(--text-secondary);
-        }
-        .ps-check {
-          flex-shrink: 0;
-          width: 20px; height: 20px; margin-top: 1px;
-          border-radius: 50%;
-          display: flex; align-items: center; justify-content: center;
-          color: rgb(var(--tint));
-          background: rgba(var(--tint), 0.1);
-        }
-        .ps-footer {
-          margin-top: auto;
-          padding-top: 20px;
-          border-top: 1px solid rgba(17, 24, 39, 0.07);
-          display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
-          gap: 14px;
-        }
-        .ps-tags { display: flex; flex-wrap: wrap; gap: 6px; }
-        .ps-tags span {
-          font-family: var(--font-subtitle);
-          font-size: 0.76rem; font-weight: 600;
-          color: var(--text-secondary);
-          background: var(--bg-tertiary);
-          padding: 4px 9px;
-          border-radius: 6px;
-        }
-        .ps-link {
-          display: inline-flex; align-items: center; gap: 7px;
-          font-family: var(--font-subtitle);
-          font-size: 0.88rem; font-weight: 700;
-          color: rgb(var(--tint));
-          background: rgba(var(--tint), 0.08);
-          padding: 9px 16px;
-          border-radius: 999px;
-          text-decoration: none;
-          transition: background-color 0.2s ease;
-        }
-        .ps-link svg:last-child { transition: transform 0.2s ease; }
-        .ps-actions { display: flex; flex-wrap: wrap; gap: 8px; }
-        .ps-link--demo {
-          border: none;
-          cursor: pointer;
-          color: #fff;
-          background: rgb(var(--tint));
-        }
-
         /* Fenêtre de démo vidéo */
         .demo-backdrop {
           position: fixed; inset: 0;
@@ -495,47 +326,6 @@ const Projects = () => (
           font-size: 0.85rem;
           color: rgba(255, 255, 255, 0.7);
         }
-        @media (hover: hover) and (pointer: fine) {
-          .ps-link:hover { background: rgba(var(--tint), 0.15); }
-          .ps-link--demo:hover { background: rgba(var(--tint), 0.88); }
-          .ps-link:hover svg:last-child { transform: translate(2px, -2px); }
-        }
-
-        /* Mobile : fenêtre compacte sous le texte */
-        @media (max-width: 767px) {
-          .project-mockup {
-            min-width: 0 !important;
-            padding: 12px !important;
-          }
-        }
-
-        @media (max-width: 991px) {
-          .project-card-showcase {
-            padding: 10px !important;
-            margin-bottom: 40px !important;
-            border-radius: 22px !important;
-          }
-          .project-row {
-            flex-direction: column !important;
-            gap: 10px !important;
-          }
-          .ps {
-            padding: 22px 16px 16px;
-            min-width: 0;
-          }
-          .project-mockup {
-            padding: 32px 16px;
-          }
-          .project-content {
-            width: 100% !important;
-            min-width: 100% !important;
-          }
-          .project-mockup {
-            width: 100% !important;
-            min-width: 100% !important;
-          }
-        }
-
         /* Chapitres : une affiche fixe dans la teinte du projet, puis la fiche qui remonte par-dessus */
         .pj-chapter { position: relative; view-timeline: --chapter block; }
         .pj-chapter--emerald { --tint: 5, 150, 105; }
@@ -624,7 +414,129 @@ const Projects = () => (
           border-radius: 36px 36px 0 0;
           box-shadow: 0 -24px 60px rgba(17, 24, 39, 0.12);
         }
-        .pj-sheet > .project-card-showcase { width: 100%; max-width: 1200px; margin: 0 auto; }
+        .pj-sheet-inner {
+          width: 100%;
+          max-width: 1200px;
+          margin: 0 auto;
+          display: grid;
+          grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+          gap: 64px;
+          align-items: center;
+        }
+        .pj-sheet-inner--flipped .pj-media { order: -1; }
+        .pj-sheet-inner--flipped { grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); }
+
+        /* Texte de la fiche : mêmes voix que l'affiche (Syne en capitales, couleur du projet) */
+        .pj-copy { container-type: inline-size; }
+        .pj-copy-status {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          margin: 0 0 16px;
+          font-family: var(--font-subtitle);
+          font-size: 0.95rem;
+          font-weight: 700;
+          color: rgb(var(--tint));
+        }
+        .pj-copy-status::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
+        .pj-copy-title {
+          margin: 0;
+          font-family: var(--font-display);
+          font-size: min(2.6rem, 100cqi / 12.5);
+          font-weight: 800;
+          line-height: 1;
+          letter-spacing: -0.03em;
+          text-transform: uppercase;
+          text-wrap: balance;
+          color: rgb(var(--tint));
+        }
+        .pj-copy-meta {
+          margin: 14px 0 0;
+          font-family: var(--font-subtitle);
+          font-size: 0.85rem;
+          font-weight: 600;
+          color: var(--text-muted);
+        }
+        .pj-copy-summary {
+          margin: 24px 0 0;
+          font-family: var(--font-body);
+          font-size: 1.15rem;
+          line-height: 1.55;
+          color: var(--text-primary);
+        }
+        .pj-copy-points {
+          list-style: none;
+          margin: 22px 0 0;
+          padding: 0;
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+        }
+        .pj-copy-points li {
+          position: relative;
+          padding-left: 24px;
+          font-family: var(--font-body);
+          font-size: 0.98rem;
+          line-height: 1.5;
+          color: var(--text-secondary);
+        }
+        .pj-copy-points li::before {
+          content: '';
+          position: absolute;
+          left: 0; top: 0.42em;
+          width: 12px; height: 12px;
+          border-radius: 4px;
+          background: rgb(var(--tint));
+        }
+        .pj-copy-foot {
+          margin-top: 30px;
+          display: flex;
+          flex-wrap: wrap;
+          align-items: center;
+          justify-content: space-between;
+          gap: 16px;
+        }
+        .pj-copy-tags {
+          margin: 0;
+          font-family: var(--font-subtitle);
+          font-size: 0.85rem;
+          font-weight: 600;
+          color: var(--text-muted);
+        }
+        .pj-copy-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+        .pj-btn {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          padding: 12px 20px;
+          border-radius: 50px;
+          border: none;
+          cursor: pointer;
+          font-family: var(--font-subtitle);
+          font-size: 0.92rem;
+          font-weight: 700;
+          text-decoration: none;
+          color: rgb(var(--tint));
+          background: rgba(var(--tint), 0.1);
+          transition: background-color var(--duration-normal) var(--ease-out), transform var(--duration-fast) var(--ease-out);
+        }
+        .pj-btn--fill { color: #ffffff; background: rgb(var(--tint)); }
+        .pj-btn:active { transform: scale(0.97); }
+        @media (hover: hover) and (pointer: fine) {
+          .pj-btn:hover { background: rgba(var(--tint), 0.18); }
+          .pj-btn--fill:hover { background: rgba(var(--tint), 0.88); }
+        }
+
+        /* La démo posée sur un aplat de la couleur du projet, comme un morceau de son affiche */
+        .pj-media {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: clamp(24px, 4vw, 56px);
+          border-radius: 28px;
+          background: rgb(var(--tint));
+        }
+        .pj-media > * { width: 100%; }
 
         /* En mouvement : les chiffres défilent quand l'affiche arrive, et l'affiche recule quand la feuille la couvre */
         @supports (animation-timeline: view()) {
@@ -650,7 +562,10 @@ const Projects = () => (
           .pj-figure { align-self: flex-start; align-items: flex-start; text-align: left; }
 
           .pj-figure-value { font-size: clamp(3.6rem, 22vw, 6rem); }
-          .pj-sheet { padding: 40px 12px; border-radius: 28px 28px 0 0; }
+          .pj-sheet { padding: 40px 16px; border-radius: 28px 28px 0 0; }
+          .pj-sheet-inner, .pj-sheet-inner--flipped { grid-template-columns: 1fr; gap: 28px; }
+          .pj-sheet-inner--flipped .pj-media { order: 0; }
+          .pj-media { padding: 16px; border-radius: 22px; }
         }
       `}} />
   </section>
