@@ -240,7 +240,7 @@ const MetricGrid = () => {
       value: 1,
       suffix: '',
       label: 'APPLI EN PRODUCTION',
-      sub: 'Unilim EDT · IUT du Limousin',
+      sub: "Emplois du temps de l'IUT du Limousin",
       startValue: 0,
       isFloat: false,
       details: [

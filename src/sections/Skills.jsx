@@ -19,12 +19,12 @@ const SkillsMesh = ({ mode }) => {
 const SKILLS = [
   {
     code: 'C1', title: 'Réaliser', icon: <Code size={20} />,
-    highlights: ['Applications métiers chez Ceva Santé Animale', 'Unilim EDT : Laravel 11, Vue 3, OR-Tools', 'Questionary : Vue.js, réponses libres'],
+    highlights: ['Applications métiers chez Ceva Santé Animale', "Emplois du temps de l'IUT : Laravel 11, Vue 3, OR-Tools", 'Questionary : Vue.js, réponses libres'],
     techs: ['React', 'Vue.js', 'Node.js', 'TypeScript', 'Python', 'PHP'],
   },
   {
     code: 'C2', title: 'Optimiser', icon: <Cpu size={20} />,
-    highlights: ['Solveur OR-Tools CP-SAT (Unilim EDT)', 'Moteur de streaming FFmpeg', 'Exploration active de Rust'],
+    highlights: ["Solveur OR-Tools CP-SAT (emplois du temps de l'IUT)", 'Moteur de streaming FFmpeg', 'Exploration active de Rust'],
     techs: ['Python', 'OR-Tools', 'Rust', 'Java', 'Lua'],
   },
   {
@@ -39,7 +39,7 @@ const SKILLS = [
   },
   {
     code: 'C5', title: 'Conduire', icon: <Users size={20} />,
-    highlights: ['Scrum chez Ceva Santé Animale', "Lead d'une équipe de 4 devs (Unilim EDT)", 'Stage Erasmus+ de R&D en Écosse'],
+    highlights: ['Scrum chez Ceva Santé Animale', "Lead d'une équipe de 4 devs (emplois du temps de l'IUT)", 'Stage Erasmus+ de R&D en Écosse'],
     techs: ['Agile', 'Git', 'Gestion de projet'],
   },
   {

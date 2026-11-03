@@ -36,8 +36,9 @@ const PROJECT_INFO = [
   {
     number: '01',
     category: 'Application en production',
-    title: 'Unilim EDT',
-    meta: "Projet BUT · Lead dev, équipe de 4 · 2025-2026",
+    title: "Emplois du temps de l'IUT",
+    tab: 'Emplois du temps',
+    meta: "Unilim EDT · Projet BUT · Lead dev, équipe de 4 · 2025-2026",
     status: "En production à l'IUT",
     summary: "L'IUT du Limousin faisait ses emplois du temps à la main. L'application les génère toute seule, sans qu'une salle, un enseignant ou un groupe soit pris deux fois.",
     points: [
@@ -628,7 +629,7 @@ const Projects = () => {
         <div className="pj-rail" ref={railRef}>
         <div className="pj-panel pj-panel--0">
         <span className="pj-number" aria-hidden="true">01</span>
-        {/* 1. Projet "Unilim EDT" (Recherche Opérationnelle & Full-stack) */}
+        {/* 1. Emplois du temps de l'IUT (Unilim EDT) */}
         <div className="project-card-showcase reveal-on-scroll">
           <div className="card-ambient-glow card-glow-emerald" />
           <div className="project-row" style={{ display: 'flex', gap: '56px', alignItems: 'center', flexDirection: 'row-reverse', position: 'relative', zIndex: 1 }}>
@@ -695,7 +696,7 @@ const Projects = () => {
         <ol className="pj-progress" aria-hidden="true">
           {PROJECT_INFO.map((project, i) => (
             <li key={project.title} className={`pj-tab pj-tab--${i}`}>
-              <span>{project.number}</span>{project.title}
+              <span>{project.number}</span>{project.tab || project.title}
             </li>
           ))}
           <li className="pj-progress-bar" />
