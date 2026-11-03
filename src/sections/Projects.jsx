@@ -79,6 +79,7 @@ const PROJECT_INFO = [
       'Papier de recherche rédigé sous la direction du Dr Shahana Bano',
     ],
     tags: ['Python', 'PyTorch', 'CLIP', 'DistilBERT'],
+    demo: { src: '/videos/rgu-dashboard-demo.mp4', poster: '/videos/rgu-dashboard-demo.jpg', duration: '21 s', label: 'Dashboard réel', button: 'Voir le dashboard' },
     link: { href: '/research_paper.pdf', label: 'Lire le papier', kind: 'pdf' },
   },
   {
@@ -118,19 +119,11 @@ const PROJECT_STAGE = [
     poster: '/videos/bcm-site-demo.jpg',
   },
   {
-    kind: 'research',
-    title: 'Polarisation par communauté',
-    footer: 'Tableau 1 du papier · toxicité notée par Perspective API',
-    label: 'Communauté Louvain',
-    max: 0.5,
-    rows: [
-      { name: 'Progressive Network', index: '0,473', we: 254, them: 247, ratio: '1,03', toxicity: '0,46' },
-      { name: 'Alt-Right Echo Chamber', index: '0,457', we: 274, them: 256, ratio: '1,07', toxicity: '0,43' },
-      { name: 'Far-Left Network', index: '0,417', we: 253, them: 259, ratio: '0,98', toxicity: '0,43' },
-      { name: 'Local Politics', index: '0,342', we: 322, them: 475, ratio: '0,68', toxicity: '0,50' },
-      { name: 'Conservative Hub', index: '0,111', we: 103, them: 402, ratio: '0,26', toxicity: '0,43' },
-      { name: 'Mainstream Media & News', index: '0,088', we: 51, them: 279, ratio: '0,18', toxicity: '0,48' },
-    ],
+    kind: 'video',
+    title: 'We vs Them · Dashboard',
+    footer: 'Dashboard réel du stage · CLIP, toxicité et graphe Louvain',
+    src: '/videos/rgu-dashboard-demo.mp4',
+    poster: '/videos/rgu-dashboard-demo.jpg',
   },
   {
     kind: 'image',
