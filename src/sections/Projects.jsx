@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { 
   createPortal } from 'react-dom';
-import TextScramble from '../components/TextScramble';
 import ProjectStage from '../components/ProjectStage';
 import { 
   Globe, 
@@ -169,7 +168,7 @@ const ProjectSummary = ({ number, category, title, meta, status, summary, points
       <span>{category}</span>
     </div>
     <h3 className="ps-title">
-      <TextScramble text={title} hover={true} />
+      {title}
     </h3>
     <p className="ps-meta">
       <span>{meta}</span>
@@ -219,6 +218,22 @@ const Projects = () => {
   const headingRef = useRef(null);
   const mockupRefs = useRef([]);
   const targetCoordsRef = useRef([]);
+  const railRef = useRef(null);
+
+  // Galerie : réduit chaque carte juste assez pour qu'elle tienne entière entre la navigation et la progression
+  useEffect(() => {
+    const rail = railRef.current;
+    if (!rail || !('ResizeObserver' in window)) return;
+    const cards = [...rail.querySelectorAll('.project-card-showcase')];
+    const fit = () => {
+      const available = window.innerHeight - 170;
+      cards.forEach((card) => card.style.setProperty('--fit', Math.min(1, available / card.offsetHeight).toFixed(3)));
+    };
+    const observer = new ResizeObserver(fit);
+    cards.forEach((card) => observer.observe(card));
+    window.addEventListener('resize', fit);
+    return () => { observer.disconnect(); window.removeEventListener('resize', fit); };
+  }, []);
 
   useEffect(() => {
     const updateTreeCoordinates = () => {
@@ -431,7 +446,8 @@ const Projects = () => {
         position: 'relative',
         backgroundColor: 'var(--bg-primary)',
         padding: '120px 24px',
-        overflow: 'hidden',
+        /* clip et non hidden : hidden ferait de la section un conteneur de défilement, et la galerie ne resterait pas épinglée */
+        overflow: 'clip',
       }}
     >
       {/* Organic Scroll-Drawn Connecting Tree SVG */}
@@ -606,6 +622,12 @@ const Projects = () => {
           </p>
         </div>
 
+        {/* Galerie : sur grand écran, la section reste épinglée et les projets défilent de droite à gauche */}
+        <div className="pj-scroller">
+        <div className="pj-pin">
+        <div className="pj-rail" ref={railRef}>
+        <div className="pj-panel pj-panel--0">
+        <span className="pj-number" aria-hidden="true">01</span>
         {/* 1. Projet "Unilim EDT" (Recherche Opérationnelle & Full-stack) */}
         <div className="project-card-showcase reveal-on-scroll">
           <div className="card-ambient-glow card-glow-emerald" />
@@ -619,6 +641,9 @@ const Projects = () => {
           </div>
         </div>
 
+        </div>
+        <div className="pj-panel pj-panel--1">
+        <span className="pj-number" aria-hidden="true">02</span>
         {/* 2. Site du BCM (Web / Full-stack) */}
         <div className="project-card-showcase reveal-on-scroll">
           <div className="card-ambient-glow card-glow-cyan" />
@@ -632,6 +657,9 @@ const Projects = () => {
           </div>
         </div>
 
+        </div>
+        <div className="pj-panel pj-panel--2">
+        <span className="pj-number" aria-hidden="true">03</span>
         {/* 3. Stage RGU Aberdeen (Recherche / Écosse) */}
         <div className="project-card-showcase reveal-on-scroll">
           <div className="card-ambient-glow card-glow-accent" />
@@ -645,6 +673,9 @@ const Projects = () => {
           </div>
         </div>
 
+        </div>
+        <div className="pj-panel pj-panel--3">
+        <span className="pj-number" aria-hidden="true">04</span>
         {/* 4. Questionary (Application web) */}
         <div className="project-card-showcase reveal-on-scroll">
           <div className="card-ambient-glow card-glow-violet" />
@@ -656,6 +687,20 @@ const Projects = () => {
               <ProjectStage {...PROJECT_STAGE[3]} />
             </div>
           </div>
+        </div>
+        </div>
+        </div>
+
+        {/* Progression : le projet à l'écran est mis en avant */}
+        <ol className="pj-progress" aria-hidden="true">
+          {PROJECT_INFO.map((project, i) => (
+            <li key={project.title} className={`pj-tab pj-tab--${i}`}>
+              <span>{project.number}</span>{project.title}
+            </li>
+          ))}
+          <li className="pj-progress-bar" />
+        </ol>
+        </div>
         </div>
       </div>
 
@@ -892,6 +937,162 @@ const Projects = () => {
             min-width: 100% !important;
           }
         }
+
+        /* Galerie horizontale : hors grand écran, sans animation au défilement ou en mouvement réduit,
+           les projets restent empilés comme avant */
+        .pj-number, .pj-progress { display: none; }
+        @supports (animation-timeline: view()) {
+          @media (min-width: 1000px) and (min-height: 600px) and (prefers-reduced-motion: no-preference) {
+            .organic-tree-svg { display: none !important; }
+            .pj-scroller {
+              height: 450vh;
+              width: 100vw;
+              margin-left: calc(50% - 50vw);
+              view-timeline: --pj block;
+            }
+            .pj-pin {
+              position: sticky;
+              top: 0;
+              height: 100vh;
+              overflow: hidden;
+            }
+            /* Quatre panneaux côte à côte ; le rail glisse d'un écran à l'autre avec une pause sur chaque projet */
+            .pj-rail {
+              display: flex;
+              width: 400vw;
+              height: 100%;
+              animation: pj-slide var(--ease-in-out) both;
+              animation-timeline: --pj;
+              animation-range: contain 0% contain 100%;
+            }
+            .pj-panel, .pj-number, .pj-tab {
+              animation-timeline: --pj;
+              animation-range: contain 0% contain 100%;
+              animation-fill-mode: both;
+              animation-timing-function: var(--ease-in-out);
+            }
+            .pj-panel {
+              position: relative;
+              flex: 0 0 100vw;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              padding: 90px 48px 80px;
+              box-sizing: border-box;
+            }
+            .pj-panel > .project-card-showcase {
+              width: min(1100px, 100%);
+              margin: 0;
+              z-index: 1;
+              scale: var(--fit, 1);
+            }
+            .pj-panel > .project-card-showcase.reveal-on-scroll { opacity: 1; transform: none; }
+            /* Numéro géant en contour, qui défile moins vite que la carte */
+            .pj-number {
+              display: block;
+              position: absolute;
+              top: 50%;
+              left: 2vw;
+              translate: 0 -55%;
+              font-family: var(--font-display);
+              font-size: min(46vh, 30vw);
+              font-weight: 800;
+              line-height: 1;
+              letter-spacing: -0.06em;
+              color: transparent;
+              -webkit-text-stroke: 2px rgba(var(--accent-rgb), 0.14);
+              pointer-events: none;
+              user-select: none;
+            }
+            /* Fiche compacte : la galerie montre un projet par écran */
+            /* Colonne de texte plus large que la démo : moins de lignes, la carte a moins besoin d'être réduite */
+            .pj-panel .ps { padding: 28px 32px 22px; flex: 1.35; }
+            .pj-panel .project-mockup { flex: 1 !important; min-width: 0 !important; }
+            .pj-panel .ps-title { font-size: clamp(1.7rem, 2.6vw, 2.2rem); }
+            .pj-panel .ps-summary { font-size: 1rem; }
+            .pj-panel .ps-points { gap: 8px; }
+            .pj-panel .ps-points li { font-size: 0.88rem; }
+            .pj-panel .ps-footer { padding-top: 14px; }
+            .pj-panel .project-mockup { padding: 18px; }
+
+            .pj-progress {
+              display: flex;
+              position: absolute;
+              left: 50%;
+              bottom: 24px;
+              translate: -50% 0;
+              gap: 6px;
+              margin: 0;
+              padding: 6px;
+              list-style: none;
+              border-radius: 50px;
+              background: rgba(255, 255, 255, 0.85);
+              border: 1px solid var(--border-color);
+              box-shadow: 0 10px 30px rgba(17, 24, 39, 0.08);
+              backdrop-filter: blur(12px);
+              -webkit-backdrop-filter: blur(12px);
+              overflow: hidden;
+            }
+            .pj-tab {
+              display: inline-flex;
+              align-items: center;
+              gap: 8px;
+              padding: 7px 14px;
+              border-radius: 50px;
+              font-family: var(--font-subtitle);
+              font-size: 0.8rem;
+              font-weight: 700;
+              color: var(--text-primary);
+              white-space: nowrap;
+            }
+            .pj-tab span { font-family: var(--font-mono); font-size: 0.72rem; color: var(--accent-hover); }
+            .pj-progress-bar {
+              position: absolute;
+              left: 0; right: 0; bottom: 0;
+              height: 2px;
+              background: var(--accent);
+              transform-origin: left;
+              animation: pj-bar linear both;
+              animation-timeline: --pj;
+              animation-range: contain 0% contain 100%;
+            }
+            .pj-panel--0 { animation-name: pj-focus-0; }
+            .pj-panel--0 .pj-number { animation-name: pj-num-0; }
+            .pj-tab--0 { animation-name: pj-tab-0; }
+            .pj-panel--1 { animation-name: pj-focus-1; }
+            .pj-panel--1 .pj-number { animation-name: pj-num-1; }
+            .pj-tab--1 { animation-name: pj-tab-1; }
+            .pj-panel--2 { animation-name: pj-focus-2; }
+            .pj-panel--2 .pj-number { animation-name: pj-num-2; }
+            .pj-tab--2 { animation-name: pj-tab-2; }
+            .pj-panel--3 { animation-name: pj-focus-3; }
+            .pj-panel--3 .pj-number { animation-name: pj-num-3; }
+            .pj-tab--3 { animation-name: pj-tab-3; }
+          }
+        }
+        @keyframes pj-slide {
+          0% { transform: translateX(-0vw); }
+          10% { transform: translateX(-0vw); }
+          30% { transform: translateX(-100vw); }
+          40% { transform: translateX(-100vw); }
+          60% { transform: translateX(-200vw); }
+          70% { transform: translateX(-200vw); }
+          90% { transform: translateX(-300vw); }
+          100% { transform: translateX(-300vw); }
+        }
+        @keyframes pj-bar { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+        @keyframes pj-num-0 { 0% { transform: translateX(0vw); } 10% { transform: translateX(0vw); } 30% { transform: translateX(30vw); } 40% { transform: translateX(30vw); } 60% { transform: translateX(60vw); } 70% { transform: translateX(60vw); } 90% { transform: translateX(90vw); } 100% { transform: translateX(90vw); } }
+        @keyframes pj-num-1 { 0% { transform: translateX(-30vw); } 10% { transform: translateX(-30vw); } 30% { transform: translateX(0vw); } 40% { transform: translateX(0vw); } 60% { transform: translateX(30vw); } 70% { transform: translateX(30vw); } 90% { transform: translateX(60vw); } 100% { transform: translateX(60vw); } }
+        @keyframes pj-num-2 { 0% { transform: translateX(-60vw); } 10% { transform: translateX(-60vw); } 30% { transform: translateX(-30vw); } 40% { transform: translateX(-30vw); } 60% { transform: translateX(0vw); } 70% { transform: translateX(0vw); } 90% { transform: translateX(30vw); } 100% { transform: translateX(30vw); } }
+        @keyframes pj-num-3 { 0% { transform: translateX(-90vw); } 10% { transform: translateX(-90vw); } 30% { transform: translateX(-60vw); } 40% { transform: translateX(-60vw); } 60% { transform: translateX(-30vw); } 70% { transform: translateX(-30vw); } 90% { transform: translateX(0vw); } 100% { transform: translateX(0vw); } }
+        @keyframes pj-focus-0 { 0% { scale: 1; opacity: 1; } 10% { scale: 1; opacity: 1; } 30% { scale: 0.86; opacity: 0.35; } 40% { scale: 0.86; opacity: 0.35; } 60% { scale: 0.86; opacity: 0.35; } 70% { scale: 0.86; opacity: 0.35; } 90% { scale: 0.86; opacity: 0.35; } 100% { scale: 0.86; opacity: 0.35; } }
+        @keyframes pj-focus-1 { 0% { scale: 0.86; opacity: 0.35; } 10% { scale: 0.86; opacity: 0.35; } 30% { scale: 1; opacity: 1; } 40% { scale: 1; opacity: 1; } 60% { scale: 0.86; opacity: 0.35; } 70% { scale: 0.86; opacity: 0.35; } 90% { scale: 0.86; opacity: 0.35; } 100% { scale: 0.86; opacity: 0.35; } }
+        @keyframes pj-focus-2 { 0% { scale: 0.86; opacity: 0.35; } 10% { scale: 0.86; opacity: 0.35; } 30% { scale: 0.86; opacity: 0.35; } 40% { scale: 0.86; opacity: 0.35; } 60% { scale: 1; opacity: 1; } 70% { scale: 1; opacity: 1; } 90% { scale: 0.86; opacity: 0.35; } 100% { scale: 0.86; opacity: 0.35; } }
+        @keyframes pj-focus-3 { 0% { scale: 0.86; opacity: 0.35; } 10% { scale: 0.86; opacity: 0.35; } 30% { scale: 0.86; opacity: 0.35; } 40% { scale: 0.86; opacity: 0.35; } 60% { scale: 0.86; opacity: 0.35; } 70% { scale: 0.86; opacity: 0.35; } 90% { scale: 1; opacity: 1; } 100% { scale: 1; opacity: 1; } }
+        @keyframes pj-tab-0 { 0% { opacity: 1; } 10% { opacity: 1; } 30% { opacity: 0.45; } 40% { opacity: 0.45; } 60% { opacity: 0.45; } 70% { opacity: 0.45; } 90% { opacity: 0.45; } 100% { opacity: 0.45; } }
+        @keyframes pj-tab-1 { 0% { opacity: 0.45; } 10% { opacity: 0.45; } 30% { opacity: 1; } 40% { opacity: 1; } 60% { opacity: 0.45; } 70% { opacity: 0.45; } 90% { opacity: 0.45; } 100% { opacity: 0.45; } }
+        @keyframes pj-tab-2 { 0% { opacity: 0.45; } 10% { opacity: 0.45; } 30% { opacity: 0.45; } 40% { opacity: 0.45; } 60% { opacity: 1; } 70% { opacity: 1; } 90% { opacity: 0.45; } 100% { opacity: 0.45; } }
+        @keyframes pj-tab-3 { 0% { opacity: 0.45; } 10% { opacity: 0.45; } 30% { opacity: 0.45; } 40% { opacity: 0.45; } 60% { opacity: 0.45; } 70% { opacity: 0.45; } 90% { opacity: 1; } 100% { opacity: 1; } }
       `}} />
     </section>
   );
