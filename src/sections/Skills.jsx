@@ -19,38 +19,32 @@ const SkillsMesh = ({ mode }) => {
 const SKILLS = [
   {
     code: 'C1', title: 'Réaliser', icon: <Code size={20} />,
-    desc: 'Développer des applications complexes avec des architectures robustes et réactives.',
-    highlights: ['Alternance Ceva Santé Animale : applications métiers et SI', 'Unilim EDT : Laravel 11, Vue 3 et OR-Tools', 'Questionary : Vue.js et analyse des réponses libres'],
-    techs: ['React', 'Vue.js', 'Node.js', 'TypeScript', 'Python', 'PHP', 'Docker'],
+    highlights: ['Applications métiers chez Ceva Santé Animale', 'Unilim EDT : Laravel 11, Vue 3, OR-Tools', 'Questionary : Vue.js, réponses libres'],
+    techs: ['React', 'Vue.js', 'Node.js', 'TypeScript', 'Python', 'PHP'],
   },
   {
     code: 'C2', title: 'Optimiser', icon: <Cpu size={20} />,
-    desc: 'Maximiser les performances algorithmiques et matérielles des applications.',
     highlights: ['Solveur OR-Tools CP-SAT (Unilim EDT)', 'Moteur de streaming FFmpeg', 'Exploration active de Rust'],
-    techs: ['Python', 'Google OR-Tools', 'Rust', 'Java', 'Lua'],
+    techs: ['Python', 'OR-Tools', 'Rust', 'Java', 'Lua'],
   },
   {
     code: 'C3', title: 'Administrer', icon: <Server size={20} />,
-    desc: 'Configurer et sécuriser des systèmes, hyperviseurs et services réseau.',
     highlights: ['Postes et serveurs sous NixOS', 'Clusters Proxmox VE', 'Homelab personnel sécurisé'],
     techs: ['Proxmox VE', 'Docker', 'NixOS'],
   },
   {
     code: 'C4', title: 'Gérer', icon: <Database size={20} />,
-    desc: 'Concevoir et gérer des bases de données relationnelles performantes.',
     highlights: ['Schémas normalisés MariaDB', 'Optimisation des index SQL', 'Modélisation relationnelle'],
     techs: ['MariaDB', 'MySQL', 'SQL'],
   },
   {
     code: 'C5', title: 'Conduire', icon: <Users size={20} />,
-    desc: 'Coordonner des équipes et appliquer les méthodologies agiles.',
-    highlights: ['Agilité et Scrum en entreprise (Ceva Santé Animale)', "Lead d'une équipe de 4 devs (Unilim EDT)", 'Stage Erasmus+ de R&D en Écosse'],
+    highlights: ['Scrum chez Ceva Santé Animale', "Lead d'une équipe de 4 devs (Unilim EDT)", 'Stage Erasmus+ de R&D en Écosse'],
     techs: ['Agile', 'Git', 'Gestion de projet'],
   },
   {
     code: 'C6', title: 'Sécuriser', icon: <ShieldAlert size={20} />,
-    desc: 'Protéger les données et systèmes contre les menaces numériques.',
-    highlights: ['Cours Cisco validé : Introduction à la cybersécurité', 'Architecture réseau multi-zones (Kathara)', 'Cryptographie et chiffrement AES-256'],
+    highlights: ['Cours Cisco de cybersécurité validé', 'Réseau multi-zones (Kathara)', 'Chiffrement AES-256'],
     techs: ['Cybersécurité', 'Cryptographie', 'Sécurité réseau'],
   },
 ];
@@ -64,15 +58,14 @@ const TOOLBOX = [
 ];
 
 // Carte d'une compétence : tout son contenu est visible, sans clic
-const SkillCard = ({ code, title, icon, desc, highlights, techs, featured, delay }) => (
+const SkillCard = ({ code, title, icon, highlights, techs, featured, delay }) => (
   <article className={`sk-card sk-card--${code.toLowerCase()} ${featured ? 'sk-card--featured' : ''} reveal-on-scroll ${delay}`}>
     <div className="sk-card-top">
       <span className="sk-card-icon">{icon}</span>
       <span className="sk-card-code">{code}</span>
-      <span className="sk-card-level">Niveau 3 · Adapter</span>
+      <span className="sk-card-level">Niveau 3</span>
     </div>
     <h3 className="sk-card-title">{title}</h3>
-    <p className="sk-card-desc">{desc}</p>
     <ul className="sk-card-list">
       {highlights.map((h) => <li key={h}>{h}</li>)}
     </ul>
@@ -102,14 +95,13 @@ const Skills = ({ theme }) => (
         </p>
       </div>
 
-      {/* Grille : Réaliser en vedette, puis les autres compétences et la boîte à outils */}
+      {/* Grille : deux rangées de trois compétences, Réaliser en vedette, puis la boîte à outils */}
       <div className="sk-grid">
         {SKILLS.map((skill, i) => (
           <SkillCard key={skill.code} {...skill} featured={i === 0} delay={`delay-${(i % 3) * 100}`} />
         ))}
 
-        <aside className="sk-card sk-tools reveal-on-scroll delay-100">
-          <h3 className="sk-tools-title">Boîte à outils</h3>
+        <aside className="sk-card sk-tools reveal-on-scroll delay-100" aria-label="Boîte à outils">
           <div className="sk-tools-grid">
             {TOOLBOX.map((group) => (
               <div key={group.label} className={`sk-tools-group ${group.tone ? `sk-tools-group--${group.tone}` : ''}`}>
@@ -136,11 +128,11 @@ const Skills = ({ theme }) => (
         z-index: 1;
         max-width: 1200px;
         margin: 0 auto;
-        padding: 96px 24px;
+        padding: 80px 24px;
       }
 
       /* Styles de l'en-tête */
-      .sk-header { text-align: center; margin-bottom: 56px; }
+      .sk-header { text-align: center; margin-bottom: 40px; }
       .sk-title {
         font-family: var(--font-display);
         font-size: clamp(2rem, 4.5vw, 3.2rem);
@@ -159,17 +151,13 @@ const Skills = ({ theme }) => (
         line-height: 1.6;
       }
 
-      /* Grille : 7 + 5, puis 4 + 4 + 4, puis 5 + 7 */
+      /* Grille : deux rangées de trois, puis la boîte à outils sur toute la largeur */
       .sk-grid {
         display: grid;
-        grid-template-columns: repeat(12, 1fr);
-        gap: 20px;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
       }
-      .sk-card--c1 { grid-column: span 7; }
-      .sk-card--c2 { grid-column: span 5; }
-      .sk-card--c3, .sk-card--c4, .sk-card--c5 { grid-column: span 4; }
-      .sk-card--c6 { grid-column: span 5; }
-      .sk-tools { grid-column: span 7; }
+      .sk-tools { grid-column: 1 / -1; }
 
       /* Carte d'une compétence */
       .sk-card {
@@ -177,8 +165,8 @@ const Skills = ({ theme }) => (
         overflow: hidden;
         display: flex;
         flex-direction: column;
-        padding: 28px;
-        border-radius: 24px;
+        padding: 22px 24px;
+        border-radius: 20px;
         background: rgba(255, 255, 255, 0.72);
         border: 1px solid var(--border-color);
         backdrop-filter: blur(16px);
@@ -191,9 +179,9 @@ const Skills = ({ theme }) => (
       }
       @media (hover: hover) and (pointer: fine) {
         .sk-card:hover {
-          transform: translateY(-4px);
+          transform: translateY(-3px);
           border-color: var(--border-color-hover);
-          box-shadow: 0 20px 44px rgba(17, 24, 39, 0.07);
+          box-shadow: 0 16px 36px rgba(17, 24, 39, 0.07);
         }
         .sk-card:hover .sk-card-icon {
           background: var(--accent-gradient);
@@ -205,11 +193,11 @@ const Skills = ({ theme }) => (
       .sk-card-top {
         display: flex;
         align-items: center;
-        gap: 12px;
-        margin-bottom: 22px;
+        gap: 10px;
+        margin-bottom: 14px;
       }
       .sk-card-icon {
-        width: 42px; height: 42px;
+        width: 36px; height: 36px;
         border-radius: 50%;
         flex-shrink: 0;
         display: flex; align-items: center; justify-content: center;
@@ -221,14 +209,14 @@ const Skills = ({ theme }) => (
       }
       .sk-card-code {
         font-family: var(--font-mono);
-        font-size: 0.78rem;
+        font-size: 0.75rem;
         font-weight: 600;
         color: var(--accent-hover);
       }
       .sk-card-level {
         margin-left: auto;
         font-family: var(--font-subtitle);
-        font-size: 0.72rem;
+        font-size: 0.7rem;
         font-weight: 700;
         color: var(--text-muted);
         white-space: nowrap;
@@ -237,36 +225,28 @@ const Skills = ({ theme }) => (
       /* Syne est très large : « Administrer » fait 11,6 em, la taille suit donc la largeur de la carte */
       .sk-card-title {
         font-family: var(--font-display);
-        font-size: min(2rem, 100cqi / 12);
+        font-size: min(1.6rem, 100cqi / 12);
         font-weight: 800;
         text-transform: uppercase;
         letter-spacing: -0.03em;
         line-height: 1.05;
         color: var(--text-primary);
-        margin: 0 0 10px;
-      }
-      .sk-card-desc {
-        font-family: var(--font-body);
-        font-size: 0.95rem;
-        line-height: 1.55;
-        color: var(--text-secondary);
-        margin: 0 0 20px;
-        max-width: 46ch;
+        margin: 0 0 14px;
       }
 
       .sk-card-list {
         list-style: none;
         padding: 0;
-        margin: 0 0 22px;
+        margin: 0 0 16px;
         display: flex;
         flex-direction: column;
-        gap: 9px;
+        gap: 6px;
       }
       .sk-card-list li {
         position: relative;
-        padding-left: 18px;
+        padding-left: 16px;
         font-family: var(--font-body);
-        font-size: 0.9rem;
+        font-size: 0.86rem;
         line-height: 1.4;
         color: var(--text-primary);
       }
@@ -274,7 +254,7 @@ const Skills = ({ theme }) => (
         content: '';
         position: absolute;
         left: 0; top: 0.5em;
-        width: 7px; height: 7px;
+        width: 6px; height: 6px;
         border-radius: 50%;
         background: var(--accent);
       }
@@ -282,72 +262,61 @@ const Skills = ({ theme }) => (
       .sk-card-tags {
         display: flex;
         flex-wrap: wrap;
-        gap: 8px;
+        gap: 6px;
         margin-top: auto;
-        position: relative;
       }
       .sk-card-tag {
         font-family: var(--font-subtitle);
-        font-size: 0.75rem;
+        font-size: 0.7rem;
         font-weight: 700;
         color: var(--text-primary);
         background: var(--bg-tertiary);
-        padding: 6px 13px;
+        padding: 4px 11px;
         border-radius: 50px;
       }
 
-      /* Réaliser, en vedette : carte sombre, titre plus grand */
+      /* Réaliser, en vedette : carte sombre avec un reflet bleu */
       .sk-card--featured {
-        padding: 36px;
         background: var(--bg-inverse);
         border-color: rgba(255, 255, 255, 0.06);
         color: var(--text-inverse);
-        box-shadow: 0 24px 60px rgba(17, 24, 39, 0.18);
+        box-shadow: 0 20px 48px rgba(17, 24, 39, 0.18);
       }
       .sk-card--featured::before {
         content: '';
         position: absolute;
         inset: 0;
-        background: radial-gradient(circle at 100% 0%, rgba(var(--accent-rgb), 0.35), transparent 55%);
+        background: radial-gradient(circle at 100% 0%, rgba(var(--accent-rgb), 0.35), transparent 60%);
         pointer-events: none;
       }
       .sk-card--featured > * { position: relative; }
       .sk-card--featured .sk-card-icon { background: var(--accent-gradient); color: #ffffff; }
       .sk-card--featured .sk-card-code { color: #93c5fd; }
       .sk-card--featured .sk-card-level { color: rgba(255, 255, 255, 0.55); }
-      .sk-card--featured .sk-card-title { color: #ffffff; font-size: min(3.4rem, 100cqi / 9); margin-bottom: 14px; }
-      .sk-card--featured .sk-card-desc { color: rgba(255, 255, 255, 0.72); font-size: 1.02rem; }
-      .sk-card--featured .sk-card-list li { color: #ffffff; font-size: 0.95rem; }
+      .sk-card--featured .sk-card-title { color: #ffffff; }
+      .sk-card--featured .sk-card-list li { color: #ffffff; }
       .sk-card--featured .sk-card-list li::before { background: #60a5fa; }
       .sk-card--featured .sk-card-tag { color: #ffffff; background: rgba(255, 255, 255, 0.1); }
       @media (hover: hover) and (pointer: fine) {
-        .sk-card--featured:hover { border-color: rgba(var(--accent-rgb), 0.5); box-shadow: 0 28px 64px rgba(17, 24, 39, 0.24); }
+        .sk-card--featured:hover { border-color: rgba(var(--accent-rgb), 0.5); box-shadow: 0 24px 56px rgba(17, 24, 39, 0.24); }
       }
 
-      /* Boîte à outils */
-      .sk-tools-title {
-        font-family: var(--font-display);
-        font-size: clamp(1.6rem, 2.4vw, 2rem);
-        font-weight: 800;
-        text-transform: uppercase;
-        letter-spacing: -0.03em;
-        line-height: 1.05;
-        color: var(--text-primary);
-        margin: 0 0 24px;
-      }
+      /* Boîte à outils : une bande de quatre groupes */
       .sk-tools-grid {
         display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 24px 28px;
+        grid-template-columns: repeat(4, auto);
+        justify-content: space-between;
+        gap: 16px 24px;
       }
-      .sk-tools-group { display: flex; flex-direction: column; gap: 12px; }
+      .sk-tools .sk-card-tag { white-space: nowrap; }
+      .sk-tools-group { display: flex; flex-direction: column; gap: 8px; }
       .sk-tools-group .sk-card-tags { margin-top: 0; }
       .sk-tools-label {
         display: flex;
         align-items: center;
-        gap: 8px;
+        gap: 6px;
         font-family: var(--font-subtitle);
-        font-size: 0.75rem;
+        font-size: 0.7rem;
         font-weight: 800;
         text-transform: uppercase;
         letter-spacing: 0.06em;
@@ -358,21 +327,23 @@ const Skills = ({ theme }) => (
       .sk-tools-group--ok .sk-tools-label { color: #047857; }
       .sk-tools-group--ok .sk-card-tag { background: rgba(16, 185, 129, 0.1); }
 
-      /* Tablette : deux colonnes, Réaliser sur toute la largeur, la boîte à outils à côté de Sécuriser */
-      @media (max-width: 960px) {
+      /* Écrans moyens : la boîte à outils passe ses groupes sur deux colonnes */
+      @media (max-width: 1100px) {
+        .sk-tools-grid { grid-template-columns: repeat(2, auto); justify-content: start; column-gap: 48px; }
+      }
+      /* Tablette : deux colonnes */
+      @media (max-width: 860px) {
         .sk-grid { grid-template-columns: 1fr 1fr; }
-        .sk-card--c1 { grid-column: 1 / -1; }
-        .sk-card--c2, .sk-card--c3, .sk-card--c4, .sk-card--c5, .sk-card--c6, .sk-tools { grid-column: span 1; }
-        .sk-tools-grid { grid-template-columns: 1fr; gap: 20px; }
       }
       /* « Professionnels » est très long en Syne : la taille suit la largeur d'écran */
       @media (max-width: 560px) {
         .sk-title { font-size: 5.6vw; }
       }
       @media (max-width: 640px) {
-        .sk-grid { grid-template-columns: 1fr; gap: 16px; }
-        .sk-card, .sk-card--featured { padding: 24px; }
-        .sk-tools-grid { grid-template-columns: 1fr; gap: 20px; }
+        .sk-grid { grid-template-columns: 1fr; gap: 12px; }
+        .sk-card { padding: 20px; }
+        .sk-tools-grid { grid-template-columns: 1fr; gap: 14px; }
+        .sk-tools .sk-card-tag { white-space: normal; }
       }
     `}} />
   </section>
