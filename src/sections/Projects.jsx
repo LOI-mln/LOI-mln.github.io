@@ -62,7 +62,7 @@ const PROJECT_INFO = [
       "Panneau d'administration : calendrier, newsletter et envoi de mails",
     ],
     tags: ['Next.js', 'React', 'TypeScript', 'Vercel'],
-    demo: { src: '/videos/bcm-site-demo.mp4', poster: '/videos/bcm-site-demo.jpg', duration: '15 s', label: 'Visite réelle' },
+    demo: { src: '/videos/bcm-site-demo.mp4', poster: '/videos/bcm-site-demo.jpg', duration: '14 s', label: 'Visite réelle' },
     link: { href: 'https://www.bcm24.fr', label: 'Voir le site', kind: 'site' },
   },
   {
