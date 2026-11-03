@@ -21,13 +21,6 @@ const LEGS = [
   `M${at('aberdeen')} C200 260 220 520 ${at('libourne')}`,
 ];
 
-// Distance à vol d'oiseau de chaque trajet, posée au milieu de sa courbe
-const DISTANCES = [
-  { text: '≈ 140 km', x: 381, y: 578, anchor: 'start' },
-  { text: '≈ 1 280 km', x: 300, y: 380, anchor: 'start' },
-  { text: '≈ 1 370 km', x: 236, y: 390, anchor: 'end' },
-];
-
 // Fleuves des villes du parcours, nommés pendant les gros plans en France
 const FRENCH_RIVERS = ['Dordogne', 'Vienne', 'Garonne', 'Loire', 'Seine', 'Rhône', 'Tarn'];
 const RIVER_LABELS = [
@@ -78,9 +71,6 @@ const keyframes = `
   }
   ${LEGS.map((_, i) => `.tl-leg--${i} { animation-range: ${range(LEG_RANGES[i])}, contain 0% contain 100%; }`).join('\n  ')}
   ${LEGS.slice(1).map((_, i) => `.tl-plane--${i + 1} { animation-range: ${range(LEG_RANGES[i + 1])}; }`).join('\n  ')}
-  ${LEGS.map((_, i) => `.tl-distance--${i} { animation-range: ${range(LEG_RANGES[i])}; }`).join('\n  ')}
-  /* Les 140 km ne se lisent qu'en gros plan : en vue large, l'étiquette se superposerait aux villes */
-  .tl-distance--0 { animation-name: tl-river-label; animation-range: contain 0% contain 100%; }
   ${PIN_RANGES.map((r, i) => (r ? `.tl-pin--${i} .tl-pin-dot, .tl-pin--${i} .tl-pin-halo, .tl-pin--${i} .tl-pin-label { animation-range: ${range(r)}; }` : '')).join('\n  ')}
   ${CARD_RANGES.map((r, i) => `.tl-step--${i} { animation-range: ${range(r)}; }`).join('\n  ')}
 `;
@@ -109,15 +99,6 @@ const JourneyScene = ({ steps }) => (
           <path d={LEGS.join(' ')} className="tl-route-base" vectorEffect="non-scaling-stroke" />
           {LEGS.map((d, i) => (
             <path key={d} d={d} pathLength="1" className={`tl-leg tl-leg--${i}`} />
-          ))}
-
-          {/* La distance apparaît pendant que son trajet se trace */}
-          {DISTANCES.map((dist, i) => (
-            <g key={dist.text} className={`tl-distance tl-distance--${i}`} transform={`translate(${dist.x} ${dist.y})`}>
-              <g className="tl-counter">
-                <text textAnchor={dist.anchor} className="tl-distance-label">{dist.text}</text>
-              </g>
-            </g>
           ))}
 
           {/* L'avion suit les deux vols et garde la même taille quel que soit le zoom */}
@@ -264,16 +245,6 @@ const JourneyScene = ({ steps }) => (
         stroke-width: 2.4px;
       }
       .tl-pin circle { transform-box: fill-box; transform-origin: center; }
-      .tl-distance-label {
-        font-family: var(--font-mono);
-        font-size: 7px;
-        font-weight: 600;
-        fill: var(--accent-hover);
-        paint-order: stroke;
-        stroke: #ffffff;
-        stroke-width: 2.6px;
-      }
-      .tl-distance { animation: tl-distance linear both; animation-timeline: --journey; }
       .tl-pin-dot, .tl-pin-halo, .tl-pin-label { animation-timeline: --journey; animation-fill-mode: both; animation-timing-function: var(--ease-out); }
       .tl-pin-dot { animation-name: tl-pin; }
       .tl-pin-halo { animation-name: tl-halo; }
@@ -397,7 +368,6 @@ const JourneyScene = ({ steps }) => (
       @keyframes tl-pin { from { transform: scale(0.5); fill: #ffffff; } to { transform: scale(1); fill: var(--accent); } }
       @keyframes tl-halo { from { transform: scale(0.3); opacity: 0; } to { transform: scale(1); opacity: 1; } }
       @keyframes tl-label { from { opacity: 0.4; } to { opacity: 1; } }
-      @keyframes tl-distance { 0%, 40% { opacity: 0; } 70%, 100% { opacity: 1; } }
       @keyframes tl-card-first {
         0%, 75% { opacity: 1; transform: none; }
         100% { opacity: 0; transform: translateY(-28px); }
