@@ -71,13 +71,14 @@ const PROJECT_INFO = [
     title: 'RGU Aberdeen',
     meta: 'Stage Erasmus+ · Écosse · 2026',
     status: 'Publication prochaine',
-    summary: "Mesurer la polarisation des discours politiques sur 5 réseaux sociaux, sans annotation manuelle.",
+    summary: "Des modèles d'IA lisent les commentaires et analysent les mèmes de 5 réseaux sociaux pour mesurer la polarisation politique, sans annotation manuelle.",
     points: [
+      'CLIP classe 2 000 mèmes sans entraînement préalable : 40 % jouent sur le « nous », 23 % visent « eux »',
+      'Toxicité notée par DistilBERT en local et par Perspective API : compter les mots ne mesurait rien (ρ ≈ 0)',
       'Graphe de 20 641 nœuds, communautés détectées par Louvain (Q = 0,954)',
-      'Indice We/Them, toxicité via Perspective API, mèmes classés avec CLIP',
       'Papier de recherche rédigé sous la direction du Dr Shahana Bano',
     ],
-    tags: ['Python', 'NLP', 'CLIP', 'Perspective API'],
+    tags: ['Python', 'PyTorch', 'CLIP', 'DistilBERT'],
     link: { href: '/research_paper.pdf', label: 'Lire le papier', kind: 'pdf' },
   },
   {
@@ -119,7 +120,7 @@ const PROJECT_STAGE = [
   {
     kind: 'research',
     title: 'Polarisation par communauté',
-    footer: 'Tableau 1 du papier · graphe de 20 641 nœuds, Louvain Q = 0,954',
+    footer: 'Tableau 1 du papier · toxicité notée par Perspective API',
     label: 'Communauté Louvain',
     max: 0.5,
     rows: [
