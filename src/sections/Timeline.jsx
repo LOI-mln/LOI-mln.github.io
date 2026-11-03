@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Calendar, Briefcase, GraduationCap, MapPin, ShieldCheck, Building2 } from 'lucide-react';
 import useSpotlight from '../hooks/useSpotlight';
-import TextScramble from '../components/TextScramble';
 
 const Timeline = () => {
   const containerRef = useSpotlight();
@@ -50,7 +49,8 @@ const Timeline = () => {
       style={{
         position: 'relative',
         backgroundColor: 'var(--bg-secondary)',
-        overflow: 'hidden',
+        /* clip et non hidden : hidden ferait de la section un conteneur de défilement, et le trajet ne suivrait plus la page */
+        overflow: 'clip',
       }}
     >
       {/* Lueur d'arrière-plan */}
@@ -104,6 +104,7 @@ const Timeline = () => {
         {/* Conteneur de la timeline */}
         <div
           ref={containerRef}
+          className="tl-track"
           style={{
             position: 'relative',
             maxWidth: '800px',
@@ -122,6 +123,9 @@ const Timeline = () => {
             }}
             className="timeline-line"
           />
+          {/* Trajet parcouru : la ligne se remplit au défilement, une comète en tête */}
+          <div className="tl-fill" aria-hidden="true" />
+          <div className="tl-comet" aria-hidden="true" />
 
           {/* Éléments de la timeline */}
           <div
@@ -138,7 +142,7 @@ const Timeline = () => {
               return (
                 <div
                   key={i}
-                  className={`reveal-on-scroll delay-${i * 150}`}
+                  className={`tl-item reveal-on-scroll delay-${i * 150}`}
                   style={{
                     display: 'flex',
                     gap: '28px',
@@ -146,8 +150,9 @@ const Timeline = () => {
                   }}
                 >
 
-                  {/* Point de repère sur la ligne */}
+                  {/* Point de repère sur la ligne : il s'allume quand la comète l'atteint */}
                   <div
+                    className="tl-node"
                     style={{
                       width: '64px',
                       height: '64px',
@@ -168,10 +173,12 @@ const Timeline = () => {
                       transform: isHovered ? 'scale(1.08)' : 'scale(1)',
                     }}
                   >
-                    {item.icon}
+                    <span className="tl-node-fill" aria-hidden="true" />
+                    <span className="tl-node-icon">{item.icon}</span>
                   </div>
 
-                  {/* Carte de contenu de l'expérience */}
+                  {/* Carte de contenu de l'expérience, dévoilée de gauche à droite */}
+                  <div className="tl-card-wrap" style={{ flexGrow: 1, minWidth: 0, display: 'flex' }}>
                   <div
                     className="glass-panel spotlight-card timeline-card"
                     onMouseEnter={() => setHoveredIdx(i)}
@@ -242,10 +249,9 @@ const Timeline = () => {
                         marginTop: '16px',
                         position: 'relative',
                         zIndex: 2,
-                        cursor: 'pointer',
                       }}
                     >
-                      <TextScramble text={item.title} hover={true} />
+                      {item.title}
                     </h3>
 
                     <h4
@@ -344,6 +350,7 @@ const Timeline = () => {
                       <span>{item.location}</span>
                     </div>
                   </div>
+                  </div>
                 </div>
               );
             })}
@@ -358,6 +365,87 @@ const Timeline = () => {
         .timeline-card:active {
           transform: scale(0.98) translateY(0) !important;
           transition-duration: 80ms !important;
+        }
+        .tl-node-icon { position: relative; display: flex; }
+        .tl-fill, .tl-comet { display: none; }
+
+        /* Le trajet : la ligne se remplit au rythme du défilement, comme si on la parcourait.
+           La « ligne de lecture » est à 60 % de la hauteur d'écran : quand elle croise une étape,
+           la pastille s'allume et la carte finit de se dévoiler. Animations CSS pilotées par le scroll, sans JS. */
+        @supports (animation-timeline: view()) {
+          @media (prefers-reduced-motion: no-preference) {
+            .tl-track { view-timeline: --tl-track block; }
+            .tl-item.reveal-on-scroll { opacity: 1; transform: none; transition: none; }
+            .timeline-line { background: var(--bg-tertiary) !important; }
+
+            .tl-fill, .tl-comet {
+              display: block;
+              position: absolute;
+              left: 31px;
+              top: 10px;
+              bottom: 10px;
+              width: 2px;
+              z-index: 1;
+              pointer-events: none;
+              animation-timeline: --tl-track;
+              animation-timing-function: linear;
+              animation-fill-mode: both;
+              animation-range: cover 40vh cover calc(100% - 60vh);
+            }
+            .tl-fill {
+              background: linear-gradient(to bottom, #60a5fa, var(--accent) 40%, var(--accent-hover));
+              transform-origin: top;
+              animation-name: tl-fill;
+            }
+            /* La comète : la colonne fait la hauteur de la ligne, son point est en haut, et elle descend de 100 % */
+            .tl-comet { animation-name: tl-comet; }
+            .tl-comet::before {
+              content: '';
+              position: absolute;
+              top: -6px;
+              left: -5px;
+              width: 12px;
+              height: 12px;
+              border-radius: 50%;
+              background: #ffffff;
+              border: 3px solid var(--accent);
+              box-shadow: 0 0 0 5px rgba(var(--accent-rgb), 0.15), 0 0 18px 2px rgba(var(--accent-rgb), 0.55);
+            }
+
+            /* Chaque étape a sa propre timeline : la pastille s'allume quand la ligne de lecture la croise */
+            .tl-item { view-timeline: --tl-item block; }
+            .tl-node { overflow: hidden; }
+            .tl-node-fill {
+              position: absolute;
+              inset: 0;
+              border-radius: 50%;
+              background: var(--accent-gradient);
+              animation: tl-ignite var(--ease-out) both;
+              animation-timeline: --tl-item;
+              animation-range: cover calc(40vh + 12px) cover calc(40vh + 52px);
+            }
+            .tl-node-icon {
+              animation: tl-icon linear both;
+              animation-timeline: --tl-item;
+              animation-range: cover calc(40vh + 24px) cover calc(40vh + 40px);
+            }
+
+            /* La carte se dévoile de gauche à droite et finit au moment où sa pastille s'allume.
+               Les marges négatives du clip laissent passer l'ombre et le léger soulèvement au survol. */
+            .tl-card-wrap {
+              animation: tl-wipe var(--ease-out) both;
+              animation-timeline: --tl-item;
+              animation-range: cover 8vh cover calc(40vh + 40px);
+            }
+          }
+        }
+        @keyframes tl-fill { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+        @keyframes tl-comet { from { transform: translateY(0); } to { transform: translateY(100%); } }
+        @keyframes tl-ignite { from { opacity: 0; transform: scale(0.4); } to { opacity: 1; transform: scale(1); } }
+        @keyframes tl-icon { from { color: var(--accent); } to { color: #ffffff; } }
+        @keyframes tl-wipe {
+          from { opacity: 0.25; transform: translateX(-24px); clip-path: inset(-30px 100% -50px -30px round 24px); }
+          to { opacity: 1; transform: none; clip-path: inset(-30px -30px -50px -30px round 24px); }
         }
       `}} />
     </section>
