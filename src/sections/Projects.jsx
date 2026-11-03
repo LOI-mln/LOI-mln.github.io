@@ -52,9 +52,9 @@ const PROJECT_INFO = [
   {
     number: '02',
     category: 'Site web',
-    title: 'Site du BCM',
+    title: 'Site du club de badminton',
     figure: { value: '25', label: 'partenaires du club mis en avant' },
-    meta: 'Badminton Club Montponnais · depuis 2026',
+    meta: 'Badminton Club Montponnais (bcm24.fr) · depuis 2026',
     status: 'En ligne',
     summary: "Le club de badminton de Montpon-Ménestérol, actif depuis 1999, n'avait pas de site à jour. Il en a maintenant un qu'il gère seul.",
     points: [
@@ -559,6 +559,7 @@ const Projects = () => (
           max-width: 1200px;
           margin: 0 auto;
           padding: 96px 24px 48px;
+          container-type: inline-size;
           min-height: 72vh;
           box-sizing: border-box;
           display: flex;
@@ -576,7 +577,8 @@ const Projects = () => (
         .pj-poster-title {
           margin: 0;
           font-family: var(--font-display);
-          font-size: clamp(2.6rem, 6.2vw, 6.4rem);
+          /* Syne est très large : le mot le plus long (« Questionary », ~11,5 em) doit toujours tenir, avec une marge */
+          font-size: min(clamp(2.6rem, 6.2vw, 6.4rem), 100cqi / 12.5);
           max-width: 14ch;
           font-weight: 800;
           line-height: 0.95;
@@ -646,7 +648,7 @@ const Projects = () => (
         @media (max-width: 860px) {
           .pj-poster-inner { gap: 32px; padding: 96px 20px 40px; }
           .pj-figure { align-self: flex-start; align-items: flex-start; text-align: left; }
-          .pj-poster-title { font-size: clamp(2.2rem, 11vw, 3.6rem); }
+
           .pj-figure-value { font-size: clamp(3.6rem, 22vw, 6rem); }
           .pj-sheet { padding: 40px 12px; border-radius: 28px 28px 0 0; }
         }
