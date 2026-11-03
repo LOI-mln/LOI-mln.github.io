@@ -385,7 +385,8 @@ const Timeline = () => {
               top: 10px;
               bottom: 10px;
               width: 2px;
-              z-index: 1;
+              /* Sous les étapes : chacune forme sa propre couche (will-change de l'apparition), le z-index des pastilles n'en sort pas */
+              z-index: 0;
               pointer-events: none;
               animation-timeline: --tl-track;
               animation-timing-function: linear;
