@@ -1,9 +1,9 @@
 import React from 'react';
 import { Calendar, MapPin, ShieldCheck, Building2 } from 'lucide-react';
-// Contours Natural Earth (domaine public, via world-atlas) projetés en Mercator, de l'Atlantique à la Pologne
+// Contours et fleuves Natural Earth (domaine public) projetés en Mercator, de l'Atlantique à la Pologne
 import map from '../data/journey-map.json';
 
-const { width, height, countries, cities } = map;
+const { width, height, countries, rivers, cities } = map;
 const at = (key) => cities[key].join(' ');
 
 // Villes du parcours, dans l'ordre des étapes ; Libourne et Sainte-Foy sont voisines, leurs noms partent chacun d'un côté
@@ -16,9 +16,23 @@ const STOPS = [
 
 // Les trois trajets : en voiture jusqu'à Limoges, puis en avion vers Aberdeen et retour par l'Atlantique
 const LEGS = [
-  `M${at('sainteFoy')} Q392 585 ${at('limoges')}`,
+  `M${at('sainteFoy')} Q379 575 ${at('limoges')}`,
   `M${at('limoges')} C300 480 250 300 ${at('aberdeen')}`,
   `M${at('aberdeen')} C200 260 220 520 ${at('libourne')}`,
+];
+
+// Distance à vol d'oiseau de chaque trajet, posée au milieu de sa courbe
+const DISTANCES = [
+  { text: '≈ 140 km', x: 381, y: 578, anchor: 'start' },
+  { text: '≈ 1 280 km', x: 300, y: 380, anchor: 'start' },
+  { text: '≈ 1 370 km', x: 236, y: 390, anchor: 'end' },
+];
+
+// Fleuves des villes du parcours, nommés pendant les gros plans en France
+const FRENCH_RIVERS = ['Dordogne', 'Vienne', 'Garonne', 'Loire', 'Seine', 'Rhône', 'Tarn'];
+const RIVER_LABELS = [
+  { text: 'Dordogne', x: 372, y: 589.5 },
+  { text: 'Vienne', x: 392, y: 557 },
 ];
 
 // Silhouette d'avion, nez vers +x pour suivre la direction du trajet
@@ -26,17 +40,20 @@ const PLANE = 'M8.5 0L7 -1.2L2 -1.2L-1.5 -6L-3.5 -6L-1.5 -1.2L-5 -1.2L-6.5 -3L-8
 
 // Plans de la caméra, en % du défilement de la scène : [moment, point visé x, y, zoom] ; le zoom final dépend de l'écran
 // Gros plan sur Sainte-Foy, glissement vers Limoges, vue large pendant le vol, Aberdeen, vol retour, Libourne, vue d'ensemble
+// Les villes françaises sont proches : gros plan (×7 sur ordinateur) pour qu'on voie la distance entre elles ;
+// à l'étape de Limoges, la caméra vise le milieu du trajet pour garder les deux villes à l'écran
+const CLOSE = 'var(--zoom-close)';
 const BEATS = [
-  [0, 372, 575, 3],
-  [14, 372, 575, 3],
-  [24, 385, 558, 3],
-  [36, 385, 558, 3],
+  [0, 368, 581, CLOSE],
+  [14, 368, 581, CLOSE],
+  [24, 375, 571, CLOSE],
+  [36, 375, 571, CLOSE],
   [48, 345, 385, 0.9],
-  [60, 318, 192, 2.6],
-  [70, 318, 192, 2.6],
+  [60, 318, 192, 3],
+  [70, 318, 192, 3],
   [80, 335, 385, 0.9],
-  [90, 355, 584, 3],
-  [94, 355, 584, 3],
+  [90, 359, 584, CLOSE],
+  [94, 359, 584, CLOSE],
   [100, 340, 395, 'var(--zoom-end)'],
 ];
 
@@ -53,11 +70,17 @@ const keyframes = `
   @keyframes tl-counter {
     ${BEATS.map(([p, , , z]) => `${p}% { scale: calc(var(--ui) / ${z}); }`).join('\n    ')}
   }
+  @keyframes tl-river-label {
+    ${BEATS.map(([p, , , z]) => `${p}% { opacity: ${z === CLOSE ? 1 : 0}; }`).join('\n    ')}
+  }
   @keyframes tl-leg-width {
     ${BEATS.map(([p, , , z]) => `${p}% { stroke-width: calc(1.6px * var(--ui) / ${z}); }`).join('\n    ')}
   }
   ${LEGS.map((_, i) => `.tl-leg--${i} { animation-range: ${range(LEG_RANGES[i])}, contain 0% contain 100%; }`).join('\n  ')}
   ${LEGS.slice(1).map((_, i) => `.tl-plane--${i + 1} { animation-range: ${range(LEG_RANGES[i + 1])}; }`).join('\n  ')}
+  ${LEGS.map((_, i) => `.tl-distance--${i} { animation-range: ${range(LEG_RANGES[i])}; }`).join('\n  ')}
+  /* Les 140 km ne se lisent qu'en gros plan : en vue large, l'étiquette se superposerait aux villes */
+  .tl-distance--0 { animation-name: tl-river-label; animation-range: contain 0% contain 100%; }
   ${PIN_RANGES.map((r, i) => (r ? `.tl-pin--${i} .tl-pin-dot, .tl-pin--${i} .tl-pin-halo, .tl-pin--${i} .tl-pin-label { animation-range: ${range(r)}; }` : '')).join('\n  ')}
   ${CARD_RANGES.map((r, i) => `.tl-step--${i} { animation-range: ${range(r)}; }`).join('\n  ')}
 `;
@@ -71,10 +94,30 @@ const JourneyScene = ({ steps }) => (
             <path key={name} d={d} className={`tl-land ${name === 'france' || name === 'uk' ? 'tl-land--home' : ''}`} vectorEffect="non-scaling-stroke" />
           ))}
 
+          {Object.entries(rivers).map(([name, d]) => (
+            <path key={name} d={d} className={`tl-river ${FRENCH_RIVERS.includes(name) ? 'tl-river--home' : ''}`} vectorEffect="non-scaling-stroke" />
+          ))}
+          {RIVER_LABELS.map((label) => (
+            <g key={label.text} className="tl-river-name" transform={`translate(${label.x} ${label.y})`}>
+              <g className="tl-counter">
+                <text className="tl-river-label">{label.text}</text>
+              </g>
+            </g>
+          ))}
+
           {/* Trajet complet en pointillés, puis chaque étape tracée au fil du défilement */}
           <path d={LEGS.join(' ')} className="tl-route-base" vectorEffect="non-scaling-stroke" />
           {LEGS.map((d, i) => (
             <path key={d} d={d} pathLength="1" className={`tl-leg tl-leg--${i}`} />
+          ))}
+
+          {/* La distance apparaît pendant que son trajet se trace */}
+          {DISTANCES.map((dist, i) => (
+            <g key={dist.text} className={`tl-distance tl-distance--${i}`} transform={`translate(${dist.x} ${dist.y})`}>
+              <g className="tl-counter">
+                <text textAnchor={dist.anchor} className="tl-distance-label">{dist.text}</text>
+              </g>
+            </g>
           ))}
 
           {/* L'avion suit les deux vols et garde la même taille quel que soit le zoom */}
@@ -139,6 +182,7 @@ const JourneyScene = ({ steps }) => (
         /* Taille des repères à l'écran, compensée sur téléphone où la carte est rendue plus petite */
         --ui: 1;
         --zoom-end: 0.8;
+        --zoom-close: 7;
       }
       .tl-stage {
         position: sticky;
@@ -176,6 +220,22 @@ const JourneyScene = ({ steps }) => (
 
       .tl-land { fill: #f7f9fc; stroke: #d3dcea; stroke-width: 0.8px; }
       .tl-land--home { fill: #ffffff; stroke: #b9c8e2; }
+      .tl-river { fill: none; stroke: #c7d6ee; stroke-width: 0.8px; stroke-linecap: round; stroke-linejoin: round; }
+      .tl-river--home { stroke: #a9c1e8; stroke-width: 1.3px; }
+      .tl-river-label {
+        font-family: var(--font-body);
+        font-size: 6.2px;
+        font-style: italic;
+        fill: #6f8fc4;
+        paint-order: stroke;
+        stroke: #ffffff;
+        stroke-width: 2px;
+      }
+      .tl-river-name {
+        animation: tl-river-label linear both;
+        animation-timeline: --journey;
+        animation-range: contain 0% contain 100%;
+      }
       .tl-route-base { fill: none; stroke: rgba(var(--accent-rgb), 0.35); stroke-width: 1.2px; stroke-dasharray: 3 5; stroke-linecap: round; }
       .tl-leg {
         fill: none;
@@ -204,6 +264,16 @@ const JourneyScene = ({ steps }) => (
         stroke-width: 2.4px;
       }
       .tl-pin circle { transform-box: fill-box; transform-origin: center; }
+      .tl-distance-label {
+        font-family: var(--font-mono);
+        font-size: 7px;
+        font-weight: 600;
+        fill: var(--accent-hover);
+        paint-order: stroke;
+        stroke: #ffffff;
+        stroke-width: 2.6px;
+      }
+      .tl-distance { animation: tl-distance linear both; animation-timeline: --journey; }
       .tl-pin-dot, .tl-pin-halo, .tl-pin-label { animation-timeline: --journey; animation-fill-mode: both; animation-timing-function: var(--ease-out); }
       .tl-pin-dot { animation-name: tl-pin; }
       .tl-pin-halo { animation-name: tl-halo; }
@@ -303,7 +373,7 @@ const JourneyScene = ({ steps }) => (
 
       /* Téléphone et tablette en portrait : ville centrée en haut, étape en bas */
       @media (max-width: 760px) {
-        .tl-scene { --cx: ${width * 0.5}px; --cy: ${height * 0.3}px; --ui: 1.6; --zoom-end: 0.62; height: 520vh; }
+        .tl-scene { --cx: ${width * 0.5}px; --cy: ${height * 0.25}px; --ui: 1.6; --zoom-end: 0.48; --zoom-close: 4.5; height: 520vh; }
         .tl-step {
           top: auto;
           bottom: max(16px, env(safe-area-inset-bottom));
@@ -327,6 +397,7 @@ const JourneyScene = ({ steps }) => (
       @keyframes tl-pin { from { transform: scale(0.5); fill: #ffffff; } to { transform: scale(1); fill: var(--accent); } }
       @keyframes tl-halo { from { transform: scale(0.3); opacity: 0; } to { transform: scale(1); opacity: 1; } }
       @keyframes tl-label { from { opacity: 0.4; } to { opacity: 1; } }
+      @keyframes tl-distance { 0%, 40% { opacity: 0; } 70%, 100% { opacity: 1; } }
       @keyframes tl-card-first {
         0%, 75% { opacity: 1; transform: none; }
         100% { opacity: 0; transform: translateY(-28px); }
