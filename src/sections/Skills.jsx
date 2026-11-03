@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Code, Cpu, Server, Database, Users, ShieldAlert, ShieldCheck, Sparkles, Monitor, Building2 } from 'lucide-react';
 import AntigravityCanvas from '../components/AntigravityCanvas';
 
@@ -57,121 +57,52 @@ const TOOLBOX = [
   { label: 'Entreprise', icon: <Building2 size={15} />, items: ['Alternance · Ceva Santé Animale'], tone: 'ai' },
 ];
 
-const prefersReducedMotion = () =>
-  typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-// Caractères de largeur moyenne en Syne, pour que le titre ne déborde pas pendant le décodage
-const GLYPHS = 'ABCDEHKNOPRSTUXZ0123456789#$%&';
-
-// Titre qui se décode lettre par lettre : une fois à l'apparition, puis à chaque survol de la carte
-const ScrambleTitle = ({ text, replay }) => {
-  const ref = useRef(null);
-  const frame = useRef(0);
-  const [shown, setShown] = useState(text);
-
-  const play = () => {
-    if (prefersReducedMotion() || frame.current) return;
-    const start = performance.now();
-    const duration = 500 + text.length * 45;
-    let lastSwap = 0;
-    const tick = (now) => {
-      const progress = Math.min(1, (now - start) / duration);
-      const fixed = Math.floor(progress * text.length);
-      if (now - lastSwap > 45 || progress === 1) {
-        lastSwap = now;
-        setShown([...text].map((ch, i) => (i < fixed || ch === ' ' ? ch : GLYPHS[Math.floor(Math.random() * GLYPHS.length)])).join(''));
-      }
-      frame.current = progress < 1 ? requestAnimationFrame(tick) : 0;
-    };
-    frame.current = requestAnimationFrame(tick);
-  };
-
-  // Premier décodage quand le titre arrive à l'écran
-  useEffect(() => {
-    const el = ref.current;
-    if (!el || !('IntersectionObserver' in window)) return;
-    const observer = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting) { play(); observer.disconnect(); }
-    }, { threshold: 0.8 });
-    observer.observe(el);
-    return () => { observer.disconnect(); cancelAnimationFrame(frame.current); frame.current = 0; };
-  }, []);
-
-  useEffect(() => { if (replay) play(); }, [replay]);
-
-  return (
-    <h3 ref={ref} className="sk-card-title" aria-label={text}>
-      <span aria-hidden="true">{shown}</span>
-    </h3>
-  );
-};
-
 // Carte d'une compétence : tout son contenu est visible, sans clic
-const SkillCard = ({ code, title, icon, highlights, techs, featured, delay }) => {
-  const [replay, setReplay] = useState(0);
-  return (
-    <div className={`sk-cell reveal-on-scroll ${delay}`}>
-      <article
-        className={`sk-card ${featured ? 'sk-card--featured' : ''}`}
-        onPointerEnter={(e) => e.pointerType === 'mouse' && setReplay((r) => r + 1)}
-      >
-        <span className="sk-card-light" aria-hidden="true" />
-        <div className="sk-card-top">
-          <span className="sk-card-icon">{icon}</span>
-          <span className="sk-card-code">{code}</span>
-          <span className="sk-card-level">Niveau 3</span>
-        </div>
-        <ScrambleTitle text={title} replay={replay} />
-        <ul className="sk-card-list">
-          {highlights.map((h) => <li key={h}>{h}</li>)}
-        </ul>
-        <div className="sk-card-tags">
-          {techs.map((t) => <span key={t} className="sk-card-tag">{t}</span>)}
-        </div>
-      </article>
-    </div>
-  );
-};
+const SkillCard = ({ code, title, icon, highlights, techs, featured, delay }) => (
+  <div className={`sk-cell sk-cell--${code.toLowerCase()} reveal-on-scroll ${delay}`}>
+    <article className={`sk-card ${featured ? 'sk-card--featured' : ''}`}>
+      <span className="sk-card-light" aria-hidden="true" />
+      <div className="sk-card-top">
+        <span className="sk-card-icon">{icon}</span>
+        <span className="sk-card-code">{code}</span>
+        <span className="sk-card-level">Niveau 3</span>
+      </div>
+      <h3 className="sk-card-title">{title}</h3>
+      <ul className="sk-card-list">
+        {highlights.map((h) => <li key={h}>{h}</li>)}
+      </ul>
+      <div className="sk-card-tags">
+        {techs.map((t) => <span key={t} className="sk-card-tag">{t}</span>)}
+      </div>
+    </article>
+  </div>
+);
 
-// Lumière qui suit la souris sur toute la grille, et inclinaison de la carte survolée
+// Lumière qui suit la souris : chaque carte reçoit la position du curseur dans son propre repère
 const useSpotlight = () => {
   const gridRef = useRef(null);
   const frame = useRef(0);
 
   const onPointerMove = (e) => {
-    if (e.pointerType !== 'mouse' || prefersReducedMotion()) return;
-    const { clientX, clientY, target } = e;
+    if (e.pointerType !== 'mouse') return;
+    const { clientX, clientY } = e;
     cancelAnimationFrame(frame.current);
     frame.current = requestAnimationFrame(() => {
-      const hovered = target.closest('.sk-card');
       gridRef.current?.querySelectorAll('.sk-card').forEach((card) => {
         const r = card.getBoundingClientRect();
-        const x = clientX - r.left;
-        const y = clientY - r.top;
-        card.style.setProperty('--mx', `${x}px`);
-        card.style.setProperty('--my', `${y}px`);
-        const tilt = card === hovered;
-        card.style.setProperty('--rx', tilt ? `${(0.5 - y / r.height) * 7}deg` : '0deg');
-        card.style.setProperty('--ry', tilt ? `${(x / r.width - 0.5) * 9}deg` : '0deg');
+        card.style.setProperty('--mx', `${clientX - r.left}px`);
+        card.style.setProperty('--my', `${clientY - r.top}px`);
       });
     });
   };
 
-  const onPointerLeave = () => {
-    cancelAnimationFrame(frame.current);
-    gridRef.current?.querySelectorAll('.sk-card').forEach((card) => {
-      card.style.setProperty('--rx', '0deg');
-      card.style.setProperty('--ry', '0deg');
-    });
-  };
-
   useEffect(() => () => cancelAnimationFrame(frame.current), []);
-  return { gridRef, onPointerMove, onPointerLeave };
+  return { gridRef, onPointerMove };
 };
 
 // Section des compétences
 const Skills = ({ theme }) => {
-  const { gridRef, onPointerMove, onPointerLeave } = useSpotlight();
+  const { gridRef, onPointerMove } = useSpotlight();
   return (
     <section id="skills" className="sk-section">
       <SkillsMesh mode={theme} />
@@ -192,7 +123,7 @@ const Skills = ({ theme }) => {
         </div>
 
         {/* Grille : deux rangées de trois compétences, Réaliser en vedette, puis la boîte à outils */}
-        <div className="sk-grid" ref={gridRef} onPointerMove={onPointerMove} onPointerLeave={onPointerLeave}>
+        <div className="sk-grid" ref={gridRef} onPointerMove={onPointerMove}>
           {SKILLS.map((skill, i) => (
             <SkillCard key={skill.code} {...skill} featured={i === 0} delay={`delay-${(i % 3) * 100}`} />
           ))}
@@ -220,7 +151,8 @@ const Skills = ({ theme }) => {
         .sk-section {
           position: relative;
           background-color: var(--bg-secondary);
-          overflow: hidden;
+          /* clip et non hidden : hidden ferait de la section un conteneur de défilement, et la donne ne suivrait plus la page */
+          overflow: clip;
         }
         .sk-inner {
           position: relative;
@@ -256,7 +188,7 @@ const Skills = ({ theme }) => {
           grid-template-columns: repeat(3, 1fr);
           gap: 16px;
         }
-        /* Les cellules portent l'apparition au défilement, les cartes s'inclinent dedans */
+        /* Les cellules portent l'apparition et la donne, les cartes gardent leur survol */
         .sk-cell { display: flex; min-width: 0; }
         .sk-cell > .sk-card { flex: 1; }
         .sk-cell--tools { grid-column: 1 / -1; }
@@ -269,14 +201,12 @@ const Skills = ({ theme }) => {
           flex-direction: column;
           padding: 22px 24px;
           border-radius: 20px;
-          background: rgba(255, 255, 255, 0.72);
+          /* Opaque : empilées pendant la donne, les cartes ne doivent pas laisser voir celles du dessous */
+          background: var(--bg-primary);
           border: 1px solid var(--border-color);
-          backdrop-filter: blur(16px);
-          -webkit-backdrop-filter: blur(16px);
-          box-shadow: 0 4px 16px rgba(17, 24, 39, 0.03);
+          box-shadow: 0 4px 16px rgba(17, 24, 39, 0.04);
           container-type: inline-size;
-          transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) translateY(var(--lift, 0px));
-          transition: transform 0.4s var(--ease-out),
+          transition: transform var(--duration-normal) var(--ease-out),
                       border-color var(--duration-normal) var(--ease-out),
                       box-shadow var(--duration-normal) var(--ease-out);
         }
@@ -289,7 +219,7 @@ const Skills = ({ theme }) => {
           border-radius: inherit;
           background: radial-gradient(360px circle at var(--mx, 50%) var(--my, 50%), rgba(var(--accent-rgb), 0.12), transparent 45%);
           opacity: 0;
-          transition: opacity var(--duration-moderate) var(--ease-out);
+          transition: opacity var(--duration-normal) var(--ease-out);
           pointer-events: none;
         }
         .sk-card::after {
@@ -303,18 +233,15 @@ const Skills = ({ theme }) => {
           -webkit-mask-composite: xor;
           mask-composite: exclude;
           opacity: 0;
-          transition: opacity var(--duration-moderate) var(--ease-out);
+          transition: opacity var(--duration-normal) var(--ease-out);
           pointer-events: none;
         }
         @media (hover: hover) and (pointer: fine) {
           .sk-grid:hover .sk-card::after { opacity: 1; }
           .sk-card:hover .sk-card-light { opacity: 1; }
           .sk-card:hover {
-            --lift: -4px;
-            transition: transform 0.12s linear,
-                        border-color var(--duration-normal) var(--ease-out),
-                        box-shadow var(--duration-normal) var(--ease-out);
-            box-shadow: 0 22px 44px rgba(17, 24, 39, 0.1);
+            transform: translateY(-2px);
+            box-shadow: 0 16px 36px rgba(17, 24, 39, 0.08);
           }
           .sk-card:hover .sk-card-icon {
             background: var(--accent-gradient);
@@ -462,6 +389,39 @@ const Skills = ({ theme }) => {
         .sk-tools-group--ai .sk-card-tag { color: var(--accent-hover); background: var(--accent-light); }
         .sk-tools-group--ok .sk-tools-label { color: #047857; }
         .sk-tools-group--ok .sk-card-tag { background: rgba(16, 185, 129, 0.1); }
+
+        /* La donne : les six cartes arrivent empilées en éventail au centre de la grille,
+           puis se distribuent à leur place au fil du défilement. Animation CSS pilotée par le scroll,
+           sans JavaScript ; elle se termine quand la grille est centrée à l'écran. */
+        @supports (animation-timeline: view()) {
+          @media (min-width: 861px) and (prefers-reduced-motion: no-preference) {
+            .sk-grid { view-timeline: --sk-deal block; }
+            .sk-cell.reveal-on-scroll { opacity: 1; transform: none; transition: none; }
+            .sk-cell {
+              animation: sk-deal var(--ease-in-out) both;
+              animation-timeline: --sk-deal;
+            }
+            /* Le paquet se forme sur la première rangée, colonne du milieu (décalages en % de la taille de chaque carte),
+               ouvert en éventail autour d'un point sous le paquet. Les plages sont en hauteur d'écran :
+               la donne commence quand le paquet est visible et finit quand la grille arrive sous la navigation. */
+            .sk-cell:not(.sk-cell--tools) { transform-origin: 50% 160%; }
+            .sk-cell--c1 { --deal: translate(calc(100% + 16px), 0) rotate(0deg); z-index: 6; animation-range: cover 40vh cover 70vh; }
+            .sk-cell--c2 { --deal: translate(0, 0) rotate(-7deg); z-index: 5; animation-range: cover 43vh cover 73vh; }
+            .sk-cell--c3 { --deal: translate(calc(-100% - 16px), 0) rotate(7deg); z-index: 4; animation-range: cover 46vh cover 76vh; }
+            .sk-cell--c4 { --deal: translate(calc(100% + 16px), calc(-100% - 16px)) rotate(-14deg); z-index: 3; animation-range: cover 49vh cover 79vh; }
+            .sk-cell--c5 { --deal: translate(0, calc(-100% - 16px)) rotate(14deg); z-index: 2; animation-range: cover 52vh cover 82vh; }
+            .sk-cell--c6 { --deal: translate(calc(-100% - 16px), calc(-100% - 16px)) rotate(-21deg); z-index: 1; animation-range: cover 55vh cover 85vh; }
+            .sk-cell--tools { animation-name: sk-rise; animation-timing-function: var(--ease-out); animation-range: cover 70vh cover 95vh; }
+          }
+        }
+        @keyframes sk-deal {
+          from { transform: var(--deal) scale(0.94); }
+          to { transform: none; }
+        }
+        @keyframes sk-rise {
+          from { opacity: 0; transform: translateY(40px); }
+          to { opacity: 1; transform: none; }
+        }
 
         /* Écrans moyens : la boîte à outils passe ses groupes sur deux colonnes */
         @media (max-width: 1100px) {
