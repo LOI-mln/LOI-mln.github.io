@@ -1,5 +1,5 @@
-import React from 'react';
-import { Calendar, MapPin, ShieldCheck, Building2 } from 'lucide-react';
+import React, { useEffect, useRef } from 'react';
+import { Calendar, MapPin, ShieldCheck, Building2, ChevronDown } from 'lucide-react';
 // Contours et fleuves Natural Earth (domaine public) projetés en Mercator, de l'Atlantique à la Pologne
 import map from '../data/journey-map.json';
 
@@ -55,6 +55,21 @@ const LEG_RANGES = [[14, 24], [38, 60], [72, 90]];
 const PIN_RANGES = [null, [21, 25], [57, 61], [87, 91]];
 const CARD_RANGES = [[0, 16], [17, 38], [52, 74], [84, 100]];
 
+// Frise des étapes : moment où chacune est à l'écran (allumée) et où la frise emmène quand on clique dessus
+const RAIL = [
+  { year: '2020', label: 'Lycée', active: [0, 13], target: 4 },
+  { year: '2024', label: 'BUT Informatique', active: [20, 36], target: 28 },
+  { year: '2026', label: 'Stage à Aberdeen', active: [55, 72], target: 63 },
+  { year: '2026', label: 'Alternance Ceva', active: [87, 100], target: 93 },
+];
+const railKeyframes = ([a, b], i) => {
+  const on = 'color: var(--bg-inverse); opacity: 1;';
+  const off = 'color: var(--text-muted); opacity: 0.6;';
+  const frames = [a > 0 ? `0%, ${a - 3}% { ${off} } ${a}% { ${on} }` : `0% { ${on} }`, `${b}% { ${on} }`];
+  if (b < 100) frames.push(`${b + 3}%, 100% { ${off} }`);
+  return `@keyframes tl-rail-${i} { ${frames.join(' ')} } .tl-rail-item--${i} { animation-name: tl-rail-${i}; }`;
+};
+
 const range = ([a, b]) => `contain ${a}% contain ${b}%`;
 const keyframes = `
   @keyframes tl-cam {
@@ -73,10 +88,80 @@ const keyframes = `
   ${LEGS.slice(1).map((_, i) => `.tl-plane--${i + 1} { animation-range: ${range(LEG_RANGES[i + 1])}; }`).join('\n  ')}
   ${PIN_RANGES.map((r, i) => (r ? `.tl-pin--${i} .tl-pin-dot, .tl-pin--${i} .tl-pin-halo, .tl-pin--${i} .tl-pin-label { animation-range: ${range(r)}; }` : '')).join('\n  ')}
   ${CARD_RANGES.map((r, i) => `.tl-step--${i} { animation-range: ${range(r)}; }`).join('\n  ')}
+  ${RAIL.map((item, i) => railKeyframes(item.active, i)).join('\n  ')}
 `;
 
-const JourneyScene = ({ steps }) => (
-  <div className="tl-scene">
+// Position du défilement (px) de chaque étape, à partir de son moment en % de la scène
+const stepPositions = (scene) => {
+  const top = scene.getBoundingClientRect().top + window.scrollY;
+  const span = scene.offsetHeight - window.innerHeight;
+  return { top, span, ys: RAIL.map((item) => top + (item.target / 100) * span) };
+};
+
+const JourneyScene = ({ steps }) => {
+  const sceneRef = useRef(null);
+  const snapping = useRef(false);
+
+  // Va à une étape en douceur ; pendant le trajet et un court instant après, les gestes sont ignorés,
+  // pour qu'un geste (et l'inertie d'un trackpad) ne fasse avancer que d'une étape
+  const glide = (y) => {
+    const lenis = window.__lenis;
+    if (!lenis) { window.scrollTo({ top: y, behavior: 'smooth' }); return; }
+    snapping.current = true;
+    lenis.scrollTo(y, {
+      duration: 1,
+      lock: true,
+      force: true,
+      onComplete: () => {
+        lenis.stop();
+        setTimeout(() => { lenis.start(); snapping.current = false; }, 450);
+      },
+    });
+  };
+
+  // Saut vers une étape depuis la frise
+  const goTo = (index) => {
+    const scene = sceneRef.current;
+    if (scene) glide(stepPositions(scene).ys[index]);
+  };
+
+  // Aimant d'étapes : dès qu'un geste quitte une étape dans la scène, elle file jusqu'à l'étape suivante dans son sens
+  // (ou la précédente en remontant). Avant la première et après la dernière, le défilement reste libre.
+  useEffect(() => {
+    let lenis = null;
+    let frame = 0;
+    let unsubscribe = null;
+
+    const onScroll = () => {
+      const scene = sceneRef.current;
+      if (snapping.current || !scene || !scene.offsetHeight) return; // scène masquée (mouvement réduit) : rien à aimanter
+      if (!lenis.direction) return; // fin d'un défilement : pas de geste en cours
+      const { top, span, ys } = stepPositions(scene);
+      const y = lenis.scroll;
+      if (y < top - window.innerHeight * 0.4 || y > top + span) return;
+      if (ys.some((t) => Math.abs(t - y) < 12)) return; // encore posé sur une étape
+      const after = ys.findIndex((t) => t > y);
+      const next = lenis.direction > 0 ? after : (after === -1 ? ys.length - 1 : after - 1);
+      if (next < 0 || next >= ys.length) return; // on sort de la scène : défilement libre
+      glide(ys[next]);
+    };
+
+    // Lenis est créé par App après le montage de la scène : on l'attend
+    const attach = () => {
+      lenis = window.__lenis;
+      if (!lenis) { frame = requestAnimationFrame(attach); return; }
+      unsubscribe = lenis.on('scroll', onScroll);
+    };
+    attach();
+
+    return () => {
+      cancelAnimationFrame(frame);
+      unsubscribe?.();
+    };
+  }, []);
+
+  return (
+  <div className="tl-scene" ref={sceneRef}>
     <div className="tl-stage">
       <svg className="tl-scene-map" viewBox={`0 0 ${width} ${height}`} preserveAspectRatio="xMidYMid slice" aria-hidden="true">
         <g className="tl-camera">
@@ -121,6 +206,20 @@ const JourneyScene = ({ steps }) => (
           ))}
         </g>
       </svg>
+
+      {/* Frise des étapes : l'étape en cours s'allume au fil du défilement, un clic y emmène */}
+      <nav className="tl-rail" aria-label="Étapes du parcours">
+        <span className="tl-rail-fill" aria-hidden="true" />
+        {RAIL.map((item, i) => (
+          <button key={item.label} type="button" className={`tl-rail-item tl-rail-item--${i}`} onClick={() => goTo(i)}>
+            <span className="tl-rail-dot" aria-hidden="true" />
+            <span className="tl-rail-year">{item.year}</span>
+            <span className="tl-rail-label">{item.label}</span>
+          </button>
+        ))}
+      </nav>
+
+      <p className="tl-hint" aria-hidden="true"><ChevronDown size={16} />Fais défiler pour suivre le trajet</p>
 
       {/* L'étape en cours, par-dessus la carte : chacune remplace la précédente */}
       <ol className="tl-steps">
@@ -342,6 +441,100 @@ const JourneyScene = ({ steps }) => (
         color: var(--text-muted);
       }
 
+
+      /* Frise des étapes, à gauche sur ordinateur */
+      .tl-rail {
+        position: absolute;
+        z-index: 3;
+        left: max(24px, calc((100vw - 1200px) / 2));
+        top: 50%;
+        translate: 0 -50%;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        padding: 14px;
+        border-radius: 20px;
+        background: rgba(255, 255, 255, 0.94);
+        box-shadow: 0 12px 30px rgba(17, 24, 39, 0.1);
+      }
+      /* Rail vertical entre les points, qui se remplit au fil du défilement */
+      .tl-rail::before, .tl-rail-fill {
+        content: '';
+        position: absolute;
+        left: 30px;
+        top: 34px;
+        bottom: 34px;
+        width: 2px;
+        border-radius: 2px;
+      }
+      .tl-rail::before { background: rgba(17, 24, 39, 0.12); }
+      .tl-rail-fill {
+        background: var(--bg-inverse);
+        transform-origin: top;
+        animation: tl-rail-fill linear both;
+        animation-timeline: --journey;
+        animation-range: contain 0% contain 93%;
+      }
+      .tl-rail-item {
+        position: relative;
+        display: grid;
+        grid-template-columns: 16px auto;
+        grid-template-rows: auto auto;
+        column-gap: 12px;
+        align-items: center;
+        padding: 8px 12px 8px 10px;
+        border: none;
+        border-radius: 12px;
+        background: transparent;
+        text-align: left;
+        cursor: pointer;
+        color: var(--text-muted);
+        animation-timeline: --journey;
+        animation-range: contain 0% contain 100%;
+        animation-fill-mode: both;
+        animation-timing-function: linear;
+        transition: background-color var(--duration-normal) var(--ease-out);
+      }
+      .tl-rail-dot {
+        grid-row: 1 / 3;
+        width: 12px; height: 12px;
+        border-radius: 50%;
+        background: currentColor;
+        box-shadow: 0 0 0 3px #ffffff;
+      }
+      .tl-rail-year { font-family: var(--font-subtitle); font-size: 0.72rem; font-weight: 700; line-height: 1.2; }
+      .tl-rail-label { font-family: var(--font-subtitle); font-size: 0.9rem; font-weight: 700; line-height: 1.25; }
+      .tl-rail-item:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+      @media (hover: hover) and (pointer: fine) {
+        .tl-rail-item:hover { background: var(--bg-tertiary); }
+      }
+
+      /* Indication de départ, qui s'efface dès qu'on commence à défiler */
+      .tl-hint {
+        position: absolute;
+        z-index: 3;
+        left: 50%;
+        bottom: 28px;
+        translate: -50% 0;
+        margin: 0;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 18px;
+        border-radius: 50px;
+        background: var(--bg-inverse);
+        color: #ffffff;
+        font-family: var(--font-subtitle);
+        font-size: 0.88rem;
+        font-weight: 700;
+        white-space: nowrap;
+        pointer-events: none;
+        animation: tl-hint linear both;
+        animation-timeline: --journey;
+        animation-range: contain 0% contain 6%;
+      }
+      .tl-hint svg { animation: tl-nudge 1.6s var(--ease-in-out) infinite; }
+
       /* Téléphone et tablette en portrait : ville centrée en haut, étape en bas */
       @media (max-width: 760px) {
         .tl-scene { --cx: ${width * 0.5}px; --cy: ${height * 0.25}px; --ui: 1.6; --zoom-end: 0.48; --zoom-close: 4.5; height: 520vh; }
@@ -355,9 +548,29 @@ const JourneyScene = ({ steps }) => (
           padding: 20px;
         }
         .tl-step-title { font-size: 1.2rem; }
+        .tl-rail {
+          top: 84px;
+          left: 16px;
+          right: 16px;
+          translate: none;
+          flex-direction: row;
+          justify-content: space-between;
+          padding: 6px 8px;
+          border-radius: 16px;
+        }
+        .tl-rail::before, .tl-rail-fill { left: 26px; right: 26px; top: 21px; bottom: auto; width: auto; height: 2px; }
+        .tl-rail-fill { transform-origin: left; animation-name: tl-rail-fill-x; }
+        .tl-rail-item { grid-template-columns: auto; justify-items: center; row-gap: 6px; padding: 6px 8px; }
+        .tl-rail-dot { grid-row: auto; }
+        .tl-rail-label { display: none; }
+        .tl-hint { top: 150px; bottom: auto; }
         .tl-step-desc { font-size: 0.85rem; line-height: 1.5; }
       }
 
+      @keyframes tl-rail-fill { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+      @keyframes tl-rail-fill-x { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+      @keyframes tl-hint { 0%, 40% { opacity: 1; } 100% { opacity: 0; } }
+      @keyframes tl-nudge { 0%, 100% { transform: translateY(-2px); } 50% { transform: translateY(3px); } }
       @keyframes tl-draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
       @keyframes tl-fly {
         0% { offset-distance: 0%; opacity: 0; }
@@ -384,6 +597,7 @@ const JourneyScene = ({ steps }) => (
       ${keyframes}
     `}} />
   </div>
-);
+  );
+};
 
 export default JourneyScene;

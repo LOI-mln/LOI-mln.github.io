@@ -45,6 +45,8 @@ function App() {
 
     // Forcer le défilement de Lenis tout en haut au démarrage
     lenis.scrollTo(0, { immediate: true });
+    // Accessible aux composants qui font défiler la page (frise du parcours)
+    window.__lenis = lenis;
 
     function raf(time) {
       lenis.raf(time);
@@ -63,6 +65,7 @@ function App() {
     observer.observe(document.body, { childList: true, subtree: true });
 
     return () => {
+      delete window.__lenis;
       lenis.destroy();
       window.removeEventListener('resize', handleResize);
       observer.disconnect();
