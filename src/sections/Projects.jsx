@@ -232,8 +232,9 @@ const Projects = () => (
           height: 100svh;
           display: flex;
           align-items: center;
-          background: rgb(var(--tint));
-          color: #ffffff;
+          /* Affiche claire, sur le fond du site : titre en bleu nuit, catégorie et chiffre à la couleur du projet */
+          background: var(--bg-secondary);
+          color: var(--text-primary);
           overflow: hidden;
         }
         .pj-poster-inner {
@@ -254,7 +255,7 @@ const Projects = () => (
           font-family: var(--font-subtitle);
           font-size: 1.05rem;
           font-weight: 700;
-          color: rgba(255, 255, 255, 0.8);
+          color: rgb(var(--tint));
         }
         .pj-poster-title {
           margin: 0;
@@ -279,12 +280,13 @@ const Projects = () => (
           line-height: 1;
           letter-spacing: -0.05em;
           font-variant-numeric: tabular-nums;
+          color: rgb(var(--tint));
         }
         .pj-figure-label {
           font-family: var(--font-body);
           font-size: 1.15rem;
           line-height: 1.4;
-          color: rgba(255, 255, 255, 0.9);
+          color: var(--text-secondary);
           max-width: 26ch;
         }
 
@@ -416,14 +418,14 @@ const Projects = () => (
           .pj-btn--fill:hover { background: rgba(var(--tint), 0.88); }
         }
 
-        /* La démo posée sur un aplat de la couleur du projet, comme un morceau de son affiche */
+        /* La démo posée sur un panneau légèrement teinté de la couleur du projet */
         .pj-media {
           display: flex;
           align-items: center;
           justify-content: center;
           padding: clamp(24px, 4vw, 56px);
           border-radius: 28px;
-          background: rgb(var(--tint));
+          background: rgba(var(--tint), 0.1);
         }
         .pj-media > * { width: 100%; }
 
