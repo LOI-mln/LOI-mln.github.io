@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useLayoutEffect, useRef } from 'react';
-import { Pause, Play } from 'lucide-react';
+import { Pause, Play, Maximize2 } from 'lucide-react';
 
 const prefersReducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -18,8 +18,17 @@ const useInView = (ref) => {
   return inView;
 };
 
-// Cadre de fenêtre : barre de titre, bouton pause et pied optionnel
-const StageWindow = ({ title, footer, paused, onTogglePause, light, innerRef, label, children }) => (
+// Passe un élément en plein écran ; sur iPhone, seule la vidéo sait le faire (webkitEnterFullscreen)
+const enterFullscreen = (el) => {
+  if (!el) return false;
+  if (el.requestFullscreen) { el.requestFullscreen().catch(() => {}); return true; }
+  if (el.webkitRequestFullscreen) { el.webkitRequestFullscreen(); return true; }
+  if (el.webkitEnterFullscreen) { el.webkitEnterFullscreen(); return true; }
+  return false;
+};
+
+// Cadre de fenêtre : barre de titre, boutons pause et plein écran, pied optionnel
+const StageWindow = ({ title, footer, paused, onTogglePause, onFullscreen, light, innerRef, label, children }) => (
   <figure ref={innerRef} className={`stage ${light ? 'stage--light' : ''}`}>
     <div className="stage-bar">
       <span className="stage-dots" aria-hidden="true"><i /><i /><i /></span>
@@ -32,6 +41,11 @@ const StageWindow = ({ title, footer, paused, onTogglePause, light, innerRef, la
           aria-label={paused ? `Relancer : ${label}` : `Mettre en pause : ${label}`}
         >
           {paused ? <Play size={13} fill="currentColor" /> : <Pause size={13} fill="currentColor" />}
+        </button>
+      )}
+      {onFullscreen && (
+        <button type="button" className="stage-toggle" onClick={onFullscreen} aria-label={`Voir en plein écran : ${title}`}>
+          <Maximize2 size={13} />
         </button>
       )}
     </div>
@@ -57,6 +71,25 @@ const VideoStage = ({ title, footer, src, poster }) => {
     }
   }, [inView, paused]);
 
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    const sync = () => { video.controls = document.fullscreenElement === video || document.webkitFullscreenElement === video; };
+    document.addEventListener('fullscreenchange', sync);
+    document.addEventListener('webkitfullscreenchange', sync);
+    return () => {
+      document.removeEventListener('fullscreenchange', sync);
+      document.removeEventListener('webkitfullscreenchange', sync);
+    };
+  }, []);
+
+  const openFullscreen = () => {
+    const video = videoRef.current;
+    setPaused(false);
+    video?.play().catch(() => {});
+    enterFullscreen(video);
+  };
+
   return (
     <StageWindow
       light
@@ -65,6 +98,7 @@ const VideoStage = ({ title, footer, src, poster }) => {
       footer={footer}
       paused={paused}
       onTogglePause={() => setPaused((p) => !p)}
+      onFullscreen={openFullscreen}
       label="la démo vidéo"
     >
       <video
@@ -83,11 +117,18 @@ const VideoStage = ({ title, footer, src, poster }) => {
 };
 
 // Capture fixe de l'application
-const ImageStage = ({ title, footer, src, alt }) => (
-  <StageWindow light title={title} footer={footer}>
-    <img className="stage-video" src={src} alt={alt} loading="lazy" />
-  </StageWindow>
-);
+const ImageStage = ({ title, footer, src, alt }) => {
+  const imageRef = useRef(null);
+  const openFullscreen = () => {
+    if (!enterFullscreen(imageRef.current)) window.open(src, '_blank', 'noopener');
+  };
+
+  return (
+    <StageWindow light title={title} footer={footer} onFullscreen={openFullscreen}>
+      <img ref={imageRef} className="stage-video" src={src} alt={alt} loading="lazy" />
+    </StageWindow>
+  );
+};
 
 // Délai avant de passer à l'étape suivante du terminal
 const terminalDelay = (line) => {
@@ -299,6 +340,7 @@ const ProjectStage = ({ kind, ...props }) => (
         transition: background-color 0.2s var(--ease-out), color 0.2s var(--ease-out);
       }
       .stage--light .stage-toggle { color: var(--text-secondary); }
+      .stage-video:fullscreen { object-fit: contain; background: #0b0f19; }
       .stage-toggle:focus-visible,
       .stage-row:focus-visible {
         outline: 2px solid #8ab4ff;

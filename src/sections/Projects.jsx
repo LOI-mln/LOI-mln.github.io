@@ -1,28 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { 
-  createPortal } from 'react-dom';
+import React from 'react';
 import ProjectStage from '../components/ProjectStage';
-import { 
-  Globe, 
-  Play, 
-  Network, 
-  ClipboardList, 
-  Briefcase, 
-  ExternalLink, 
-  ArrowUpRight, 
-  Activity, 
-  Database, 
-  CheckCircle, 
-  Flame, 
-  AlertTriangle, 
-  FileText, 
-  Clock, 
-  ShieldCheck, 
-  Terminal, 
-  Zap, 
-  Check, 
-  Lock
-} from 'lucide-react';
+import { ExternalLink, ArrowUpRight, FileText } from 'lucide-react';
 
 const GithubIcon = ({ size = 18 }) => (
   <svg viewBox="0 0 24 24" width={size} height={size} stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round">
@@ -47,7 +25,6 @@ const PROJECT_INFO = [
       { t: "Suivi des heures", d: "prévu et réalisé comparés pour chaque enseignant" },
     ],
     tags: ['Python', 'Laravel', 'Vue 3'],
-    demo: { src: '/videos/unilim-edt-demo.mp4', poster: '/videos/unilim-edt-demo.jpg', duration: '35 s' },
   },
   {
     number: '02',
@@ -63,7 +40,6 @@ const PROJECT_INFO = [
       { t: "Calendrier de la saison", d: "chaque tournoi et chaque soirée du club avec sa fiche" },
     ],
     tags: ['Next.js', 'React'],
-    demo: { src: '/videos/bcm-site-demo.mp4', poster: '/videos/bcm-site-demo.jpg', duration: '14 s', label: 'Visite réelle' },
     link: { href: 'https://www.bcm24.fr', label: 'Voir le site', kind: 'site' },
   },
   {
@@ -80,7 +56,6 @@ const PROJECT_INFO = [
       { t: "Dashboard interactif", d: "explorer les résultats et analyser de nouvelles données" },
     ],
     tags: ['Python', 'IA', 'NLP'],
-    demo: { src: '/videos/rgu-dashboard-demo.mp4', poster: '/videos/rgu-dashboard-demo.jpg', duration: '21 s', label: 'Dashboard réel', button: 'Voir le dashboard' },
     link: { href: '/research_paper.pdf', label: 'Lire le papier', kind: 'pdf' },
   },
   {
@@ -136,34 +111,9 @@ const PROJECT_STAGE = [
   },
 ];
 
-// Fenêtre vidéo de démonstration (chargée seulement à l'ouverture)
-const DemoModal = ({ demo, title, onClose }) => {
-  useEffect(() => {
-    const onKey = (e) => { if (e.key === 'Escape') onClose(); };
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
-  }, [onClose]);
-
-  // Portail : la carte a une transformation CSS qui piégerait le position: fixed
-  return createPortal(
-    <div className="demo-backdrop" onClick={onClose} role="dialog" aria-modal="true" aria-label={`Démo de ${title}`}>
-      <div className="demo-frame" onClick={(e) => e.stopPropagation()}>
-        <div className="demo-head">
-          <span>{demo.label || 'Démo réelle'} · {title}</span>
-          <button type="button" onClick={onClose} aria-label="Fermer la démo">×</button>
-        </div>
-        <video src={demo.src} poster={demo.poster} controls autoPlay muted playsInline />
-        {demo.note && <p className="demo-note">{demo.note}</p>}
-      </div>
-    </div>,
-    document.body
-  );
-};
-
 // Fiche d'un projet, sur la feuille qui recouvre son affiche : texte à la couleur du projet, démo sur un aplat de cette couleur
 const ProjectSheet = ({ project, stage, flipped }) => {
-  const [demoOpen, setDemoOpen] = useState(false);
-  const { title, category, meta, status, summary, points, tags, link, demo } = project;
+  const { title, category, meta, status, summary, points, tags, link } = project;
 
   return (
     <div className={`pj-sheet-inner ${flipped ? 'pj-sheet-inner--flipped' : ''}`}>
@@ -178,14 +128,8 @@ const ProjectSheet = ({ project, stage, flipped }) => {
         <div className="pj-copy-foot">
           <p className="pj-copy-tags">{tags.join(' · ')}</p>
           <div className="pj-copy-actions">
-            {demo && (
-              <button type="button" className="pj-btn pj-btn--fill" onClick={() => setDemoOpen(true)}>
-                <Play size={14} fill="currentColor" />
-                <span>{demo.button || 'Voir la démo'} · {demo.duration}</span>
-              </button>
-            )}
             {link && (
-              <a href={link.href} target="_blank" rel="noopener noreferrer" className="pj-btn">
+              <a href={link.href} target="_blank" rel="noopener noreferrer" className="pj-btn pj-btn--fill">
                 {link.kind === 'github' && <GithubIcon size={15} />}
                 {link.kind === 'pdf' && <FileText size={15} />}
                 {link.kind === 'site' && <ExternalLink size={15} />}
@@ -199,7 +143,6 @@ const ProjectSheet = ({ project, stage, flipped }) => {
       <div className="pj-media">
         <ProjectStage {...stage} />
       </div>
-      {demoOpen && <DemoModal demo={demo} title={title} onClose={() => setDemoOpen(false)} />}
     </div>
   );
 };
@@ -289,42 +232,7 @@ const Projects = () => (
     ))}
 
       <style dangerouslySetInnerHTML={{ __html: `
-        /* Fenêtre de démo vidéo */
-        .demo-backdrop {
-          position: fixed; inset: 0;
-          z-index: 10000;
-          display: flex; align-items: center; justify-content: center;
-          padding: 24px;
-          background: rgba(17, 24, 39, 0.72);
-          backdrop-filter: blur(6px);
-        }
-        .demo-frame {
-          width: min(1100px, 100%);
-          border-radius: 18px;
-          overflow: hidden;
-          background: #0b0f19;
-          box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.6);
-        }
-        .demo-head {
-          display: flex; align-items: center; justify-content: space-between;
-          padding: 10px 16px;
-          font-family: var(--font-subtitle);
-          font-size: 0.85rem; font-weight: 700;
-          color: rgba(255, 255, 255, 0.85);
-        }
-        .demo-head button {
-          border: none; background: none; cursor: pointer;
-          color: rgba(255, 255, 255, 0.7);
-          font-size: 1.6rem; line-height: 1;
-        }
-        .demo-frame video { display: block; width: 100%; height: auto; background: #000; }
-        .demo-note {
-          margin: 0;
-          padding: 10px 16px 12px;
-          font-family: var(--font-body);
-          font-size: 0.85rem;
-          color: rgba(255, 255, 255, 0.7);
-        }
+
         /* Chapitres : une affiche fixe dans la teinte du projet, puis la fiche qui remonte par-dessus */
         .pj-chapter { position: relative; view-timeline: --chapter block; }
         .pj-chapter--emerald { --tint: 5, 150, 105; }
