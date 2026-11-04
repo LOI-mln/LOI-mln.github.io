@@ -2,32 +2,29 @@ import React from 'react';
 import { ArrowUpRight } from 'lucide-react';
 import RollingFigure from './RollingFigure';
 
-// Trois repères de l'accueil, en aplats de couleur comme les affiches des projets ; chacun mène à sa section
+// Trois repères de l'accueil, en cartes claires comme le reste du site ; chacun mène à sa section
 const METRICS = [
   {
     figure: { value: '200', prefix: '≈ ' },
     label: "personnes utilisent mon appli d'emplois du temps à l'IUT",
     href: '#projet-1',
-    tone: 'emerald',
   },
   {
     figure: { value: '3', suffix: 'mois' },
     label: "de recherche en IA à l'université Robert Gordon d'Aberdeen",
     href: '#projet-3',
-    tone: 'accent',
   },
   {
     figure: { value: '1', suffix: 'an' },
     label: "d'alternance comme développeur chez Ceva Santé Animale",
     href: '#timeline',
-    tone: 'ink',
   },
 ];
 
 const MetricGrid = () => (
   <div className="mg-grid">
     {METRICS.map((m, i) => (
-      <a key={m.href} href={m.href} className={`mg-tile mg-tile--${m.tone}`} style={{ '--n': i }}>
+      <a key={m.href} href={m.href} className="mg-tile" style={{ '--n': i }}>
         <RollingFigure {...m.figure} className="mg-figure" />
         <span className="mg-label">{m.label}</span>
         <ArrowUpRight className="mg-arrow" size={20} aria-hidden="true" />
@@ -48,46 +45,47 @@ const MetricGrid = () => (
         flex-direction: column;
         justify-content: space-between;
         gap: 28px;
-        min-height: 200px;
+        min-height: 190px;
         padding: 26px 28px;
         border-radius: 24px;
-        color: #ffffff;
         text-decoration: none;
-        background: rgb(var(--tone));
-        transition: transform var(--duration-normal) var(--ease-out), background-color var(--duration-normal) var(--ease-out);
+        color: var(--text-primary);
+        background: var(--bg-primary);
+        border: 1px solid var(--border-color);
+        box-shadow: 0 4px 16px rgba(17, 24, 39, 0.04);
+        transition: transform var(--duration-normal) var(--ease-out), border-color var(--duration-normal) var(--ease-out), box-shadow var(--duration-normal) var(--ease-out);
       }
-      .mg-tile--emerald { --tone: 5, 150, 105; }
-      .mg-tile--accent { --tone: 37, 99, 235; }
-      .mg-tile--ink { --tone: 17, 24, 39; }
 
+      /* Le chiffre en Syne bleu nuit, son unité en bleu */
       .mg-figure {
         font-family: var(--font-display);
         font-size: clamp(3rem, 5.4vw, 4.6rem);
         font-weight: 800;
         line-height: 1;
         letter-spacing: -0.05em;
+        color: var(--text-primary);
       }
-      .mg-figure .roll-affix { font-size: 0.5em; letter-spacing: -0.02em; }
+      .mg-figure .roll-affix { font-size: 0.5em; letter-spacing: -0.02em; color: var(--accent); }
       .mg-figure .roll-affix--suffix { margin-left: 0.35em; }
       .mg-label {
-        max-width: 26ch;
+        max-width: 28ch;
         font-family: var(--font-body);
         font-size: 1rem;
         line-height: 1.45;
-        color: rgba(255, 255, 255, 0.88);
+        color: var(--text-secondary);
       }
       .mg-arrow {
         position: absolute;
         top: 24px;
         right: 24px;
-        opacity: 0.6;
-        transition: transform var(--duration-normal) var(--ease-out), opacity var(--duration-normal) var(--ease-out);
+        color: var(--text-muted);
+        transition: transform var(--duration-normal) var(--ease-out), color var(--duration-normal) var(--ease-out);
       }
-      .mg-tile:focus-visible { outline: 3px solid rgb(var(--tone)); outline-offset: 3px; }
+      .mg-tile:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
       .mg-tile:active { transform: scale(0.98); }
       @media (hover: hover) and (pointer: fine) {
-        .mg-tile:hover { transform: translateY(-3px); }
-        .mg-tile:hover .mg-arrow { opacity: 1; transform: translate(2px, -2px); }
+        .mg-tile:hover { transform: translateY(-3px); border-color: var(--border-color-hover); box-shadow: 0 16px 36px rgba(17, 24, 39, 0.08); }
+        .mg-tile:hover .mg-arrow { color: var(--accent); transform: translate(2px, -2px); }
       }
 
       /* Les chiffres défilent quand les tuiles arrivent à l'écran (elles sont sous la ligne de flottaison) ;
