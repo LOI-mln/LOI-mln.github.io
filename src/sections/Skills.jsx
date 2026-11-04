@@ -1,20 +1,5 @@
 import React, { useEffect, useRef } from 'react';
 import { Code, Cpu, Server, Database, Users, ShieldAlert, ShieldCheck, Sparkles, Monitor, Building2 } from 'lucide-react';
-import AntigravityCanvas from '../components/AntigravityCanvas';
-
-// Canvas de fond ondulé
-const SkillsMesh = ({ mode }) => {
-  return (
-    <AntigravityCanvas
-      mode={mode}
-      colorScheme="blue"
-      density="low"
-      clusterRight={false}
-      velocityStretch={false}
-    />
-  );
-};
-
 // Les six compétences du BUT, dans l'ordre de la grille
 const SKILLS = [
   {
@@ -101,11 +86,10 @@ const useSpotlight = () => {
 };
 
 // Section des compétences
-const Skills = ({ theme }) => {
+const Skills = () => {
   const { gridRef, onPointerMove } = useSpotlight();
   return (
-    <section id="skills" className="sk-section">
-      <SkillsMesh mode={theme} />
+    <section id="skills" className="sk-section field">
 
       <div className="sk-inner">
         {/* En-tête de la section */}
@@ -150,7 +134,8 @@ const Skills = ({ theme }) => {
         __html: `
         .sk-section {
           position: relative;
-          background-color: var(--bg-secondary);
+          /* Aplat bleu nuit, comme les affiches des projets : titre en blanc, cartes blanches posées dessus */
+          background-color: var(--bg-inverse);
           /* clip et non hidden : hidden ferait de la section un conteneur de défilement, et la donne ne suivrait plus la page */
           overflow: clip;
         }
@@ -168,7 +153,7 @@ const Skills = ({ theme }) => {
           font-family: var(--font-display);
           font-size: clamp(2rem, 4.5vw, 3.2rem);
           font-weight: 800;
-          color: var(--text-primary);
+          color: #ffffff;
           letter-spacing: -0.04em;
           text-transform: uppercase;
           line-height: 1.2;
@@ -177,7 +162,7 @@ const Skills = ({ theme }) => {
         .sk-subtitle {
           max-width: 580px;
           margin: 12px auto 0;
-          color: var(--text-secondary);
+          color: rgba(255, 255, 255, 0.75);
           font-size: 0.95rem;
           line-height: 1.6;
         }
@@ -336,33 +321,22 @@ const Skills = ({ theme }) => {
           border-radius: 50px;
         }
 
-        /* Réaliser, en vedette : carte sombre avec un reflet bleu */
+        /* Réaliser, en vedette : aplat bleu plein, qui se détache du fond bleu nuit */
         .sk-card--featured {
-          background: var(--bg-inverse);
-          border-color: rgba(255, 255, 255, 0.06);
-          color: var(--text-inverse);
-          box-shadow: 0 20px 48px rgba(17, 24, 39, 0.18);
-        }
-        .sk-card--featured::before {
-          content: '';
-          position: absolute;
-          inset: 0;
-          background: radial-gradient(circle at 100% 0%, rgba(var(--accent-rgb), 0.35), transparent 60%);
-          pointer-events: none;
+          background: var(--accent);
+          border-color: transparent;
+          color: #ffffff;
         }
         .sk-card--featured .sk-card-light {
-          background: radial-gradient(360px circle at var(--mx, 50%) var(--my, 50%), rgba(147, 197, 253, 0.16), transparent 45%);
+          background: radial-gradient(360px circle at var(--mx, 50%) var(--my, 50%), rgba(255, 255, 255, 0.14), transparent 45%);
         }
-        .sk-card--featured .sk-card-icon { background: var(--accent-gradient); color: #ffffff; }
-        .sk-card--featured .sk-card-code { color: #93c5fd; }
-        .sk-card--featured .sk-card-level { color: rgba(255, 255, 255, 0.55); }
+        .sk-card--featured .sk-card-icon { background: rgba(255, 255, 255, 0.18); color: #ffffff; }
+        .sk-card--featured .sk-card-code { color: #dbeafe; }
+        .sk-card--featured .sk-card-level { color: rgba(255, 255, 255, 0.7); }
         .sk-card--featured .sk-card-title { color: #ffffff; }
         .sk-card--featured .sk-card-list li { color: #ffffff; }
-        .sk-card--featured .sk-card-list li::before { background: #60a5fa; }
-        .sk-card--featured .sk-card-tag { color: #ffffff; background: rgba(255, 255, 255, 0.1); }
-        @media (hover: hover) and (pointer: fine) {
-          .sk-card--featured:hover { box-shadow: 0 28px 60px rgba(17, 24, 39, 0.28); }
-        }
+        .sk-card--featured .sk-card-list li::before { background: #ffffff; }
+        .sk-card--featured .sk-card-tag { color: #ffffff; background: rgba(255, 255, 255, 0.16); }
 
         /* Boîte à outils : une bande de quatre groupes */
         .sk-tools-grid {

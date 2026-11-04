@@ -171,10 +171,12 @@ const JourneyScene = ({ steps }) => (
         height: 100vh;
         height: 100svh;
         overflow: hidden;
-        background: #e8eef8;
+        background: var(--accent);
       }
       /* Fondus haut et bas pour que la carte se fonde dans la page */
+      /* L'aplat de la section et la mer ont le même bleu : pas besoin de fondu */
       .tl-stage::before, .tl-stage::after {
+        display: none;
         content: '';
         position: absolute;
         left: 0; right: 0;
@@ -199,8 +201,8 @@ const JourneyScene = ({ steps }) => (
         animation-range: contain 0% contain 100%;
       }
 
-      .tl-land { fill: #f7f9fc; stroke: #d3dcea; stroke-width: 0.8px; }
-      .tl-land--home { fill: #ffffff; stroke: #b9c8e2; }
+      .tl-land { fill: rgba(255, 255, 255, 0.55); stroke: var(--accent); stroke-width: 0.8px; }
+      .tl-land--home { fill: #ffffff; stroke: var(--accent); }
       .tl-river { fill: none; stroke: #c7d6ee; stroke-width: 0.8px; stroke-linecap: round; stroke-linejoin: round; }
       .tl-river--home { stroke: #a9c1e8; stroke-width: 1.3px; }
       .tl-river-label {
@@ -217,10 +219,10 @@ const JourneyScene = ({ steps }) => (
         animation-timeline: --journey;
         animation-range: contain 0% contain 100%;
       }
-      .tl-route-base { fill: none; stroke: rgba(var(--accent-rgb), 0.35); stroke-width: 1.2px; stroke-dasharray: 3 5; stroke-linecap: round; }
+      .tl-route-base { fill: none; stroke: rgba(15, 23, 42, 0.35); stroke-width: 1.2px; stroke-dasharray: 3 5; stroke-linecap: round; }
       .tl-leg {
         fill: none;
-        stroke: var(--accent);
+        stroke: var(--bg-inverse);
         stroke-linecap: round;
         stroke-dasharray: 1;
         /* Le trait se dessine sur sa propre plage ; son épaisseur compense le zoom (pas de non-scaling-stroke, qui casse pathLength) */
@@ -228,13 +230,13 @@ const JourneyScene = ({ steps }) => (
         animation-timeline: --journey, --journey;
       }
       .tl-plane {
-        fill: var(--accent-hover);
+        fill: var(--bg-inverse);
         offset-rotate: auto;
         animation: tl-fly var(--ease-in-out) both;
         animation-timeline: --journey;
       }
-      .tl-pin-dot { fill: var(--accent); stroke: #ffffff; stroke-width: 1.6; }
-      .tl-pin-halo { fill: rgba(var(--accent-rgb), 0.18); }
+      .tl-pin-dot { fill: var(--bg-inverse); stroke: #ffffff; stroke-width: 1.6; }
+      .tl-pin-halo { fill: rgba(15, 23, 42, 0.2); }
       .tl-pin-label {
         font-family: var(--font-subtitle);
         font-size: 7.2px;
@@ -365,7 +367,7 @@ const JourneyScene = ({ steps }) => (
         92% { opacity: 1; }
         100% { offset-distance: 100%; opacity: 0; }
       }
-      @keyframes tl-pin { from { transform: scale(0.5); fill: #ffffff; } to { transform: scale(1); fill: var(--accent); } }
+      @keyframes tl-pin { from { transform: scale(0.5); fill: #ffffff; } to { transform: scale(1); fill: var(--bg-inverse); } }
       @keyframes tl-halo { from { transform: scale(0.3); opacity: 0; } to { transform: scale(1); opacity: 1; } }
       @keyframes tl-label { from { opacity: 0.4; } to { opacity: 1; } }
       @keyframes tl-card-first {

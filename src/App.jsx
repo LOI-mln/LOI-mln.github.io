@@ -2,15 +2,15 @@ import React, { useEffect } from 'react';
 // Build stamp for debugging deployed bundle cache
 console.log('App build: ' + new Date().toISOString());
 import Navbar from './components/Navbar';
-import AntigravityCanvas from './components/AntigravityCanvas';
 import CustomCursor from './components/CustomCursor';
 import OrganicCanvas from './components/OrganicCanvas';
 import Hero from './sections/Hero';
 import Skills from './sections/Skills';
 import Projects from './sections/Projects';
 import Timeline from './sections/Timeline';
+import About from './sections/About';
 import CurtainReveal from './components/CurtainReveal';
-import { ArrowUpRight, Trophy, Zap, ShieldCheck, Flame, Compass, ShoppingBag, Sparkles } from 'lucide-react';
+import { ArrowUpRight } from 'lucide-react';
 import Lenis from 'lenis';
 import useScrollReveal from './hooks/useScrollReveal';
 
@@ -98,410 +98,60 @@ function App() {
           <Skills />
 
           {/* Section Hors-Piste / Passions */}
-          <section
-            id="about"
-            style={{
-              position: 'relative',
-              backgroundColor: 'var(--bg-primary)',
-            }}
-          >
-            {/* Constellation interactive subtile bleue */}
-            <AntigravityCanvas
-              mode="light"
-              colorScheme="blue"
-              density="low"
-              clusterRight={false}
-              velocityStretch={false}
-            />
-            <div className="section-container" style={{ paddingTop: '120px', paddingBottom: '120px' }}>
-              <div 
-                style={{ 
-                  display: 'flex', 
-                  gap: '60px', 
-                  flexWrap: 'wrap', 
-                  alignItems: 'flex-start' 
-                }}
-              >
-                {/* Colonne gauche : En-tête éditorial */}
-                <div 
-                  style={{ 
-                    flex: '1', 
-                    minWidth: '280px', 
-                    position: 'sticky', 
-                    top: '120px',
-                    paddingBottom: '30px'
-                  }}
-                >
-                  <div className="organic-badge" style={{ marginBottom: '16px', width: 'fit-content' }}>
-                    HORS-PISTE
-                  </div>
-                  <h2
-                    className="section-title"
-                    style={{
-                      fontSize: 'clamp(2rem, 5vw, 3.2rem)',
-                      color: 'var(--text-primary)',
-                      textTransform: 'uppercase',
-                      lineHeight: '1.2',
-                      margin: '0 0 20px 0',
-                    }}
-                  >
-                    Au-delà <span className="accent-glow-text" style={{ padding: '0 0.05em' }}>du code</span>
-                  </h2>
-                  <p
-                    style={{
-                      maxWidth: '400px',
-                      color: 'var(--text-secondary)',
-                      fontSize: '1.05rem',
-                      fontFamily: 'var(--font-body)',
-                      lineHeight: 1.6,
-                      margin: 0
-                    }}
-                  >
-                    Mes passions, activités secondaires et engagements au quotidien, présentés en toute simplicité.
-                  </p>
-                </div>
-
-                {/* Colonne droite : Cartes passions */}
-                <div 
-                  style={{ 
-                    flex: '1.5', 
-                    minWidth: '320px', 
-                    display: 'flex', 
-                    flexDirection: 'column', 
-                    gap: '24px' 
-                  }}
-                >
-                  {/* Carte Sport et Nature */}
-                  <div
-                    className="glass-panel"
-                    style={{
-                      padding: '24px',
-                      background: 'rgba(255, 255, 255, 0.45)',
-                      backdropFilter: 'blur(12px)',
-                      borderRadius: '24px',
-                      display: 'flex',
-                      gap: '20px',
-                      border: '1px solid rgba(255, 255, 255, 0.5)',
-                      transition: 'var(--transition-smooth)',
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.transform = 'translateY(-3px)';
-                      e.currentTarget.style.borderColor = 'var(--accent-hover)';
-                      e.currentTarget.style.boxShadow = '0 10px 25px rgba(37, 99, 235, 0.05)';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.transform = 'translateY(0)';
-                      e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.5)';
-                      e.currentTarget.style.boxShadow = 'none';
-                    }}
-                  >
-                    <div
-                      style={{
-                        flexShrink: 0,
-                        width: '40px',
-                        height: '40px',
-                        borderRadius: '50%',
-                        backgroundColor: 'rgba(37, 99, 235, 0.08)',
-                        color: 'var(--accent-hover)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                      }}
-                    >
-                      <Trophy size={18} />
-                    </div>
-                    <div style={{ flex: 1 }}>
-                      <h3 style={{ fontSize: '1.1rem', fontFamily: 'var(--font-title)', fontWeight: 700, color: 'var(--text-primary)', margin: '0 0 6px 0' }}>
-                        Sports & Outdoor
-                      </h3>
-                      <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', lineHeight: 1.5, margin: 0 }}>
-                        Pratique régulière de la boxe anglaise en club pour le cardio et la condition physique. Adepte de randonnées d'endurance en autonomie dans les Pyrénées, les Alpes ou les Highlands, tennis et ski.
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Carte Optimisation de latence */}
-                  <div
-                    className="glass-panel"
-                    style={{
-                      padding: '24px',
-                      background: 'rgba(255, 255, 255, 0.45)',
-                      backdropFilter: 'blur(12px)',
-                      borderRadius: '24px',
-                      display: 'flex',
-                      gap: '20px',
-                      border: '1px solid rgba(255, 255, 255, 0.5)',
-                      transition: 'var(--transition-smooth)',
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.transform = 'translateY(-3px)';
-                      e.currentTarget.style.borderColor = 'var(--accent-hover)';
-                      e.currentTarget.style.boxShadow = '0 10px 25px rgba(37, 99, 235, 0.05)';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.transform = 'translateY(0)';
-                      e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.5)';
-                      e.currentTarget.style.boxShadow = 'none';
-                    }}
-                  >
-                    <div
-                      style={{
-                        flexShrink: 0,
-                        width: '40px',
-                        height: '40px',
-                        borderRadius: '50%',
-                        backgroundColor: 'rgba(37, 99, 235, 0.08)',
-                        color: 'var(--accent-hover)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                      }}
-                    >
-                      <Zap size={18} />
-                    </div>
-                    <div style={{ flex: 1 }}>
-                      <h3 style={{ fontSize: '1.1rem', fontFamily: 'var(--font-title)', fontWeight: 700, color: 'var(--text-primary)', margin: '0 0 6px 0' }}>
-                        Optimisation Latence
-                      </h3>
-                      <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', lineHeight: 1.5, margin: 0 }}>
-                        Recherche empirique sur la réduction de l'input lag matériel et logiciel. Tuning de contrôleurs haute fréquence (claviers magnétiques à effet Hall), OS de jeu légers et micro-firmwares.
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Carte Recherche en IA */}
-                  <div
-                    className="glass-panel"
-                    style={{
-                      padding: '24px',
-                      background: 'rgba(255, 255, 255, 0.45)',
-                      backdropFilter: 'blur(12px)',
-                      borderRadius: '24px',
-                      display: 'flex',
-                      gap: '20px',
-                      border: '1px solid rgba(255, 255, 255, 0.5)',
-                      transition: 'var(--transition-smooth)',
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.transform = 'translateY(-3px)';
-                      e.currentTarget.style.borderColor = 'var(--accent-hover)';
-                      e.currentTarget.style.boxShadow = '0 10px 25px rgba(37, 99, 235, 0.05)';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.transform = 'translateY(0)';
-                      e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.5)';
-                      e.currentTarget.style.boxShadow = 'none';
-                    }}
-                  >
-                    <div
-                      style={{
-                        flexShrink: 0,
-                        width: '40px',
-                        height: '40px',
-                        borderRadius: '50%',
-                        backgroundColor: 'rgba(37, 99, 235, 0.08)',
-                        color: 'var(--accent-hover)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                      }}
-                    >
-                      <Sparkles size={18} />
-                    </div>
-                    <div style={{ flex: 1 }}>
-                      <h3 style={{ fontSize: '1.1rem', fontFamily: 'var(--font-title)', fontWeight: 700, color: 'var(--text-primary)', margin: '0 0 6px 0' }}>
-                        Recherche & R&D IA
-                      </h3>
-                      <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', lineHeight: 1.5, margin: 0 }}>
-                        Veille constante sur les derniers modèles de langage, l'ingénierie de prompt, et l'intégration d'outils IA dans des écosystèmes locaux (Homelab, Docker, etc.). Capacité à collaborer de manière fluide avec des agents IA pour accélérer le cycle de développement logiciel.
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Carte Commerce de collection */}
-                  <div
-                    className="glass-panel"
-                    style={{
-                      padding: '24px',
-                      background: 'rgba(255, 255, 255, 0.45)',
-                      backdropFilter: 'blur(12px)',
-                      borderRadius: '24px',
-                      display: 'flex',
-                      gap: '20px',
-                      border: '1px solid rgba(255, 255, 255, 0.5)',
-                      transition: 'var(--transition-smooth)',
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.transform = 'translateY(-3px)';
-                      e.currentTarget.style.borderColor = 'var(--accent-hover)';
-                      e.currentTarget.style.boxShadow = '0 10px 25px rgba(37, 99, 235, 0.05)';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.transform = 'translateY(0)';
-                      e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.5)';
-                      e.currentTarget.style.boxShadow = 'none';
-                    }}
-                  >
-                    <div
-                      style={{
-                        flexShrink: 0,
-                        width: '40px',
-                        height: '40px',
-                        borderRadius: '50%',
-                        backgroundColor: 'rgba(37, 99, 235, 0.08)',
-                        color: 'var(--accent-hover)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                      }}
-                    >
-                      <ShoppingBag size={18} />
-                    </div>
-                    <div style={{ flex: 1 }}>
-                      <h3 style={{ fontSize: '1.1rem', fontFamily: 'var(--font-title)', fontWeight: 700, color: 'var(--text-primary)', margin: '0 0 6px 0' }}>
-                        Achat-Revente & Trade
-                      </h3>
-                      <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', lineHeight: 1.5, margin: 0 }}>
-                        Achat, estimation et revente d'objets de collection (cartes de jeux, rétro-gaming), d'articles de mode en édition limitée (sneakers) et de matériel informatique de pointe (hardware) sur les plateformes en ligne (eBay, Vinted, etc.). Gestion des stocks, logistique internationale d'envoi et relations clients.
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Carte Expérience McDo */}
-                  <div
-                    className="glass-panel"
-                    style={{
-                      padding: '24px',
-                      background: 'rgba(255, 255, 255, 0.45)',
-                      backdropFilter: 'blur(12px)',
-                      borderRadius: '24px',
-                      display: 'flex',
-                      gap: '20px',
-                      border: '1px solid rgba(255, 255, 255, 0.5)',
-                      transition: 'var(--transition-smooth)',
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.transform = 'translateY(-3px)';
-                      e.currentTarget.style.borderColor = 'var(--accent-hover)';
-                      e.currentTarget.style.boxShadow = '0 10px 25px rgba(37, 99, 235, 0.05)';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.transform = 'translateY(0)';
-                      e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.5)';
-                      e.currentTarget.style.boxShadow = 'none';
-                    }}
-                  >
-                    <div
-                      style={{
-                        flexShrink: 0,
-                        width: '40px',
-                        height: '40px',
-                        borderRadius: '50%',
-                        backgroundColor: 'rgba(37, 99, 235, 0.08)',
-                        color: 'var(--accent-hover)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                      }}
-                    >
-                      <ShieldCheck size={18} />
-                    </div>
-                    <div style={{ flex: 1 }}>
-                      <h3 style={{ fontSize: '1.1rem', fontFamily: 'var(--font-title)', fontWeight: 700, color: 'var(--text-primary)', margin: '0 0 6px 0' }}>
-                        Expérience Terrain
-                      </h3>
-                      <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', lineHeight: 1.5, margin: 0 }}>
-                        Équipier polyvalent chez McDonald's en parallèle de mes études. Une immersion terrain exigeante qui enseigne l'efficacité sous pression, le rythme soutenu et le travail d'équipe rapide.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
+          <About />
 
           {/* Ligne de vie du parcours */}
           <Timeline />
         </main>
 
-        {/* Pied de page éditorial */}
-        <footer
-          style={{
-            position: 'relative',
-            backgroundColor: 'var(--bg-secondary)',
-            borderTop: '1px solid var(--border-color)',
-            padding: '48px 24px',
-            zIndex: 2,
-          }}
-        >
-          <div
-            style={{
-              maxWidth: '1200px',
-              margin: '0 auto',
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              flexWrap: 'wrap',
-              gap: '24px',
-              width: '100%',
-            }}
-          >
-            {/* Initiales et identité */}
-            <div style={{ display: 'flex', flexDirection: 'column' }}>
-              <span
-                style={{
-                  fontFamily: 'var(--font-title)',
-                  fontSize: '1.1rem',
-                  fontWeight: 800,
-                  color: 'var(--text-primary)',
-                  letterSpacing: '-0.02em',
-                }}
-              >
-                MILAN LOÏ
-              </span>
-              <span
-                style={{
-                  fontFamily: 'var(--font-body)',
-                  fontSize: '0.75rem',
-                  color: 'var(--text-secondary)',
-                  marginTop: '2px',
-                }}
-              >
-                Concepteur Logiciel & Développeur IA // IUT Limousin
-              </span>
-            </div>
-
-            {/* Lien vers le code du portfolio */}
-            <a
-              href="https://github.com/LOI-mln/LOI-mln.github.io"
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px',
-                fontFamily: 'var(--font-subtitle)',
-                fontSize: '0.8rem',
-                fontWeight: 600,
-                color: 'var(--text-secondary)',
-              }}
-            >
-              <span>Code source sur GitHub</span>
-              <ArrowUpRight size={12} />
+        {/* Pied de page : aplat bleu nuit, le nom revient en grand */}
+        <footer className="site-footer field">
+          <p className="site-footer-name">Milan Loï</p>
+          <div className="site-footer-row">
+            <span>Concepteur logiciel · BUT Informatique · Limoges</span>
+            <a href="https://github.com/LOI-mln/LOI-mln.github.io" target="_blank" rel="noopener noreferrer">
+              Code source sur GitHub <ArrowUpRight size={14} />
             </a>
-
-            {/* Statistiques système du projet */}
-            <div
-              style={{
-                fontFamily: 'monospace',
-                fontSize: '0.75rem',
-                color: 'var(--text-muted)',
-                letterSpacing: '0.05em',
-              }}
-            >
-              LIMOGES, FRANCE · BUT 3 INFORMATIQUE
-            </div>
           </div>
+          <style dangerouslySetInnerHTML={{ __html: `
+            .site-footer {
+              position: relative;
+              z-index: 2;
+              padding: 72px 24px 32px;
+              background: var(--bg-inverse);
+              color: #ffffff;
+              overflow: clip;
+              container-type: inline-size;
+            }
+            /* Le nom occupe toute la largeur : sa taille suit celle du pied de page (« Milan Loï » fait ~8,6 em en Syne) */
+            .site-footer-name {
+              margin: 0 0 40px;
+              text-align: center;
+              font-family: var(--font-display);
+              font-size: calc((100cqi - 48px) / 8.8);
+              font-weight: 800;
+              line-height: 0.9;
+              letter-spacing: -0.05em;
+              text-transform: uppercase;
+              white-space: nowrap;
+            }
+            .site-footer-row {
+              max-width: 1200px;
+              margin: 0 auto;
+              display: flex;
+              flex-wrap: wrap;
+              justify-content: space-between;
+              gap: 12px 24px;
+              font-family: var(--font-subtitle);
+              font-size: 0.9rem;
+              font-weight: 600;
+              color: rgba(255, 255, 255, 0.7);
+            }
+            .site-footer-row a { display: inline-flex; align-items: center; gap: 6px; color: #ffffff; }
+            @media (hover: hover) and (pointer: fine) {
+              .site-footer-row a:hover { color: #93c5fd; }
+            }
+          `}} />
         </footer>
       </div>
     </>

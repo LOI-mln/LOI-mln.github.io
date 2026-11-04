@@ -47,28 +47,16 @@ const Timeline = () => {
   return (
     <section
       id="timeline"
+      className="field tl-field"
       style={{
         position: 'relative',
-        backgroundColor: 'var(--bg-secondary)',
+        /* Aplat bleu : la mer de la carte prend la même couleur */
+        backgroundColor: 'var(--accent)',
         /* clip et non hidden : hidden ferait de la section un conteneur de défilement, et la scène du trajet ne suivrait plus la page */
         overflow: 'clip',
       }}
     >
-      {/* Lueur d'arrière-plan */}
-      <div
-        style={{
-          position: 'absolute',
-          top: '-10%',
-          right: '-10%',
-          width: '50vw',
-          height: '50vw',
-          background: 'radial-gradient(circle, rgba(37, 99, 235, 0.02) 0%, rgba(255, 255, 255, 0) 70%)',
-          zIndex: 0,
-          pointerEvents: 'none',
-        }}
-      />
-
-      <div className="section-container" style={{ paddingBottom: '140px', position: 'relative', zIndex: 1 }}>
+      <div className="section-container" style={{ paddingBottom: '80px', position: 'relative', zIndex: 1 }}>
         {/* Titre de la section */}
         <div className="reveal-on-scroll" style={{ textAlign: 'center', marginBottom: '70px' }}>
           <div className="organic-badge" style={{ marginBottom: '16px' }}>
@@ -78,7 +66,7 @@ const Timeline = () => {
             className="section-title"
             style={{
               fontSize: 'clamp(2rem, 5vw, 3.2rem)',
-              color: 'var(--text-primary)',
+              color: '#ffffff',
               textTransform: 'uppercase',
               lineHeight: '1.25',
               padding: '0.1em 0',
@@ -91,7 +79,7 @@ const Timeline = () => {
             style={{
               maxWidth: '600px',
               margin: '16px auto 0 auto',
-              color: 'var(--text-secondary)',
+              color: 'rgba(255, 255, 255, 0.82)',
               fontFamily: 'var(--font-body)',
               fontSize: '1rem',
               lineHeight: 1.6,
@@ -359,6 +347,9 @@ const Timeline = () => {
         .timeline-card {
           touch-action: manipulation;
         }
+        /* Sur l'aplat bleu, le mot en couleur passe en bleu nuit (comme le trajet) et la ligne de la liste en blanc */
+        .tl-field .accent-glow-text { color: var(--bg-inverse); }
+        .tl-field .timeline-line { background: rgba(255, 255, 255, 0.6) !important; }
         .timeline-card:active {
           transform: scale(0.98) translateY(0) !important;
           transition-duration: 80ms !important;

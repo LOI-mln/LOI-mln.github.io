@@ -154,24 +154,26 @@ const Hero = () => {
           >
             <h2
               style={{
-                fontFamily: 'var(--font-creative)',
-                fontSize: 'clamp(2.6rem, 8vw, 5.8rem)',
-                fontWeight: 300,
-                fontStyle: 'italic',
+                /* Même voix que les affiches des projets : Syne en capitales */
+                fontFamily: 'var(--font-display)',
+                /* Deux lignes voulues, à une taille qui tient entre les deux pastilles */
+                fontSize: 'clamp(1.6rem, 3.3vw, 2.8rem)',
+                fontWeight: 800,
+                letterSpacing: '-0.04em',
                 color: 'var(--text-primary)',
                 lineHeight: 1,
                 margin: 0,
-                textTransform: 'none',
+                textTransform: 'uppercase',
                 textShadow: '0 0 20px rgba(255, 255, 255, 0.95), 0 0 35px rgba(255, 255, 255, 0.85), 0 0 8px rgba(255, 255, 255, 0.9)',
               }}
             >
-              Concepteur <span className="accent-glow-text" style={{ padding: '0 0.05em' }}>Logiciel</span>
+              Concepteur <span className="accent-glow-text" style={{ display: 'block', padding: '0 0.05em' }}>Logiciel</span>
             </h2>
           </div>
 
           {/* Badge de disponibilité */}
           <div
-            className="glass-panel desktop-only"
+            className="desktop-only"
             style={{
               position: 'absolute',
               left: '0px',
@@ -183,9 +185,9 @@ const Hero = () => {
               display: 'flex',
               alignItems: 'center',
               gap: '10px',
-              backgroundColor: 'var(--bg-primary)',
+              backgroundColor: 'var(--bg-inverse)',
+              color: '#ffffff',
               zIndex: 3,
-              boxShadow: '0 10px 25px rgba(0,0,0,0.03)',
             }}
           >
             <span
@@ -203,7 +205,7 @@ const Hero = () => {
                 fontFamily: 'var(--font-subtitle)',
                 fontSize: '0.8rem',
                 fontWeight: 700,
-                color: 'var(--text-primary)',
+                color: '#ffffff',
                 letterSpacing: '0.02em',
               }}
             >
@@ -213,7 +215,7 @@ const Hero = () => {
 
           {/* Badge de localisation */}
           <div
-            className="glass-panel desktop-only"
+            className="desktop-only"
             style={{
               position: 'absolute',
               right: '0px',
@@ -224,18 +226,18 @@ const Hero = () => {
               display: 'flex',
               alignItems: 'center',
               gap: '8px',
-              backgroundColor: 'var(--bg-primary)',
+              backgroundColor: 'var(--bg-inverse)',
+              color: '#ffffff',
               zIndex: 3,
-              boxShadow: '0 10px 25px rgba(0,0,0,0.03)',
             }}
           >
-            <MapPin size={14} style={{ color: 'var(--accent)' }} />
+            <MapPin size={14} style={{ color: '#93c5fd' }} />
             <span
               style={{
                 fontFamily: 'var(--font-subtitle)',
                 fontSize: '0.8rem',
                 fontWeight: 700,
-                color: 'var(--text-primary)',
+                color: '#ffffff',
                 letterSpacing: '0.02em',
               }}
             >
@@ -258,14 +260,14 @@ const Hero = () => {
           }}
         >
           <div
-            className="glass-panel"
             style={{
               padding: '10px 20px',
               borderRadius: '50px',
               display: 'inline-flex',
               alignItems: 'center',
               gap: '8px',
-              backgroundColor: 'var(--bg-primary)',
+              backgroundColor: 'var(--bg-inverse)',
+              color: '#ffffff',
             }}
           >
             <span

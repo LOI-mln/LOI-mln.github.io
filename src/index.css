@@ -325,12 +325,11 @@ h1, h2, h3, h4 {
   animation: float 6s ease-in-out infinite;
 }
 
-.accent-glow-text {
-  background: var(--accent-gradient-text);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
+/* Mot mis en couleur dans un titre : couleur pleine, comme les affiches (sur un aplat, il passe en bleu clair) */
+.accent-glow-text { color: var(--accent); }
+.field .accent-glow-text { color: #93c5fd; }
+/* Pastille d'en-tête posée sur un aplat de couleur */
+.field .organic-badge { background: rgba(255, 255, 255, 0.12); border-color: transparent; color: #ffffff; }
 
 /* Effet de ligne surlignée */
 .highlight-line {
