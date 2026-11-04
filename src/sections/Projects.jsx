@@ -40,11 +40,11 @@ const PROJECT_INFO = [
     figure: { value: '200', prefix: '≈ ', label: "personnes s'en servent à l'IUT" },
     meta: "Unilim EDT · Projet BUT · Lead dev, équipe de 4 · 2025-2026",
     status: "En production à l'IUT",
-    summary: "L'IUT du Limousin faisait ses emplois du temps à la main. L'application les génère toute seule, sans qu'une salle, un enseignant ou un groupe soit pris deux fois.",
+    summary: "L'IUT faisait ses emplois du temps à la main. L'application les construit seule : 3 promotions, 66 enseignants, près de 7 800 heures de cours par an.",
     points: [
-      "Environ 200 personnes s'en servent au département Informatique, étudiants et enseignants",
-      '3 promotions, 66 enseignants et près de 7 800 heures de cours à placer sur l\'année',
-      "J'encadre l'équipe de 4 développeurs qui la fait évoluer",
+      { t: "Génération automatique", d: "un emploi du temps complet, sans aucun conflit, en un clic" },
+      { t: "Retouches en direct", d: "on déplace un cours, les conflits sont repérés aussitôt" },
+      { t: "Suivi des heures", d: "prévu et réalisé comparés pour chaque enseignant" },
     ],
     tags: ['Python', 'Laravel', 'Vue 3'],
     demo: { src: '/videos/unilim-edt-demo.mp4', poster: '/videos/unilim-edt-demo.jpg', duration: '35 s' },
@@ -56,11 +56,11 @@ const PROJECT_INFO = [
     figure: { value: '25', label: 'partenaires du club mis en avant' },
     meta: 'Badminton Club Montponnais (bcm24.fr) · depuis 2026',
     status: 'En ligne',
-    summary: "Le club de badminton de Montpon-Ménestérol, actif depuis 1999, n'avait pas de site à jour. Il en a maintenant un qu'il gère seul.",
+    summary: "Le club de Montpon-Ménestérol, actif depuis 1999, a enfin un site à jour qu'il gère seul.",
     points: [
-      'Tout pour venir jouer : 5 créneaux par semaine sur 5 terrains, tarifs et inscription en ligne',
-      'Les 4 équipes en interclubs et les 25 partenaires du club mis en avant',
-      'Le bureau publie le calendrier et envoie la newsletter sans passer par moi',
+      { t: "Inscription 100 % en ligne", d: "de la fiche d'inscription au paiement, sans papier" },
+      { t: "Espace du bureau", d: "newsletter, calendrier et mails aux adhérents, sans développeur" },
+      { t: "Calendrier de la saison", d: "chaque tournoi et chaque soirée du club avec sa fiche" },
     ],
     tags: ['Next.js', 'React'],
     demo: { src: '/videos/bcm-site-demo.mp4', poster: '/videos/bcm-site-demo.jpg', duration: '14 s', label: 'Visite réelle' },
@@ -75,10 +75,9 @@ const PROJECT_INFO = [
     status: 'Publication prochaine',
     summary: "Mesurer à quel point les débats politiques en ligne divisent, sur 5 réseaux sociaux, avec de l'IA plutôt qu'en lisant tout à la main.",
     points: [
-      'Plus de 32 000 commentaires et 2 000 mèmes analysés automatiquement',
-      "L'IA repère les mèmes qui parlent de « nous » (40 %) et ceux qui visent « eux » (23 %)",
-      "Résultat : des bulles presque étanches, où chacun ne parle qu'à son camp",
-      'Papier de recherche rédigé sous la direction du Dr Shahana Bano',
+      { t: "IA qui lit et qui voit", d: "la toxicité des messages et le sens des mèmes, image et texte" },
+      { t: "Carte des communautés", d: "des bulles où chacun ne parle qu'à son camp" },
+      { t: "Dashboard interactif", d: "explorer les résultats et analyser de nouvelles données" },
     ],
     tags: ['Python', 'IA', 'NLP'],
     demo: { src: '/videos/rgu-dashboard-demo.mp4', poster: '/videos/rgu-dashboard-demo.jpg', duration: '21 s', label: 'Dashboard réel', button: 'Voir le dashboard' },
@@ -90,11 +89,11 @@ const PROJECT_INFO = [
     title: 'Questionary',
     figure: { value: '2 400', label: "étudiants de l'IUT pourraient l'utiliser" },
     meta: 'Projet BUT · En équipe · 2025-2026',
-    summary: "Créer un questionnaire, le partager par QR code et lire les résultats sans passer par un tableur, réponses libres comprises.",
+    summary: "Créer un questionnaire, le partager et lire les résultats sans tableur. Pensée pour les 2 400 étudiants de l'IUT du Limousin.",
     points: [
-      "Pensée pour tout l'IUT du Limousin : 2 400 étudiants sur 5 sites, connexion avec le compte de l'université",
-      "Des questions qui s'adaptent selon les réponses précédentes",
-      'Résultats prêts à partager : mots les plus cités, export PDF, Excel ou CSV',
+      { t: "Partage par QR code", d: "on répond avec son compte de l'université" },
+      { t: "Questions conditionnelles", d: "le questionnaire s'adapte aux réponses" },
+      { t: "Analyse automatique", d: "graphiques, mots les plus cités et exports PDF ou Excel" },
     ],
     tags: ['Vue.js', 'PHP', 'MariaDB'],
     link: { href: 'https://github.com/Mdeterne/php-mariadb-Questionary', label: 'Voir le dépôt', kind: 'github' },
@@ -174,7 +173,7 @@ const ProjectSheet = ({ project, stage, flipped }) => {
         <p className="pj-copy-meta">{meta}</p>
         <p className="pj-copy-summary">{summary}</p>
         <ul className="pj-copy-points">
-          {points.map((point) => <li key={point}>{point}</li>)}
+          {points.map((point) => <li key={point.t}><strong>{point.t}</strong> — {point.d}</li>)}
         </ul>
         <div className="pj-copy-foot">
           <p className="pj-copy-tags">{tags.join(' · ')}</p>
@@ -480,6 +479,7 @@ const Projects = () => (
           line-height: 1.5;
           color: var(--text-secondary);
         }
+        .pj-copy-points strong { font-weight: 700; color: var(--text-primary); }
         .pj-copy-points li::before {
           content: '';
           position: absolute;
