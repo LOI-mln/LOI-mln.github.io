@@ -27,7 +27,8 @@ const Hero = () => {
         flexDirection: 'column',
         justifyContent: 'flex-start',
         padding: '110px 24px 60px 24px',
-        overflow: 'hidden',
+        /* clip et non hidden : hidden ferait de l'accueil un conteneur de défilement, et les chiffres ne suivraient plus la page */
+        overflow: 'clip',
         backgroundColor: 'transparent',
       }}
     >

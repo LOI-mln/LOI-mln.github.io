@@ -1,5 +1,6 @@
 import React from 'react';
 import ProjectStage from '../components/ProjectStage';
+import RollingFigure from '../components/RollingFigure';
 import { ExternalLink, ArrowUpRight, FileText } from 'lucide-react';
 
 const GithubIcon = ({ size = 18 }) => (
@@ -150,22 +151,6 @@ const ProjectSheet = ({ project, stage, flipped }) => {
 // Teinte de chaque projet (RVB), dans l'ordre des fiches
 const TINTS = ['emerald', 'cyan', 'accent', 'violet'];
 
-// Chiffre qui défile jusqu'à sa valeur, chiffre par chiffre, quand l'affiche arrive
-const RollingFigure = ({ value, prefix }) => (
-  <span className="pj-figure-value" aria-label={`${prefix || ''}${value}`}>
-    {prefix && <span className="pj-figure-prefix" aria-hidden="true">{prefix}</span>}
-    {[...value].map((ch, i) => (/\d/.test(ch) ? (
-      <span key={i} className="pj-digit" aria-hidden="true" style={{ '--d': ch, '--i': i }}>
-        <span className="pj-digit-strip">
-          {'0123456789'.split('').map((n) => <span key={n}>{n}</span>)}
-        </span>
-      </span>
-    ) : (
-      <span key={i} aria-hidden="true">{ch === ' ' ? '\u202f' : ch}</span>
-    )))}
-  </span>
-);
-
 const Projects = () => (
   <section
     id="projects"
@@ -211,7 +196,7 @@ const Projects = () => (
 
     {/* Un chapitre par projet : son affiche reste fixe, puis sa fiche remonte par-dessus comme une feuille */}
     {PROJECT_INFO.map((project, i) => (
-      <article key={project.title} className={`pj-chapter pj-chapter--${TINTS[i]}`}>
+      <article key={project.title} id={`projet-${i + 1}`} className={`pj-chapter pj-chapter--${TINTS[i]}`}>
         <div className="pj-poster">
           <div className="pj-poster-inner">
             <div className="pj-poster-text">
@@ -219,7 +204,7 @@ const Projects = () => (
               <h3 className="pj-poster-title">{project.title}</h3>
             </div>
             <p className="pj-figure">
-              <RollingFigure {...project.figure} />
+              <RollingFigure {...project.figure} className="pj-figure-value" />
               <span className="pj-figure-label">{project.figure.label}</span>
             </p>
           </div>
@@ -295,10 +280,6 @@ const Projects = () => (
           letter-spacing: -0.05em;
           font-variant-numeric: tabular-nums;
         }
-        .pj-figure-prefix { margin-right: 0.04em; }
-        .pj-digit { display: inline-block; height: 1em; overflow: hidden; }
-        .pj-digit-strip { display: flex; flex-direction: column; transform: translateY(calc(var(--d) * -1em)); }
-        .pj-digit-strip span { height: 1em; line-height: 1; }
         .pj-figure-label {
           font-family: var(--font-body);
           font-size: 1.15rem;
@@ -449,8 +430,8 @@ const Projects = () => (
         /* En mouvement : les chiffres défilent quand l'affiche arrive, et l'affiche recule quand la feuille la couvre */
         @supports (animation-timeline: view()) {
           @media (prefers-reduced-motion: no-preference) {
-            .pj-digit-strip {
-              animation: pj-roll var(--ease-out) both;
+            .pj-figure-value .roll-strip {
+              animation: roll-in var(--ease-out) both;
               animation-timeline: --chapter;
               animation-range: cover calc(20vh + var(--i) * 4vh) cover calc(85vh + var(--i) * 4vh);
             }
@@ -462,7 +443,6 @@ const Projects = () => (
             }
           }
         }
-        @keyframes pj-roll { from { transform: translateY(0); } }
         @keyframes pj-recede { to { scale: 0.9; opacity: 0.25; } }
 
         @media (max-width: 860px) {

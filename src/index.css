@@ -472,3 +472,13 @@ html.lenis body {
 }
 
 
+
+/* Chiffre qui défile jusqu'à sa valeur (composant RollingFigure) : la colonne 0-9 de chaque chiffre
+   s'arrête sur sa valeur ; chaque section décide quand l'animation « roll-in » la fait monter */
+.roll { display: inline-flex; align-items: baseline; font-variant-numeric: tabular-nums; }
+.roll-affix { margin-right: 0.04em; }
+.roll-affix--suffix { margin: 0 0 0 0.12em; }
+.roll-digit { display: inline-block; height: 1em; overflow: hidden; line-height: 1; }
+.roll-strip { display: flex; flex-direction: column; transform: translateY(calc(var(--d) * -1em)); }
+.roll-strip span { height: 1em; line-height: 1; }
+@keyframes roll-in { from { transform: translateY(0); } }
