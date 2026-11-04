@@ -16,6 +16,7 @@ const PROJECT_INFO = [
     number: '01',
     category: 'Application en production',
     title: "Emplois du temps de l'IUT",
+    logo: { src: '/img/logos/iut-unilim.png', alt: 'IUT du Limousin, Université de Limoges', height: 64 },
     figure: { value: '200', prefix: '≈ ', label: "personnes s'en servent à l'IUT" },
     meta: "Unilim EDT · Projet BUT · Lead dev, équipe de 4 · 2025-2026",
     status: "En production à l'IUT",
@@ -31,6 +32,7 @@ const PROJECT_INFO = [
     number: '02',
     category: 'Site web',
     title: 'Site du club de badminton',
+    logo: { src: '/img/logos/bcm.png', alt: 'Badminton Club Montponnais', height: 116 },
     figure: { value: '25', label: 'partenaires du club mis en avant' },
     meta: 'Badminton Club Montponnais (bcm24.fr) · depuis 2026',
     status: 'En ligne',
@@ -47,6 +49,7 @@ const PROJECT_INFO = [
     number: '03',
     category: 'Recherche IA',
     title: 'RGU Aberdeen',
+    logo: { src: '/img/logos/rgu.svg', alt: 'Robert Gordon University', height: 48 },
     figure: { value: '32 000', prefix: '+', label: "commentaires analysés par l'IA" },
     meta: 'Stage Erasmus+ · Écosse · 2026',
     status: 'Publication prochaine',
@@ -63,6 +66,7 @@ const PROJECT_INFO = [
     number: '04',
     category: 'Application web',
     title: 'Questionary',
+    logo: { src: '/img/logos/iut-unilim.png', alt: 'IUT du Limousin, Université de Limoges', height: 64 },
     figure: { value: '2 400', label: "étudiants de l'IUT pourraient l'utiliser" },
     meta: 'Projet BUT · En équipe · 2025-2026',
     summary: "Créer un questionnaire, le partager et lire les résultats sans tableur. Pensée pour les 2 400 étudiants de l'IUT du Limousin.",
@@ -149,7 +153,8 @@ const ProjectSheet = ({ project, stage, flipped }) => {
 };
 
 // Teinte de chaque projet (RVB), dans l'ordre des fiches
-const TINTS = ['emerald', 'cyan', 'accent', 'violet'];
+// Couleur de l'établissement de chaque projet : rouge de l'Université de Limoges, vert du club, violet de RGU
+const TINTS = ['unilim', 'bcm', 'rgu', 'unilim'];
 
 const Projects = () => (
   <section
@@ -200,6 +205,14 @@ const Projects = () => (
         <div className="pj-poster">
           <div className="pj-poster-inner">
             <div className="pj-poster-text">
+              {project.logo && (
+                <img
+                  className="pj-poster-logo"
+                  src={project.logo.src}
+                  alt={project.logo.alt}
+                  style={{ '--logo-h': `${project.logo.height}px` }}
+                />
+              )}
               <p className="pj-poster-category">{project.category}</p>
               <h3 className="pj-poster-title">{project.title}</h3>
             </div>
@@ -220,10 +233,9 @@ const Projects = () => (
 
         /* Chapitres : une affiche fixe dans la teinte du projet, puis la fiche qui remonte par-dessus */
         .pj-chapter { position: relative; view-timeline: --chapter block; }
-        .pj-chapter--emerald { --tint: 5, 150, 105; }
-        .pj-chapter--cyan { --tint: 14, 116, 144; }
-        .pj-chapter--accent { --tint: 37, 99, 235; }
-        .pj-chapter--violet { --tint: 124, 58, 237; }
+        .pj-chapter--unilim { --tint: 168, 30, 36; }
+        .pj-chapter--bcm { --tint: 22, 163, 74; }
+        .pj-chapter--rgu { --tint: 113, 33, 119; }
 
         .pj-poster {
           position: sticky;
@@ -250,6 +262,7 @@ const Projects = () => (
           justify-content: space-between;
           gap: 44px;
         }
+        .pj-poster-logo { display: block; height: var(--logo-h); width: auto; margin: 0 0 22px; }
         .pj-poster-category {
           margin: 0 0 18px;
           font-family: var(--font-subtitle);
@@ -450,6 +463,7 @@ const Projects = () => (
         @media (max-width: 860px) {
           .pj-poster-inner { gap: 32px; padding: 96px 20px 40px; }
           .pj-figure { align-self: flex-start; align-items: flex-start; text-align: left; }
+          .pj-poster-logo { height: calc(var(--logo-h) * 0.75); margin-bottom: 16px; }
 
           .pj-figure-value { font-size: clamp(3.6rem, 22vw, 6rem); }
           .pj-sheet { padding: 40px 16px; border-radius: 28px 28px 0 0; }
