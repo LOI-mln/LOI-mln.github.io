@@ -7,6 +7,7 @@ const RollingFigure = ({ value, prefix, suffix, className = '' }) => (
     {prefix && <span className="roll-affix" aria-hidden="true">{prefix}</span>}
     {[...value].map((ch, i) => (/\d/.test(ch) ? (
       <span key={i} className="roll-digit" aria-hidden="true" style={{ '--d': ch, '--i': i }}>
+        <span className="roll-sizer">{ch}</span>
         <span className="roll-strip">
           {'0123456789'.split('').map((n) => <span key={n}>{n}</span>)}
         </span>
