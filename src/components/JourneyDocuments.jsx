@@ -54,8 +54,7 @@ const BoardingPass = () => (
   </div>
 );
 
-// Exporté : l'accueil réutilise ce badge dans son repère sur l'alternance (ses styles .doc sont posés plus bas, par ce composant)
-export const Badge = () => (
+const Badge = () => (
   <div className="doc doc-badge">
     <span className="doc-badge-slot" aria-hidden="true" />
     <p className="doc-badge-company">Ceva Santé Animale</p>
@@ -73,7 +72,6 @@ const JourneyDocuments = ({ steps }) => {
   const [active, setActive] = useState(0);
   const count = steps.length;
   const go = (index) => setActive((index + count) % count);
-  const step = steps[active];
 
   const onKeyDown = (e) => {
     if (e.key === 'ArrowRight') { e.preventDefault(); go(active + 1); }
@@ -105,14 +103,19 @@ const JourneyDocuments = ({ steps }) => {
       </div>
 
       <div className="jd-detail" role="tabpanel" id="jd-panel" aria-labelledby={`jd-tab-${active}`}>
-        <div className="jd-detail-body" key={active}>
-          <span className="jd-date"><Calendar size={12} />{step.date}</span>
-          <h3 className="jd-title">{step.title}</h3>
-          <p className="jd-sub">{step.sub}</p>
-          {step.certifBadge && <span className="jd-badge jd-badge--ok"><ShieldCheck size={13} />{step.certifBadge}</span>}
-          {step.badge && <span className="jd-badge"><Building2 size={13} />{step.badge}</span>}
-          <p className="jd-desc">{step.desc}</p>
-          <span className="jd-place"><MapPin size={12} />{step.location}</span>
+        {/* Les quatre fiches sont superposées : la plus longue fixe la hauteur, les flèches restent donc à la même place */}
+        <div className="jd-cards">
+          {steps.map((step, i) => (
+            <div key={step.title} className={`jd-detail-body ${i === active ? 'is-active' : ''}`} aria-hidden={i !== active}>
+              <span className="jd-date"><Calendar size={12} />{step.date}</span>
+              <h3 className="jd-title">{step.title}</h3>
+              <p className="jd-sub">{step.sub}</p>
+              {step.certifBadge && <span className="jd-badge jd-badge--ok"><ShieldCheck size={13} />{step.certifBadge}</span>}
+              {step.badge && <span className="jd-badge"><Building2 size={13} />{step.badge}</span>}
+              <p className="jd-desc">{step.desc}</p>
+              <span className="jd-place"><MapPin size={12} />{step.location}</span>
+            </div>
+          ))}
         </div>
         <div className="jd-nav">
           <button type="button" className="jd-arrow" onClick={() => go(active - 1)} aria-label="Étape précédente"><ChevronLeft size={18} /></button>
@@ -253,7 +256,11 @@ const JourneyDocuments = ({ steps }) => {
 
         /* Détails de l'étape choisie */
         .jd-detail { display: flex; flex-direction: column; gap: 22px; }
+        /* Une seule case de grille pour les quatre fiches : elles prennent toutes la hauteur de la plus longue */
+        .jd-cards { display: grid; }
         .jd-detail-body {
+          grid-area: 1 / 1;
+          visibility: hidden;
           display: flex;
           flex-direction: column;
           align-items: flex-start;
@@ -262,8 +269,8 @@ const JourneyDocuments = ({ steps }) => {
           background: var(--bg-primary);
           border: 1px solid var(--border-color);
           box-shadow: 0 10px 30px rgba(17, 24, 39, 0.04);
-          animation: jd-in 320ms var(--ease-out) both;
         }
+        .jd-detail-body.is-active { visibility: visible; animation: jd-in 320ms var(--ease-out) both; }
         .jd-date {
           display: inline-flex; align-items: center; gap: 6px;
           padding: 4px 12px; border-radius: 50px;
@@ -280,7 +287,7 @@ const JourneyDocuments = ({ steps }) => {
         }
         .jd-badge--ok { color: #047857; background: rgba(16, 185, 129, 0.08); border-color: rgba(16, 185, 129, 0.25); }
         .jd-desc { margin: 14px 0 0; font-family: var(--font-body); font-size: 0.95rem; line-height: 1.6; color: var(--text-secondary); }
-        .jd-place { display: flex; align-items: center; gap: 6px; margin-top: 16px; font-family: var(--font-subtitle); font-size: 0.8rem; font-weight: 500; color: var(--text-muted); }
+        .jd-place { display: flex; align-items: center; gap: 6px; margin-top: auto; padding-top: 16px; font-family: var(--font-subtitle); font-size: 0.8rem; font-weight: 500; color: var(--text-muted); }
 
         .jd-nav { display: flex; align-items: center; gap: 14px; }
         .jd-count { font-family: var(--font-subtitle); font-size: 0.85rem; font-weight: 700; color: var(--text-secondary); min-width: 96px; text-align: center; }
