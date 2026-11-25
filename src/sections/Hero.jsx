@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowRight, Sparkles, MapPin, Award, Shield, FileText } from 'lucide-react';
+import { ArrowRight, MapPin } from 'lucide-react';
 import MetricGrid from '../components/MetricGrid';
 
 const Hero = () => {
@@ -79,7 +79,7 @@ const Hero = () => {
               style={{
                 fontFamily: "var(--font-title)", /* Alignement avec la charte Space Grotesk */
                 fontSize: 'clamp(4.5rem, 16vw, 11rem)',
-                fontWeight: 900,
+                fontWeight: 700,
                 color: 'var(--accent)',
                 lineHeight: 1,
                 letterSpacing: '0.02em',
@@ -165,126 +165,37 @@ const Hero = () => {
                 textShadow: '0 0 20px rgba(255, 255, 255, 0.95), 0 0 35px rgba(255, 255, 255, 0.85), 0 0 8px rgba(255, 255, 255, 0.9)',
               }}
             >
-              Concepteur <span className="accent-glow-text" style={{ padding: '0 0.05em' }}>Logiciel</span>
+              Concepteur <span style={{ color: 'var(--accent)' }}>Logiciel</span>
             </h2>
           </div>
 
-          {/* Badge de disponibilité */}
-          <div
-            className="glass-panel desktop-only"
-            style={{
-              position: 'absolute',
-              left: '0px',
-              top: '55%',
-              transform: 'translateY(-50%)',
-              maxWidth: 'calc((100% - 400px) / 2 - 16px)', // Ne jamais chevaucher le portrait
-              padding: '14px 22px',
-              borderRadius: '50px',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '10px',
-              backgroundColor: 'var(--bg-primary)',
-              zIndex: 3,
-              boxShadow: '0 10px 25px rgba(0,0,0,0.03)',
-            }}
-          >
-            <span
-              className="pulse-dot"
-              style={{
-                flexShrink: 0,
-                width: '8px',
-                height: '8px',
-                backgroundColor: 'var(--status-success)', // Point clignotant vert sémantique
-                boxShadow: '0 0 10px var(--status-success)',
-              }}
-            />
-            <span
-              style={{
-                fontFamily: 'var(--font-subtitle)',
-                fontSize: '0.8rem',
-                fontWeight: 700,
-                color: 'var(--text-primary)',
-                letterSpacing: '0.02em',
-              }}
-            >
-              Recherche alternance développement · sept. 2027
+          {/* Deux légendes d'affiche de part et d'autre du prénom : la recherche d'alternance et les villes */}
+          <p className="hero-note hero-note--left">
+            <span className="hero-note-kicker">
+              <span className="hero-note-dot" aria-hidden="true" />
+              Recherche une alternance
             </span>
-          </div>
-
-          {/* Badge de localisation */}
-          <div
-            className="glass-panel desktop-only"
-            style={{
-              position: 'absolute',
-              right: '0px',
-              top: '55%',
-              transform: 'translateY(-50%)',
-              padding: '14px 22px',
-              borderRadius: '50px',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px',
-              backgroundColor: 'var(--bg-primary)',
-              zIndex: 3,
-              boxShadow: '0 10px 25px rgba(0,0,0,0.03)',
-            }}
-          >
-            <MapPin size={14} style={{ color: 'var(--accent)' }} />
-            <span
-              style={{
-                fontFamily: 'var(--font-subtitle)',
-                fontSize: '0.8rem',
-                fontWeight: 700,
-                color: 'var(--text-primary)',
-                letterSpacing: '0.02em',
-              }}
-            >
-              Limoges · Bordeaux
+            <span className="hero-note-main">Développement · sept. 2027</span>
+          </p>
+          <p className="hero-note hero-note--right">
+            <span className="hero-note-kicker">
+              <MapPin size={12} aria-hidden="true" />
+              Localisation
             </span>
-          </div>
+            <span className="hero-note-main">Limoges · Bordeaux</span>
+          </p>
         </div>
 
-        {/* Contenu de secours pour mobiles */}
-        <div
-          className="mobile-only-hero-footer"
-          style={{
-            display: 'none',
-            flexDirection: 'column',
-            alignItems: 'center',
-            gap: '16px',
-            textAlign: 'center',
-            marginBottom: '16px',
-            width: '100%',
-          }}
-        >
-          <div
-            className="glass-panel"
-            style={{
-              padding: '10px 20px',
-              borderRadius: '50px',
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '8px',
-              backgroundColor: 'var(--bg-primary)',
-            }}
-          >
-            <span
-              className="pulse-dot"
-              style={{
-                width: '8px',
-                height: '8px',
-                backgroundColor: 'var(--status-success)',
-              }}
-            />
-            <span style={{ fontFamily: 'var(--font-subtitle)', fontSize: '0.75rem', fontWeight: 700 }}>
-              Recherche alternance développement · sept. 2027
-            </span>
-          </div>
-        </div>
+        {/* Écrans étroits : la recherche d'alternance tient en une pastille, sous le titre */}
+        <p className="hero-status-chip">
+          <span className="hero-note-dot" aria-hidden="true" />
+          Recherche une alternance · sept. 2027
+        </p>
 
         {/* Phrase d'accroche : qui je suis en une lecture */}
         <p className="hero-pitch">
-          Développeur logiciel en alternance chez <strong>Ceva Santé Animale</strong> et en 3<sup>e</sup> année de <strong>BUT Informatique</strong> à Limoges. Je poursuis en <strong>développement logiciel</strong> pour mon master.
+          <span>Développeur logiciel en alternance chez <strong className="hero-keep">Ceva Santé Animale</strong> et{'\u00A0'}en{'\u00A0'}3<sup>e</sup> année de <strong className="hero-keep">BUT Informatique</strong> à Limoges.</span>{' '}
+          <span>Je poursuis en <strong>développement logiciel</strong> pour mon master.</span>
         </p>
 
         {/* Bouton d'action principal */}
@@ -301,10 +212,8 @@ const Hero = () => {
           </a>
         </div>
 
-        {/* Section des statistiques (MetricGrid) */}
-        <div style={{ width: '100%', marginTop: '24px' }}>
-          <MetricGrid />
-        </div>
+        {/* Trois repères : la démo d'un projet, la recherche, l'alternance */}
+        <MetricGrid />
       </div>
 
 
@@ -370,43 +279,114 @@ const Hero = () => {
           animation-delay: 650ms;
         }
 
-        .desktop-only {
+        /* Légendes d'affiche : alignées sur les bords de la page, à mi-hauteur du prénom */
+        .hero-note {
+          position: absolute;
+          top: 32%;
+          z-index: 3;
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+          margin: 0;
+          translate: 0 -50%;
           animation: subTitleEntry 1.4s cubic-bezier(0.16, 1, 0.3, 1) both;
         }
-        .hero-portrait-container + .desktop-only {
-          animation-delay: 750ms;
+        .hero-note--left { left: 0; align-items: flex-start; animation-delay: 750ms; }
+        .hero-note--right { right: 0; align-items: flex-end; text-align: right; animation-delay: 850ms; }
+        .hero-note-kicker {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          font-family: var(--font-subtitle);
+          font-size: 0.75rem;
+          line-height: 1rem;
+          font-weight: 700;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+          color: var(--text-secondary);
         }
-        .hero-portrait-container ~ .desktop-only {
-          animation-delay: 850ms;
+        .hero-note--right .hero-note-kicker svg { color: var(--accent); }
+        .hero-note-main {
+          font-family: var(--font-subtitle);
+          font-size: 1.125rem;
+          line-height: 1.75rem;
+          font-weight: 600;
+          white-space: nowrap;
+          color: var(--text-primary);
+        }
+        .hero-note-dot {
+          flex-shrink: 0;
+          width: 8px;
+          height: 8px;
+          border-radius: 50%;
+          background: var(--status-success);
+          animation: heroDotPulse 2s infinite;
+        }
+        @keyframes heroDotPulse {
+          0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.6); }
+          70% { box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
+          100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+        }
+
+        .hero-status-chip {
+          display: none;
+          align-items: center;
+          gap: 8px;
+          margin: 0 0 16px;
+          padding: 8px 16px;
+          border-radius: 9999px;
+          background: var(--bg-primary);
+          border: 1px solid var(--border-color);
+          font-family: var(--font-subtitle);
+          font-size: 0.75rem;
+          line-height: 1rem;
+          font-weight: 700;
+          color: var(--text-primary);
+          animation: subTitleEntry 1.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+          animation-delay: 750ms;
         }
 
         .hero-portrait-container {
           width: 400px !important;
           height: 500px !important;
         }
+        /* Sur ordinateur, la scène suit la hauteur de la fenêtre : sur un portable, le bouton reste visible sans défiler */
+        @media (min-width: 992px) {
+          .hero-center-wrapper { height: min(520px, 57svh) !important; }
+          .hero-center-wrapper h1 { font-size: min(11rem, 16vw, 19.5svh) !important; }
+          .hero-center-wrapper h2 { font-size: min(5.8rem, 8vw, 10.2svh) !important; }
+          .hero-portrait-container { width: auto !important; height: 96% !important; aspect-ratio: 4 / 5; }
+        }
+        /* Entre les deux, la pastille s'ajoute sous le titre : la scène lui laisse sa place */
+        @media (min-width: 992px) and (max-width: 1199px) {
+          .hero-center-wrapper { height: min(520px, 51svh) !important; }
+        }
 
         .hero-pitch {
-          max-width: 720px;
+          max-width: 680px;
           margin: 0 auto 24px auto;
           text-align: center;
           font-family: var(--font-body);
-          font-size: clamp(1rem, 1.4vw, 1.2rem);
-          line-height: 1.55;
+          font-size: 1.125rem;
+          line-height: 1.75rem;
           color: var(--text-primary);
           animation: subTitleEntry 1s cubic-bezier(0.16, 1, 0.3, 1) both;
           animation-delay: 300ms;
         }
+        /* Une phrase par bloc : la coupure tombe entre les deux idées, jamais au milieu d'un nom */
+        .hero-pitch > span { display: block; text-wrap: balance; }
         .hero-pitch strong {
           color: var(--accent-hover);
           font-weight: 700;
         }
+        .hero-pitch .hero-keep { white-space: nowrap; }
+        /* L'exposant ne doit pas écarter sa ligne des autres */
+        .hero-pitch sup { line-height: 0; }
         .hero-contact-container {
           display: flex;
           justify-content: center;
           align-items: center;
           width: 100%;
-          margin-top: 10px;
-          margin-bottom: 10px;
           opacity: 1;
           transform: translate(0, 0) scale(1);
           transition: opacity 0.4s var(--ease-out), transform 0.4s var(--ease-out);
@@ -459,13 +439,13 @@ const Hero = () => {
           transform: scale(0.97) translateY(0) !important;
           transition-duration: 80ms !important;
         }
+        /* Sous 1200px, le prénom n'a plus la place pour ses légendes : la pastille prend le relais */
+        @media (max-width: 1199px) {
+          .hero-note { display: none; }
+          .hero-status-chip { display: inline-flex; }
+        }
         @media (max-width: 991px) {
-          .desktop-only {
-            display: none !important;
-          }
-          .mobile-only-hero-footer {
-            display: flex !important;
-          }
+          .hero-pitch { font-size: 1rem; line-height: 1.5rem; }
           .hero-center-wrapper {
             height: 360px !important;
             margin-top: 40px !important;

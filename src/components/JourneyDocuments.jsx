@@ -54,7 +54,8 @@ const BoardingPass = () => (
   </div>
 );
 
-const Badge = () => (
+// Exporté : l'accueil réutilise ce badge dans son repère sur l'alternance (ses styles .doc sont posés plus bas, par ce composant)
+export const Badge = () => (
   <div className="doc doc-badge">
     <span className="doc-badge-slot" aria-hidden="true" />
     <p className="doc-badge-company">Ceva Santé Animale</p>
